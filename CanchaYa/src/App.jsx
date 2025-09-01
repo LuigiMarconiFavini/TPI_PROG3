@@ -6,7 +6,7 @@ function App() {
 
   return (
     <>
-      {<NotFound /> /* Falta implementar bien la lógica cuando hagamos hecho el login */}
+      {/* <NotFound />  Falta implementar bien la lógica cuando hagamos hecho el login */}
       <Dashboard/>
     </>
   )

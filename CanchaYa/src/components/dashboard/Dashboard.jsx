@@ -1,14 +1,13 @@
 import React from 'react'
+import SearchForm from '../searchForm/SearchForm'
 
 const Dashboard = () => {
   return (
     <>
         <h1>CANCHAS-YA</h1>
-        <P>Encontra tu las mejores canchas cerca de donde estes!!</P>
+        <p>Encontra tu las mejores canchas cerca de donde estes!!</p>
 
-        <Form>
-            <input type="select" name="deporte" placeholder='Ingresa el Deporte' />
-        </Form>
+        <SearchForm/>
     </>
   )
 }
