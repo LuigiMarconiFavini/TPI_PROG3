@@ -6,7 +6,6 @@ const Dashboard = () => {
     <>
         <h1>CANCHAS-YA</h1>
         <p>Encontra tu las mejores canchas cerca de donde estes!!</p>
-
         <SearchForm/>
     </>
   )
