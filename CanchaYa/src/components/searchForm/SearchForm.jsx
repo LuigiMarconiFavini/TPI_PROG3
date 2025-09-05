@@ -1,102 +1,127 @@
 import { useState } from "react";
-
-const opcionesIniciales = {
-    futbol: [
-      { value: "f5", label: "Fútbol 5" },
-      { value: "f7", label: "Fútbol 7" },
-      { value: "f8", label: "Fútbol 8" },
-      { value: "f9", label: "Fútbol 9" },
-    ],
-    padel: [
-      { value: "cubiertas", label: "Cubiertas" },
-      { value: "panoramicas", label: "Panorámicas" },
-      { value: "cesped", label: "Césped sintético" },
-      { value: "cielo", label: "Cielo abierto" },
-    ],
-};
-
-const inicialHorario = [
-        { value: "9:00hs", label: "9:00hs" },
-        { value: "10:00hs", label: "10:00hs" },
-        { value: "11:00hs", label: "11:00hs" },
-        { value: "12:00hs", label: "12:00hs" },
-        { value: "13:00hs", label: "13:00hs" },
-        { value: "14:00hs", label: "14:00hs" },
-        { value: "15:00hs", label: "15:00hs" },
-        { value: "16:00hs", label: "16:00hs" },
-        { value: "17:00hs", label: "17:00hs" },
-        { value: "18:00hs", label: "18:00hs" },
-        { value: "19:00hs", label: "19:00hs" },
-        { value: "20:00hs", label: "20:00hs" },
-        { value: "21:00hs", label: "21:00hs" },
-        { value: "22:00hs", label: "22:00hs" },
-        { value: "23:00hs", label: "23:00hs" },
-]
+import CardCourts from "../cardCourts/CardCourts";
+import { canchas, deportes, tiposPorDeporte, horarios } from "../../mocks/mock";
 
 const SearchForm = () => {
   const [deporte, setDeporte] = useState("");
   const [tipoCancha, setTipoCancha] = useState("");
   const [horarioSeleccionado, setHorarioSeleccionado] = useState("");
+  const [resultados, setResultados] = useState(canchas);
 
   const handleDeporte = (e) => {
     setDeporte(e.target.value);
-  }
+    setTipoCancha("");
+  };
 
   const handleTipoCancha = (e) => {
-    setTipoCancha(e.target.value)
-  }
+    setTipoCancha(e.target.value);
+  };
 
   const handleHorario = (e) => {
-    setHorarioSeleccionado(e.target.value)
-  }
+    setHorarioSeleccionado(e.target.value);
+    setTipoCancha("");
+  };
+
+  const handleFilter = (e) => {
+    e.preventDefault();
+
+    const filtradas = canchas.filter((c) => {
+      const matchDeporte = deporte ? c.deporte === deporte : true;
+      const matchTipo = tipoCancha ? c.tipo === tipoCancha : true;
+      const matchHorario = horarioSeleccionado
+        ? c.horarios.includes(horarioSeleccionado)
+        : true;
+      return matchDeporte && matchTipo && matchHorario;
+    });
+
+    setResultados(filtradas);
+  };
 
   return (
-    <form>
-     <select
-        id="deporte"
-        name="deporte"
-        value={deporte}
-        onChange={handleDeporte}
+    <div className="p-6 bg-gray-50 min-h-screen">
+      {/* // Aca empieza el form */}
+      <form
+        onSubmit={handleFilter}
+        className="flex flex-wrap gap-6 items-end bg-white p-6 rounded-2xl shadow-md"
       >
-        <option value="">Elige Deporte</option>
-        <option value="futbol">Fútbol</option>
-        <option value="padel">Pádel</option>
-      </select>
-
-      {deporte && (
-        <select
-          id="tipoCancha"
-          name="tipoCancha"
-          value={tipoCancha}
-          onChange={handleTipoCancha}
-        >
-          <option value="">Selecciona el tipo de cancha</option>
-          {opcionesIniciales[deporte].map(
-            (op) => (
-            <option key={op.value} value={op.value}>
-                {op.label}
-            </option>
-          ))}
-        </select>
-      )}
-
-        <select
-            name="horario"
-            id="horario"
+        {/* // Este es el select de deportes */}
+        <div className="flex flex-col w-48">
+          <label className="text-sm font-semibold text-gray-700 mb-2">
+            Deporte
+          </label>
+          <select
+            value={deporte}
+            onChange={handleDeporte}
+            className="border border-gray-300 rounded-lg px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+          >
+            <option value="">Elegir Deporte</option>
+            {deportes.map((d) => (
+              <option key={d.value} value={d.value}>
+                {d.label}
+              </option>
+            ))}
+          </select>
+        </div>
+        {/* // Este es el select de canchas */}
+        {deporte && (
+          <div className="flex flex-col w-56">
+            <label className="text-sm font-semibold text-gray-700 mb-2">
+              Tipo de Cancha
+            </label>
+            <select
+              value={tipoCancha}
+              onChange={handleTipoCancha}
+              className="border border-gray-300 rounded-lg px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+            >
+              <option value="">Selecciona Tipo</option>
+              {tiposPorDeporte[deporte].map((t) => (
+                <option key={t.value} value={t.value}>
+                  {t.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+        {/* // select de horario */}
+        <div className="flex flex-col w-44">
+          <label className="text-sm font-semibold text-gray-700 mb-2">
+            Horario
+          </label>
+          <select
             value={horarioSeleccionado}
             onChange={handleHorario}
-        >
+            className="border border-gray-300 rounded-lg px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+          >
             <option value="">Elige Horario</option>
-            {inicialHorario.map((h) => (
-                <option key={h.value} value={h.value}>
-                {h.label}
-                </option>
+            {horarios.map((h) => (
+              <option key={h} value={h}>
+                {h}
+              </option>
             ))}
-        </select>
-
-      <button>Buscar Canchas</button>
-    </form>
+          </select>
+        </div>
+        {/* // aca se busca */}
+        <button
+          type="submit"
+          className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 transition-all"
+        >
+          Buscar Canchas
+        </button>
+      </form>
+      {/* // aca muestra lo que busca */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-10">
+        {resultados.length > 0 ? (
+          resultados.map((c) => <CardCourts key={c.id} cancha={c} />)
+        ) : (
+          <div className="col-span-full flex justify-center items-center h-32">
+            <p className="text-gray-500 text-lg font-medium">
+              No se encontraron canchas 😢
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
-
+// este es uno de oro
 export default SearchForm;
