@@ -1,5 +1,6 @@
 import React from "react";
 import SearchForm from "../searchForm/SearchForm";
+import Footer from "../footer/Footer";
 
 const Dashboard = () => {
   return (
@@ -10,6 +11,9 @@ const Dashboard = () => {
           Encontra tu las mejores canchas cerca de donde estes!!
         </p>
         <SearchForm />
+        <div>
+          <Footer />
+        </div>
       </div>
     </>
   );
