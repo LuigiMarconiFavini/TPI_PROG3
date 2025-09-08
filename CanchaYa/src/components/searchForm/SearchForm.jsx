@@ -19,7 +19,6 @@ const SearchForm = () => {
 
   const handleHorario = (e) => {
     setHorarioSeleccionado(e.target.value);
-    setTipoCancha("");
   };
 
   const handleFilter = (e) => {
