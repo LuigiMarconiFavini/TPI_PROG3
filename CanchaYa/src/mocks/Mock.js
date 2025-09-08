@@ -82,3 +82,14 @@ export const canchas = [
       "https://marcaenzona.com/news/uploads/images/image_750x_67056451efdef.jpg",
   },
 ];
+
+export const promotionsMock = {
+  totalBookings: 5, // reservas hechas por el usuario
+  rewardsCycle: 5,  // cada cuántas reservas hay recompensa
+  availableRewards: [
+    "10% de descuento en tu próxima reserva",
+    "1 bebida gratis post-partido",
+    "20% de descuento en una cancha techada",
+  ],
+  redeemedRewards: [], // historial de recompensas canjeadas
+};
