@@ -1,6 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
+
 
 const CardCourts = ({ cancha }) => {
+
+  const [reserva, setReserva] = useState()
+
+  const handleReserva = () => {
+    alert("¡Reserva realizada!");
+    setReserva("")
+    
+  }
   return (
     <div className="bg-white border border-gray-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden flex flex-col">
       {/* Imagen */}
@@ -36,7 +45,10 @@ const CardCourts = ({ cancha }) => {
         </div>
 
         {/* Botón reservar */}
-        <button className="mt-auto bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition">
+        <button 
+          value={reserva}
+          onClick={handleReserva}
+          className="mt-auto bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition">
           Reservar
         </button>
       </div>
