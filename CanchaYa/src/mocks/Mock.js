@@ -82,3 +82,13 @@ export const canchas = [
       "https://marcaenzona.com/news/uploads/images/image_750x_67056451efdef.jpg",
   },
 ];
+
+export const userMock = {
+  id: 1,
+  firstName: "Luigi",
+  lastName: "Marconi Favini",
+  email: "luigimarconifavini@mail.com",
+  phone: "+54 341 610 6235",
+  role: "Usuario",
+  photo: "https://i.pravatar.cc/150?img=5",
+};
