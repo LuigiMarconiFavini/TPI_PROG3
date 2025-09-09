@@ -2,6 +2,7 @@
   import Navbar from "../navbar/Navbar";
   import SearchForm from "../searchForm/SearchForm";
   import Faq from "../faq/Faq";
+  import Footer from "../footer/Footer";
 
   const Dashboard = () => {
 
@@ -19,6 +20,7 @@
               <div className="w-full lg:w-3/4 bg-gray-900 rounded-xl p-6 shadow-md">
               <Faq />
               </div>
+              <Footer />
             </div>
 
 
@@ -29,4 +31,5 @@
   };
 
   export default Dashboard;
+
 
