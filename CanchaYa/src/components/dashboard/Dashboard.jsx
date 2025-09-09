@@ -1,8 +1,12 @@
 import React from "react";
+import Navbar from "../navbar/Navbar";
 import SearchForm from "../searchForm/SearchForm";
 
 const Dashboard = () => {
   return (
+    
+      <Navbar />
+     
     <div className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8 bg-gray-900 text-white">
       <div className="text-center my-8">
         <h1 className="text-4xl font-bold mb-2">CANCHAS-YA</h1>
@@ -16,3 +20,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
