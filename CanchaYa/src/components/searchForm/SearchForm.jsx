@@ -19,7 +19,6 @@ const SearchForm = () => {
 
   const handleHorario = (e) => {
     setHorarioSeleccionado(e.target.value);
-    setTipoCancha("");
   };
 
   const handleFilter = (e) => {
@@ -38,11 +37,11 @@ const SearchForm = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-6 min-h-screen bg-gray-900 text-white">
       {/* // Aca empieza el form */}
       <form
         onSubmit={handleFilter}
-        className="flex flex-wrap gap-6 items-end bg-white p-6 rounded-2xl shadow-md"
+        className="flex flex-wrap gap-6 items-end bg-white p-6 rounded-2xl shadow-md justify-center"
       >
         {/* // Este es el select de deportes */}
         <div className="flex flex-col w-48">
@@ -52,7 +51,7 @@ const SearchForm = () => {
           <select
             value={deporte}
             onChange={handleDeporte}
-            className="border border-gray-300 rounded-lg px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="border border-gray-600 rounded-lg px-3 py-2 shadow-sm bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
           >
             <option value="">Elegir Deporte</option>
             {deportes.map((d) => (
@@ -64,14 +63,14 @@ const SearchForm = () => {
         </div>
         {/* // Este es el select de canchas */}
         {deporte && (
-          <div className="flex flex-col w-56">
+          <div className="flex flex-col w-48">
             <label className="text-sm font-semibold text-gray-700 mb-2">
               Tipo de Cancha
             </label>
             <select
               value={tipoCancha}
               onChange={handleTipoCancha}
-              className="border border-gray-300 rounded-lg px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="border border-gray-600 rounded-lg px-3 py-2 shadow-sm bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
               <option value="">Selecciona Tipo</option>
               {tiposPorDeporte[deporte].map((t) => (
@@ -83,14 +82,14 @@ const SearchForm = () => {
           </div>
         )}
         {/* // select de horario */}
-        <div className="flex flex-col w-44">
+        <div className="flex flex-col w-48">
           <label className="text-sm font-semibold text-gray-700 mb-2">
             Horario
           </label>
           <select
             value={horarioSeleccionado}
             onChange={handleHorario}
-            className="border border-gray-300 rounded-lg px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="border border-gray-600 rounded-lg px-3 py-2 shadow-sm bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
           >
             <option value="">Elige Horario</option>
             {horarios.map((h) => (
@@ -101,12 +100,15 @@ const SearchForm = () => {
           </select>
         </div>
         {/* // aca se busca */}
-        <button
-          type="submit"
-          className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 transition-all"
-        >
-          Buscar Canchas
+        <div className="flex flex-col w-48">
+          <label className="invisible mb-2">Buscar</label>
+            <button
+              type="submit"
+              className="border border-gray-600 rounded-lg px-3 py-2 shadow-sm bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+            >
+            Buscar Canchas
         </button>
+        </div>
       </form>
       {/* // aca muestra lo que busca */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-10">
