@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Navbar = ({onsingout}) => {
+const Navbar = ({loggedIn, onsingout}) => {
 
   const handleClick = () => {
-      onsingout(true)
+      onsingout()
   }
 
   return (
@@ -40,21 +40,31 @@ const Navbar = ({onsingout}) => {
 
           {/* Botones */}
           <div className="hidden lg:flex lg:items-center gap-x-2">
-            <Link
-              to="/signup"
-              className="flex items-center text-black dark:text-white justify-center px-6 py-2.5 font-semibold"
-            >
-              Registrarse
-            </Link>
-            <Link
-              to="/login"
-              className="flex items-center justify-center rounded-md bg-[#4A3BFF] text-white px-6 py-2.5 font-semibold hover:shadow-lg hover:drop-shadow transition duration-200"
-            >
-              Iniciar Sesión
-            </Link>
-             <button className="flex items-center justify-center rounded-md bg-[#4A3BFF] text-white px-6 py-2.5 font-semibold hover:shadow-lg hover:drop-shadow transition duration-200" onClick={handleClick}>
-              Cerrar sesion
-            </button>
+             {!loggedIn && (
+              <>
+                <Link
+                  to="/signup"
+                  className="flex items-center text-black dark:text-white justify-center px-6 py-2.5 font-semibold"
+                >
+                  Registrarse
+                </Link>
+                <Link
+                  to="/login"
+                  className="flex items-center justify-center rounded-md bg-[#4A3BFF] text-white px-6 py-2.5 font-semibold hover:shadow-lg hover:drop-shadow transition duration-200"
+                >
+                  Iniciar Sesión
+                </Link>
+              </>
+            )}
+
+            {loggedIn && (
+              <button
+                className="flex items-center justify-center rounded-md bg-[#4A3BFF] text-white px-6 py-2.5 font-semibold hover:shadow-lg hover:drop-shadow transition duration-200"
+                onClick={handleClick}
+              >
+                Cerrar sesión
+              </button>
+            )}
           </div>
 
           {/* Mobile Menu (botón hamburguesa) */}

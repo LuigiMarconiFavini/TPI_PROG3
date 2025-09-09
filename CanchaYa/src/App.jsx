@@ -10,7 +10,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
 
   const handleLogin = () => {
-    setLoggedIn(true); // cambia el estado al loguearse
+    setLoggedIn(true); 
   };
 
   const hanldeSingOut = () => {
@@ -24,7 +24,7 @@ function App() {
         <Route path="/login" element={<Login onLogin={handleLogin}/>}/>
           <Route path="/" element={
             <Protected isSignedIn={loggedIn} >
-              <Navbar onsingout={hanldeSingOut}/>
+              <Navbar loggedIn={loggedIn}  onsingout={hanldeSingOut}/>
               <Dashboard />
             </Protected>
         }/>
