@@ -20,10 +20,9 @@
               <div className="w-full lg:w-3/4 bg-gray-900 rounded-xl p-6 shadow-md">
               <Faq />
               </div>
-              <Footer />
             </div>
 
-
+            <Footer />
           </div>
         </div>
       </>
