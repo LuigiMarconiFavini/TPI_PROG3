@@ -106,7 +106,7 @@ const Login = ({ onLogin }) => {
 
         <p className="mt-10 text-center text-sm text-gray-400">
           ¿No tenés cuenta?{" "}
-          <a href="#" className="font-semibold text-indigo-400 hover:text-indigo-300">
+          <a href="/register" className="font-semibold text-indigo-400 hover:text-indigo-300">
             Registrate
           </a>
         </p>
