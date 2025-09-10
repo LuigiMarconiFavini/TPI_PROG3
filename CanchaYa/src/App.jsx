@@ -4,32 +4,51 @@ import Dashboard from "./components/dashboard/Dashboard";
 import NotFound from "./components/notFound/NotFound";
 import Login from "./components/auth/login/Login";
 import Protected from "./components/protected/Protected";
-import Navbar from "./components/navbar/Navbar";
+import MyProfile from "./components/myProfile/MyProfile";
+import PrivateLayout from "./components/layouts/PrivateLayout";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
 
   const handleLogin = () => {
-    setLoggedIn(true); 
+    setLoggedIn(true);
   };
 
-  const hanldeSingOut = () => {
-    setLoggedIn(false)
-  }
+  const handleSignOut = () => {
+    setLoggedIn(false);
+  };
 
   return (
     <BrowserRouter>
       <Routes>
-        {/* Ruta raíz "/" */}
-        <Route path="/login" element={<Login onLogin={handleLogin}/>}/>
-          <Route path="/" element={
-            <Protected isSignedIn={loggedIn} >
-              <Navbar loggedIn={loggedIn}  onsingout={hanldeSingOut}/>
-              <Dashboard />
-            </Protected>
-        }/>
+        {/* Páginas públicas */}
+        <Route path="/login" element={<Login onLogin={handleLogin} />} />
+        {/* <Route path="/register" element={<Register />} /> */}
 
-        {/* Ruta para cualquier cosa no encontrada */}
+        {/* Rutas privadas */}
+        <Route
+          path="/"
+          element={
+            <Protected isSignedIn={loggedIn}>
+              <PrivateLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
+                <Dashboard />
+              </PrivateLayout>
+            </Protected>
+          }
+        />
+
+        <Route
+          path="/my-profile"
+          element={
+            <Protected isSignedIn={loggedIn}>
+              <PrivateLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
+                <MyProfile />
+              </PrivateLayout>
+            </Protected>
+          }
+        />
+
+        {/* NotFound */}
         <Route path="/*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
@@ -37,4 +56,5 @@ function App() {
 }
 
 export default App;
+
 

@@ -1,11 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Navbar = ({loggedIn, onsingout}) => {
-
+const Navbar = ({ loggedIn, onsingout }) => {
   const handleClick = () => {
-      onsingout()
-  }
+    onsingout();
+  };
 
   return (
     <div className="top-0 py-1 lg:py-2 w-full bg-transparent lg:relative z-50 dark:bg-gray-900">
@@ -30,7 +29,10 @@ const Navbar = ({loggedIn, onsingout}) => {
                 <Link to="/services">Mis Reservas</Link>
               </li>
               <li className="hover:underline hover:underline-offset-4 transition-all duration-100 ease-linear">
-                <Link to="/about">Mi Perfil</Link>
+                <Link to="/my-profile">Mi Perfil</Link>
+              </li>
+              <li className="hover:underline hover:underline-offset-4 transition-all duration-100 ease-linear">
+                <Link to="/promotions">Mis Promociones</Link>
               </li>
               <li className="hover:underline hover:underline-offset-4 transition-all duration-100 ease-linear">
                 <Link to="/contact">Contactanos</Link>
@@ -40,7 +42,7 @@ const Navbar = ({loggedIn, onsingout}) => {
 
           {/* Botones */}
           <div className="hidden lg:flex lg:items-center gap-x-2">
-             {!loggedIn && (
+            {!loggedIn && (
               <>
                 <Link
                   to="/signup"
@@ -95,4 +97,5 @@ const Navbar = ({loggedIn, onsingout}) => {
 };
 
 export default Navbar;
+
 

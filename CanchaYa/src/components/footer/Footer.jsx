@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./Footer.css";
 
 const Footer = () => {
@@ -46,48 +46,6 @@ const Footer = () => {
             <p className="text-gray-300 mb-6">
               Servicios de alquileres de canchas de futbol y padel.
             </p>
-
-            {/* <div className="flex space-x-4">
-              <a
-                href="#"
-                className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-500 hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-300"
-                aria-label="GitHub"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387..."></path>
-                </svg>
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-sky-500 hover:shadow-lg hover:shadow-sky-500/30 transition-all duration-300"
-                aria-label="YouTube"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0..."></path>
-                </svg>
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-purple-500 hover:shadow-lg hover:shadow-purple-500/30 transition-all duration-300"
-                aria-label="Facebook"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M22.675 0h-21.35c-.732 0-1.325..."></path>
-                </svg>
-              </a>
-            </div> */}
           </div>
 
           <div className="group">
@@ -96,17 +54,33 @@ const Footer = () => {
               <span className="absolute bottom-0 left-0 w-full h-1 bg-blue-500 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
             </h3>
             <ul className="space-y-3">
-              {["Mi Perfil", "Mis Reservas", "Nosotros"].map((link) => (
-                <li key={link}>
-                  <a
-                    href="#"
-                    className="text-gray-300 hover:text-white hover:pl-2 transition-all duration-300 flex items-center"
-                  >
-                    <span className="w-1 h-1 bg-blue-500 rounded-full mr-2 opacity-0 group-hover:opacity-100 transition duration-300"></span>
-                    {link}
-                  </a>
-                </li>
-              ))}
+              <li>
+                <Link
+                  to="/my-profile"
+                  className="text-gray-300 hover:text-white hover:pl-2 transition-all duration-300 flex items-center"
+                >
+                  <span className="w-1 h-1 bg-blue-500 rounded-full mr-2 opacity-0 group-hover:opacity-100 transition duration-300"></span>
+                  Mi Perfil
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/services"
+                  className="text-gray-300 hover:text-white hover:pl-2 transition-all duration-300 flex items-center"
+                >
+                  <span className="w-1 h-1 bg-blue-500 rounded-full mr-2 opacity-0 group-hover:opacity-100 transition duration-300"></span>
+                  Mis Reservas
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/contact"
+                  className="text-gray-300 hover:text-white hover:pl-2 transition-all duration-300 flex items-center"
+                >
+                  <span className="w-1 h-1 bg-blue-500 rounded-full mr-2 opacity-0 group-hover:opacity-100 transition duration-300"></span>
+                  Contactanos
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -220,3 +194,4 @@ const Footer = () => {
 };
 
 export default Footer;
+
