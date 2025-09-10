@@ -3,6 +3,7 @@
   import SearchForm from "../searchForm/SearchForm";
   import Faq from "../faq/Faq";
   import Footer from "../footer/Footer";
+  import MyProfile from "../myProfile/MyProfile";
 
   const Dashboard = () => {
 
@@ -15,6 +16,7 @@
               Encontra las mejores canchas cerca de donde estés!!
             </p>
             <SearchForm />
+            <MyProfile />
 
             <div className="mt-12 flex justify-center">
               <div className="w-full lg:w-3/4 bg-gray-900 rounded-xl p-6 shadow-md">
@@ -30,5 +32,3 @@
   };
 
   export default Dashboard;
-
-
