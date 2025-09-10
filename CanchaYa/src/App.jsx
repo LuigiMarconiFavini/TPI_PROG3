@@ -6,6 +6,7 @@ import Login from "./components/auth/login/Login";
 import Protected from "./components/protected/Protected";
 import MyProfile from "./components/myProfile/MyProfile";
 import PrivateLayout from "./components/layouts/PrivateLayout";
+import Contact from "./components/contact/Contact";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -43,6 +44,17 @@ function App() {
             <Protected isSignedIn={loggedIn}>
               <PrivateLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
                 <MyProfile />
+              </PrivateLayout>
+            </Protected>
+          }
+        />
+
+        <Route
+          path="/contact"
+          element={
+            <Protected isSignedIn={loggedIn}>
+              <PrivateLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
+                <Contact />
               </PrivateLayout>
             </Protected>
           }
