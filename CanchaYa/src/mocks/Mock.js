@@ -83,6 +83,17 @@ export const canchas = [
   },
 ];
 
+export const promotionsMock = {
+  totalBookings: 5, // reservas hechas por el usuario
+  rewardsCycle: 5,  // cada cuántas reservas hay recompensa
+  availableRewards: [
+    "10% de descuento en tu próxima reserva",
+    "1 bebida gratis post-partido",
+    "20% de descuento en una cancha techada",
+  ],
+  redeemedRewards: [], // historial de recompensas canjeadas
+};
+
 export const userMock = {
   id: 1,
   firstName: "Luigi",
@@ -92,4 +103,3 @@ export const userMock = {
   role: "Usuario",
   photo: "https://media.cnn.com/api/v1/images/stellar/prod/cnne-212344-monkey-selfie.jpeg?c=16x9&q=h_653,w_1160,c_fill/f_avif",
 };
-
