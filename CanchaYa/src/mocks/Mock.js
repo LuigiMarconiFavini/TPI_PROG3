@@ -93,3 +93,13 @@ export const promotionsMock = {
   ],
   redeemedRewards: [], // historial de recompensas canjeadas
 };
+
+export const userMock = {
+  id: 1,
+  firstName: "Luigi",
+  lastName: "Marconi Favini",
+  email: "luigimarconifavini@mail.com",
+  phone: "+54 341 610 6235",
+  role: "Usuario",
+  photo: "https://media.cnn.com/api/v1/images/stellar/prod/cnne-212344-monkey-selfie.jpeg?c=16x9&q=h_653,w_1160,c_fill/f_avif",
+};
