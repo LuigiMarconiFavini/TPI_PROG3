@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Dashboard from "./components/dashboard/Dashboard";
 import NotFound from "./components/notFound/NotFound";
 import Login from "./components/auth/login/Login";
+import Register from "./components/auth/register/Register";
 import Protected from "./components/protected/Protected";
 import MyProfile from "./components/myProfile/MyProfile";
 import PrivateLayout from "./components/layouts/PrivateLayout";
@@ -38,6 +39,9 @@ function App() {
           }
         />
 
+        {/* Ruta para registro */}
+        <Route path="/register" element={<Register />} /> {/* 🔹 Nueva ruta */}
+
         <Route
           path="/my-profile"
           element={
@@ -68,5 +72,3 @@ function App() {
 }
 
 export default App;
-
-
