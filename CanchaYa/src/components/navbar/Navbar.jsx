@@ -16,19 +16,41 @@ const Navbar = ({ loggedIn, onSignOut }) => {
 
         {/* Links */}
         <div className="hidden lg:flex space-x-8 items-center text-base font-bold text-black/80">
-          <Link to="/" className="hover:underline hover:underline-offset-4">Inicio</Link>
-          <Link to="/services" className="hover:underline hover:underline-offset-4">Reservar Cancha</Link>
+          <Link to="/" className="hover:underline hover:underline-offset-4">
+            Inicio
+          </Link>
+          <Link
+            to="/services"
+            className="hover:underline hover:underline-offset-4"
+          >
+            Reservar Cancha
+          </Link>
 
-          {/* Promociones condicional */}
-          {loggedIn ? (
-            <Link to="/promotions" className="hover:underline hover:underline-offset-4">Mis Promociones</Link>
-          ) : (
-            <Link to="/promotions-public" className="hover:underline hover:underline-offset-4">Promociones</Link>
-          )}
+          <Link
+            to={loggedIn ? "/promotions/private" : "/promotions"}
+            className="hover:underline hover:underline-offset-4"
+          >
+            {loggedIn ? "Mis Promociones" : "Promociones"}
+          </Link>
 
-          <Link to="/my-reservations" className="hover:underline hover:underline-offset-4">Mis Reservas</Link>
-          <Link to="/my-profile" className="hover:underline hover:underline-offset-4">Mi Perfil</Link>
-          <Link to="/contact" className="hover:underline hover:underline-offset-4">Contactanos</Link>
+          <Link
+            to="/my-reservations"
+            className="hover:underline hover:underline-offset-4"
+          >
+            Mis Reservas
+          </Link>
+          <Link
+            to="/my-profile"
+            className="hover:underline hover:underline-offset-4"
+          >
+            Mi Perfil
+          </Link>
+          <Link
+            to="/contact"
+            className="hover:underline hover:underline-offset-4"
+          >
+            Contactanos
+          </Link>
         </div>
 
         {/* Botones */}
