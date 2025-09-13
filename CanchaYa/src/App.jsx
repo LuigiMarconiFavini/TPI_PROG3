@@ -6,8 +6,8 @@ import Login from "./components/auth/login/Login";
 import Register from "./components/auth/register/Register";
 import Protected from "./components/protected/Protected";
 import MyProfile from "./components/myProfile/MyProfile";
-import PrivateLayout from "./components/layouts/PrivateLayout";
 import Contact from "./components/contact/Contact";
+import MainLayout from "./components/layouts/MainLayout";
 import Promotions from "./components/promotions/Promotions";
 import PublicPromotions from "./components/promotions/PublicPromotions";
 
@@ -26,9 +26,9 @@ function App() {
         <Route
           path="/promotions"
           element={
-            <PrivateLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
+            <MainLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
               <PublicPromotions />
-            </PrivateLayout>
+            </MainLayout>
           }
         />
 
@@ -36,9 +36,9 @@ function App() {
         <Route
           path="/"
           element={
-            <PrivateLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
+            <MainLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
               <Dashboard />
-            </PrivateLayout>
+            </MainLayout>
           }
         />
 
@@ -47,9 +47,9 @@ function App() {
           path="/promotions/private"
           element={
             <Protected isSignedIn={loggedIn}>
-              <PrivateLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
+              <MainLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
                 <Promotions />
-              </PrivateLayout>
+              </MainLayout>
             </Protected>
           }
         />
@@ -58,9 +58,9 @@ function App() {
           path="/my-profile"
           element={
             <Protected isSignedIn={loggedIn}>
-              <PrivateLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
+              <MainLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
                 <MyProfile />
-              </PrivateLayout>
+              </MainLayout>
             </Protected>
           }
         />
@@ -68,9 +68,9 @@ function App() {
         <Route
           path="/contact"
           element={
-            <PrivateLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
+            <MainLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
               <Contact />
-            </PrivateLayout>
+            </MainLayout>
           }
         />
 

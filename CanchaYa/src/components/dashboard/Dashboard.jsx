@@ -23,8 +23,6 @@
               <Faq />
               </div>
             </div>
-
-            <Footer />
           </div>
         </div>
       </>
