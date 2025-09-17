@@ -1,57 +1,79 @@
 import { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Register = () => {
-  const [fullName, setFullName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({
-    fullName: false,
+    username: false,
     email: false,
     password: false,
     confirmPassword: false,
   });
+  const [submitting, setSubmitting] = useState(false);
 
+  const usernameRef = useRef(null);
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const confirmPasswordRef = useRef(null);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validaciones simples
-    if (!fullName.trim()) {
-      setErrors((eS) => ({ ...eS, fullName: true }));
+    // Validaciones
+    if (!username.trim()) {
+      setErrors((s) => ({ ...s, username: true }));
+      usernameRef.current?.focus();
       return;
     }
     if (!email.trim()) {
-      setErrors((eS) => ({ ...eS, email: true }));
+      setErrors((s) => ({ ...s, email: true }));
       emailRef.current?.focus();
       return;
     }
     if (password.length < 6) {
-      setErrors((eS) => ({ ...eS, password: true }));
+      setErrors((s) => ({ ...s, password: true }));
       passwordRef.current?.focus();
       return;
     }
     if (password !== confirmPassword) {
-      setErrors((eS) => ({ ...eS, confirmPassword: true }));
+      setErrors((s) => ({ ...s, confirmPassword: true }));
       confirmPasswordRef.current?.focus();
       return;
     }
 
-    // Si pasa todas
-    setErrors({ fullName: false, email: false, password: false, confirmPassword: false });
-    // Simulación de registro
-    alert("✅ Registro exitoso");
-    navigate("/login");
+    setErrors({ username: false, email: false, password: false, confirmPassword: false });
+
+    setSubmitting(true);
+    try {
+      const res = await fetch("http://localhost:3000/api/users/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("✅ Registro exitoso. Por favor iniciá sesión.");
+        navigate("/login");
+      } else {
+        // mostrar mensaje del backend si lo envía
+        alert(data?.msg || data?.message || "No se pudo realizar el registro");
+      }
+    // eslint-disable-next-line no-unused-vars
+    } catch (err) {
+      alert("Error al conectar con el servidor");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 min-h-screen bg-white">
-      {/* Lado izquierdo - imagen de cancha azul */}
       <div className="hidden lg:block">
         <img
           src="https://www.elneverazo.com/wp-content/uploads/2022/03/bolahs-1170x658-1.jpg"
@@ -60,43 +82,32 @@ const Register = () => {
         />
       </div>
 
-      {/* Lado derecho - formulario registro */}
       <div className="flex flex-col justify-center px-6 py-12 lg:px-16">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <img
-            alt="CanchaYa"
-            src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-            className="mx-auto h-10 w-auto"
-          />
-          <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">
-            Crear cuenta en CanchaYa
-          </h2>
+          <img alt="CanchaYa" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500" className="mx-auto h-10 w-auto" />
+          <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">Crear cuenta en CanchaYa</h2>
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-md">
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Full Name */}
+            {/* Username */}
             <div>
-              <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
-                Nombre completo
-              </label>
+              <label htmlFor="username" className="block text-sm font-medium text-gray-700">Nombre de usuario</label>
               <input
-                id="fullName"
-                name="fullName"
-                ref={null}
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
+                id="username"
+                name="username"
+                ref={usernameRef}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 className={`mt-2 w-full rounded-md border px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 sm:text-sm
-                  ${errors.fullName ? "border-red-500 ring-2 ring-red-500" : "border-gray-300 focus:ring-blue-600"}`}
-                placeholder="Tu nombre completo"
+                  ${errors.username ? "border-red-500 ring-2 ring-red-500" : "border-gray-300 focus:ring-blue-600"}`}
+                placeholder="Ej: fran123"
               />
             </div>
 
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email
-              </label>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
               <input
                 id="email"
                 name="email"
@@ -112,9 +123,7 @@ const Register = () => {
 
             {/* Password */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Contraseña
-              </label>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">Contraseña</label>
               <input
                 id="password"
                 name="password"
@@ -130,9 +139,7 @@ const Register = () => {
 
             {/* Confirm Password */}
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                Confirmar contraseña
-              </label>
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">Confirmar contraseña</label>
               <input
                 id="confirmPassword"
                 name="confirmPassword"
@@ -146,22 +153,20 @@ const Register = () => {
               />
             </div>
 
-            {/* Submit */}
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                disabled={submitting}
+                className="flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-600 disabled:opacity-50"
               >
-                Registrarse
+                {submitting ? "Registrando..." : "Registrarse"}
               </button>
             </div>
           </form>
 
           <p className="mt-10 text-center text-sm text-gray-600">
             ¿Ya tenés cuenta?{" "}
-            <a href="/login" className="font-semibold text-blue-600 hover:text-blue-500">
-              Iniciá sesión
-            </a>
+            <Link to="/login" className="font-semibold text-blue-600 hover:text-blue-500">Iniciá sesión</Link>
           </p>
         </div>
       </div>
@@ -170,4 +175,3 @@ const Register = () => {
 };
 
 export default Register;
-

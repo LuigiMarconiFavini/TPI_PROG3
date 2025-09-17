@@ -10,7 +10,7 @@ const Login = ({ onLogin }) => {
   const passwordRef = useRef(null);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!email.trim()) {
@@ -26,13 +26,31 @@ const Login = ({ onLogin }) => {
     }
 
     setErrors({ email: false, password: false });
-    onLogin();
-    navigate("/");
+
+    try {
+      const res = await fetch("http://localhost:3000/api/users/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        onLogin(); // 🔑 habilita rutas privadas
+        navigate("/");
+      } else {
+        alert(data?.message || "❌ Credenciales inválidas");
+      }
+    // eslint-disable-next-line no-unused-vars
+    } catch (err) {
+      alert("⚠️ Error al conectar con el servidor");
+    }
   };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 min-h-screen bg-white">
-      {/* Lado izquierdo - con la imagen */}
+      {/* Imagen */}
       <div className="hidden lg:block">
         <img
           src="https://realidadgeselinaonline.com.ar/wp-content/uploads/2025/06/MINIBLOGS-6.png"
@@ -41,7 +59,7 @@ const Login = ({ onLogin }) => {
         />
       </div>
 
-      {/* Lado derecho - formulario */}
+      {/* Formulario */}
       <div className="flex flex-col justify-center px-6 py-12 lg:px-16">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <img
@@ -49,83 +67,66 @@ const Login = ({ onLogin }) => {
             src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
             className="mx-auto h-10 w-auto"
           />
-          <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">
+          <h2 className="mt-10 text-center text-2xl font-bold text-gray-900">
             Iniciar sesión en CanchaYa
           </h2>
         </div>
 
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-md">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* EMAIL */}
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email
-              </label>
-              <div className="mt-2">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  ref={emailRef}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className={`block w-full rounded-md border px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 sm:text-sm
-                    ${errors.email ? "border-red-500 ring-2 ring-red-500" : "border-gray-300 focus:ring-indigo-500"}`}
-                  placeholder="tu@ejemplo.com"
-                />
-              </div>
-            </div>
+        <form onSubmit={handleSubmit} className="mt-10 space-y-6 sm:mx-auto sm:w-full sm:max-w-md">
+          {/* EMAIL */}
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              ref={emailRef}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className={`mt-2 w-full rounded-md border px-3 py-2 sm:text-sm ${
+                errors.email ? "border-red-500 ring-2 ring-red-500" : "border-gray-300 focus:ring-indigo-500"
+              }`}
+              placeholder="tu@ejemplo.com"
+            />
+          </div>
 
-            {/* PASSWORD */}
-            <div>
-              <div className="flex items-center justify-between">
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                  Contraseña
-                </label>
-                <div className="text-sm">
-                  <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                    ¿Olvidaste tu contraseña?
-                  </a>
-                </div>
-              </div>
-              <div className="mt-2">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  ref={passwordRef}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className={`block w-full rounded-md border px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 sm:text-sm
-                    ${errors.password ? "border-red-500 ring-2 ring-red-500" : "border-gray-300 focus:ring-indigo-500"}`}
-                  placeholder="Mínimo 6 caracteres"
-                />
-              </div>
-            </div>
+          {/* PASSWORD */}
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              Contraseña
+            </label>
+            <input
+              id="password"
+              type="password"
+              ref={passwordRef}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={`mt-2 w-full rounded-md border px-3 py-2 sm:text-sm ${
+                errors.password ? "border-red-500 ring-2 ring-red-500" : "border-gray-300 focus:ring-indigo-500"
+              }`}
+              placeholder="Mínimo 6 caracteres"
+            />
+          </div>
 
-            {/* SUBMIT */}
-            <div>
-              <button
-                type="submit"
-                className="flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-green-600"
-              >
-                Iniciar sesión
-              </button>
-            </div>
-          </form>
+          {/* SUBMIT */}
+          <button
+            type="submit"
+            className="flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white hover:bg-green-500"
+          >
+            Iniciar sesión
+          </button>
+        </form>
 
-          <p className="mt-10 text-center text-sm text-gray-600">
-            ¿No tenés cuenta?{" "}
-            <a href="/register" className="font-semibold text-green-600 hover:text-green-500">
-              Registrate
-            </a>
-          </p>
-        </div>
+        <p className="mt-10 text-center text-sm text-gray-600">
+          ¿No tenés cuenta?{" "}
+          <a href="/register" className="font-semibold text-green-600 hover:text-green-500">
+            Registrate
+          </a>
+        </p>
       </div>
     </div>
   );
 };
 
 export default Login;
-
-
