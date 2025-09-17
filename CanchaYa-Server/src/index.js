@@ -9,11 +9,11 @@ app.use(cors())
 app.use(express.json())
 
 //Rutas...
-import canchasRoutes from "./routes/canchas.routes.js"
-//import userRoutes from "./routes/users.routes.js";
+import canchasRoutes from "./routes/canchasRoutes.js"
+//import userRoutes from "./routes/usersRoutes.js";
 
 //Models
-import "./Models/Users.js"
+import "./Models/User.js"
 
 try {
     await sequelize.authenticate();
