@@ -32,6 +32,12 @@ const Navbar = ({ loggedIn, onSignOut }) => {
           >
             {loggedIn ? "Mis Promociones" : "Promociones"}
           </Link>
+          <Link
+            to="/contact"
+            className="hover:underline hover:underline-offset-4"
+          >
+            Contactanos
+          </Link>
 
           <Link
             to="/my-reservations"
@@ -44,12 +50,6 @@ const Navbar = ({ loggedIn, onSignOut }) => {
             className="hover:underline hover:underline-offset-4"
           >
             Mi Perfil
-          </Link>
-          <Link
-            to="/contact"
-            className="hover:underline hover:underline-offset-4"
-          >
-            Contactanos
           </Link>
         </div>
 

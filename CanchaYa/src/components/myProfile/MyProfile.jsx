@@ -39,9 +39,8 @@ export default function MyProfile() {
   return (
     <div className="bg-white min-h-screen flex flex-col items-center justify-start">
       
-      {/* Banner ocupa todo el ancho */}
-      <div className="bg-indigo-700 text-white py-12 px-6 text-center w-full shadow-lg mb-10">
-        <h1 className="text-3xl md:text-4xl font-bold mb-4">👤 Mi Perfil</h1>
+      <div className="bg-indigo-600 text-white py-2 px-4 text-center w-full shadow-mb mb-10 mt-2">
+        <h1 className="text-2xl md:text-2xl font-bold mb-4">👤 Mi Perfil</h1>
         <p className="text-lg md:text-xl text-indigo-100">
           Aquí podés consultar y actualizar tu información personal de forma segura.
         </p>

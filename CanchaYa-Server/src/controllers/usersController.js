@@ -1,41 +1,28 @@
 import { User } from "../Models/User.js";
-import bcrypt from "bcryptjs"
 
-
-export const registerUser = async(req, res) => {
+export const getAllUsers = async(req, res) => {
     try {
-        const { username, email, password } = req.body;
-
-        const exists = await User.findOne({ where: { email } });
-        if (exists) return res.status(400).json({ msg: "El email ya está registrado" });
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const newUser = await User.create({
-            username,
-            email,
-            password: hashedPassword
+        const users = await User.findAll({
+            attributes: ['id', 'username', 'email', 'role', 'createdAt', 'updatedAt']
         });
-
-        res.status(201).json({ msg: "Usuario registrado", user: newUser });
-    } catch (err) {
-        res.status(500).json({ msg: "Error al registrar", error: err.message });
+        res.json(users);
+    } catch (error) {
+        console.error("Error al obtener usuarios", error);
+        res.status(500).json({ message: "error del server" });
     }
 };
 
-
-export const loginUser = async(req, res) => {
+//obtener por el id
+export const getUserById = async(req, res) => {
+    const { id } = req.params;
     try {
-        const { email, password } = req.body;
-
-        const user = await User.findOne({ where: { email } });
-        if (!user) return res.status(400).json({ msg: "Usuario no encontrado" });
-
-        const validPassword = await bcrypt.compare(password, user.password);
-        if (!validPassword) return res.status(400).json({ msg: "Contraseña incorrecta" });
-
-        res.json({ msg: "Login exitoso", user });
-    } catch (err) {
-        res.status(500).json({ msg: "Error en login", error: err.message });
+        const user = await User.findByPk(id, {
+            attributes: ['id', 'username', 'email', 'role']
+        });
+        if (!user) return res.status(404).json({ message: "Usuario no encontrado" });
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ message: "error del server" });
     }
+
 };
