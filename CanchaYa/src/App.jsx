@@ -10,6 +10,7 @@ import Contact from "./components/contact/Contact";
 import MainLayout from "./components/layouts/MainLayout";
 import Promotions from "./components/promotions/Promotions";
 import PublicPromotions from "./components/promotions/PublicPromotions";
+import ReservationSummary from "./components/reservationSummary/ReservationSummary";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -72,6 +73,11 @@ function App() {
               <Contact />
             </MainLayout>
           }
+        />
+
+        <Route
+          path="/resumen"
+          element={<ReservationSummary />}
         />
 
         {/* NotFound */}
