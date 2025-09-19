@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import Navbar from "../navbar/Navbar";
 import Footer from "../footer/Footer";
 
-const MainLayout = ({ children, loggedIn, onSignOut }) => {
+const MainLayout = ({ children, loggedIn, onSignOut, hideNavbar = false }) => {
   const location = useLocation();
 
   // Si estoy en login o register, oculto navbar y footer
@@ -12,7 +12,7 @@ const MainLayout = ({ children, loggedIn, onSignOut }) => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {!hideLayout && <Navbar loggedIn={loggedIn} onSignOut={onSignOut} />}
+      {!hideLayout && !hideNavbar && <Navbar loggedIn={loggedIn} onSignOut={onSignOut} />}
       <main className="flex-1">{children}</main>
       {!hideLayout && <Footer />}
     </div>

@@ -77,7 +77,11 @@ function App() {
 
         <Route
           path="/resumen"
-          element={<ReservationSummary />}
+          element={
+          <MainLayout loggedIn={loggedIn} onSignOut={handleSignOut} hideNavbar={true}>
+            <ReservationSummary />
+          </MainLayout>
+          }
         />
 
         {/* NotFound */}
