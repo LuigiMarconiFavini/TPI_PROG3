@@ -32,12 +32,19 @@ const Login = ({ onLogin }) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
-      });
+      })
 
-      const data = await res.json();
+      let data = null;
+      try { 
+        data = await res.json();
+      } catch
+      {alert}
 
       if (res.ok) {
         onLogin(); // 🔑 habilita rutas privadas
+        localStorage.setItem("canchaYa-token", data.token)
+        console.log(data)
+        console.log(data.token)
         navigate("/");
       } else {
         alert(data?.message || "❌ Credenciales inválidas");

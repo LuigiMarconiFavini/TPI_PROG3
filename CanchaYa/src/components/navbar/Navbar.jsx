@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 const Navbar = ({ loggedIn, onSignOut }) => {
   const handleClick = () => {
     onSignOut();
+    localStorage.removeItem("canchaYa-token")
   };
 
   return (

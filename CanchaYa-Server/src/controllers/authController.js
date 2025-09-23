@@ -36,15 +36,13 @@ export const loginUser = async(req, res) => {
         const validPassword = await bcrypt.compare(password, user.password);
         if (!validPassword) return res.status(400).json({ msg: "Email o contraseña incorrectos" });
 
-        res.json({ msg: "Login exitoso", user });
-
         const token = jwt.sign( 
             { id: user.id, role: user.role },
             SECRET,    
             { expiresIn: "2h" }
         );
 
-        res.json({
+        return res.json({
             msg: "Login exitoso",
             token,
             user: {
@@ -56,6 +54,6 @@ export const loginUser = async(req, res) => {
         });
 
     } catch (err) {
-        res.status(500).json({ msg: "Error en login", error: err.message });
+        return res.status(500).json({ msg: "Error en login", error: err.message });
     }
 };
