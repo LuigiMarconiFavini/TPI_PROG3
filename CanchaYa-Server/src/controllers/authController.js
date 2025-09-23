@@ -23,7 +23,7 @@ export const registerUser = async(req, res) => {
     }
 };
 
-//SECRET = process.env.JWT_SECRET;
+const SECRET = process.env.JWT_SECRET;
 
 
 export const loginUser = async(req, res) => {
@@ -31,27 +31,31 @@ export const loginUser = async(req, res) => {
         const { email, password } = req.body;
 
         const user = await User.findOne({ where: { email } });
-        if (!user) return res.status(400).json({ msg: "Usuario no encontrado" });
+        if (!user) return res.status(400).json({ msg: 'Email o contraseña incorrectos'});
 
         const validPassword = await bcrypt.compare(password, user.password);
-        if (!validPassword) return res.status(400).json({ msg: "Contraseña incorrecta" });
+        if (!validPassword) return res.status(400).json({ msg: "Email o contraseña incorrectos" });
 
         res.json({ msg: "Login exitoso", user });
+
+        const token = jwt.sign( 
+            { id: user.id, role: user.role },
+            SECRET,    
+            { expiresIn: "2h" }
+        );
+
+        res.json({
+            msg: "Login exitoso",
+            token,
+            user: {
+                id: user.id,
+                username: user.username,
+                email: user.email,
+                role: user.role,
+            },
+        });
+
     } catch (err) {
         res.status(500).json({ msg: "Error en login", error: err.message });
     }
 };
-
-/*const token = jwt.sign({ id: user.id, role: user.role },
-    SECRET, { expiresIn: "2h" }
-);
-
-res.json({
-    token,
-    user: {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        role: user.role,
-    },
-});*/
