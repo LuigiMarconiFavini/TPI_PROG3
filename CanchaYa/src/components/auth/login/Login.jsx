@@ -27,32 +27,26 @@ const Login = ({ onLogin }) => {
 
     setErrors({ email: false, password: false });
 
-    try {
-      const res = await fetch("http://localhost:3000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      })
+   try {
+  const res = await fetch("http://localhost:3000/api/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
 
-      let data = null;
-      try { 
-        data = await res.json();
-      } catch
-      {alert}
+  const data = await res.json();
 
-      if (res.ok) {
-        onLogin(); // 🔑 habilita rutas privadas
-        localStorage.setItem("canchaYa-token", data.token)
-        console.log(data)
-        console.log(data.token)
-        navigate("/");
-      } else {
-        alert(data?.message || "❌ Credenciales inválidas");
-      }
-    // eslint-disable-next-line no-unused-vars
-    } catch (err) {
-      alert("⚠️ Error al conectar con el servidor");
-    }
+  if (res.ok) {
+    localStorage.setItem("canchaYa-token", data.token);
+    onLogin(); // habilita rutas privadas
+    navigate("/");
+  } else {
+    alert(data?.message || "❌ Credenciales inválidas");
+  }
+// eslint-disable-next-line no-unused-vars
+} catch (err) {
+  alert("⚠️ Error al conectar con el servidor");
+}
   };
 
   return (

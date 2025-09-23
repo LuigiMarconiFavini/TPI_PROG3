@@ -2,6 +2,7 @@ import { User } from "../Models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
+
 export const registerUser = async(req, res) => {
     try {
         const { username, email, password } = req.body;
@@ -9,7 +10,10 @@ export const registerUser = async(req, res) => {
         const exists = await User.findOne({ where: { email } });
         if (exists) return res.status(400).json({ msg: "El email ya está registrado" });
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const saltRounds = 10;
+        const salt = await bcrypt.genSalt(saltRounds);
+        
+        const hashedPassword = await bcrypt.hash(password,salt);
 
         const newUser = await User.create({
             username,
@@ -23,7 +27,7 @@ export const registerUser = async(req, res) => {
     }
 };
 
-const SECRET = process.env.JWT_SECRET;
+const SECRET = 'c4nch4Y4'
 
 
 export const loginUser = async(req, res) => {
@@ -37,7 +41,7 @@ export const loginUser = async(req, res) => {
         if (!validPassword) return res.status(400).json({ msg: "Email o contraseña incorrectos" });
 
         const token = jwt.sign( 
-            { id: user.id, role: user.role },
+            { id: user.id, role: user.role, username: user.username, },
             SECRET,    
             { expiresIn: "2h" }
         );
@@ -54,6 +58,6 @@ export const loginUser = async(req, res) => {
         });
 
     } catch (err) {
-        return res.status(500).json({ msg: "Error en login", error: err.message });
+        res.status(500).json({ msg: "Error en login", error: err.message });
     }
 };
