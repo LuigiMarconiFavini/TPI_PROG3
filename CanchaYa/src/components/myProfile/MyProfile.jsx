@@ -1,142 +1,128 @@
-import { useState } from "react";
-import { userMock } from "../../mocks/mock";
+import { useState, useEffect } from "react";
 
 export default function MyProfile() {
-  const [user, setUser] = useState(userMock);
+  const [user, setUser] = useState(null);
   const [editMode, setEditMode] = useState(false);
-  const [formData, setFormData] = useState({ ...user });
+  const [formData, setFormData] = useState({});
   const [msg, setMsg] = useState("");
+
+  const fetchMyProfile = async () => {
+    try {
+      const token = localStorage.getItem("canchaYa-token");
+
+      const res = await fetch("http://localhost:3000/api/users/me", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setUser(data);
+        setFormData(data); // Inicializa formData con los datos del usuario
+      } else {
+        alert(data?.message || "⚠️ No se pudo obtener el perfil");
+      }
+    // eslint-disable-next-line no-unused-vars
+    } catch (err) {
+      alert("⚠️ Error al conectar con el servidor");
+    }
+  };
+
+  const updateMyProfile = async () => {
+    try {
+      const token = localStorage.getItem("canchaYa-token");
+
+      const res = await fetch(`http://localhost:3000/api/users/${user.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          username: formData.username,
+          // El email no se envía porque no es editable aquí
+          // Si quisieras cambiar la contraseña, necesitarías un campo y lógica aparte
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        // Actualiza el estado del usuario con los nuevos datos, manteniendo el email y role originales si no se actualizan
+        setUser(data.user || { ...user, username: formData.username });
+        setEditMode(false);
+        setMsg("✅ Perfil actualizado correctamente!");
+      } else {
+        alert(data?.message || "⚠️ No se pudo actualizar el perfil");
+      }
+    // eslint-disable-next-line no-unused-vars
+    } catch (err) {
+      alert("⚠️ Error al conectar con el servidor");
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
   };
 
-  const handlePhotoChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setFormData({ ...formData, photo: reader.result });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSave = () => {
-    const fullName = `${formData.firstName} ${formData.lastName}`.trim();
-    if (!fullName) {
-      setMsg("❌ El nombre no puede estar vacío");
-      setTimeout(() => setMsg(""), 4000);
-      return;
-    }
-    setUser({ ...formData });
-    setEditMode(false);
-    setMsg("✅ Perfil actualizado correctamente!");
-    setTimeout(() => setMsg(""), 4000);
-  };
+  useEffect(() => {
+    fetchMyProfile();
+  }, []);
 
   return (
-    <div className="bg-white min-h-screen flex flex-col items-center justify-start">
-      
-      <div className="bg-indigo-600 text-white py-2 px-4 text-center w-full shadow-mb mb-10 mt-2">
-        <h1 className="text-2xl md:text-2xl font-bold mb-4">👤 Mi Perfil</h1>
-        <p className="text-lg md:text-xl text-indigo-100">
-          Aquí podés consultar y actualizar tu información personal de forma segura.
-        </p>
-      </div>
-
-      {/* Contenido principal */}
-      <div className="w-full max-w-4xl rounded-2xl bg-gray-100 p-10 text-gray-800 shadow-xl">
-        <div className="flex flex-col md:flex-row">
-          
-          {/* Foto de perfil y botones */}
-          <div className="md:w-1/3 text-center mb-8 md:mb-0">
-            <div className="relative inline-block">
-              <img
-                src={formData.photo}
-                alt="Profile"
-                className="rounded-full w-48 h-48 mx-auto mb-4 border-4 border-indigo-600 transition-transform duration-300 hover:scale-105"
-              />
-              {editMode && (
-                <label className="absolute bottom-0 right-0 bg-indigo-600 text-white p-2 rounded-full cursor-pointer">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536M4 20h4.768l11.232-11.232-4.768-4.768L4 20z" />
-                  </svg>
-                  <input type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" />
-                </label>
-              )}
-            </div>
-            <div className="mt-4 flex justify-center gap-2">
-              <button
-                onClick={editMode ? handleSave : () => setEditMode(true)}
-                className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-500 transition-colors duration-300 ring ring-gray-300 hover:ring-indigo-300"
-              >
-                {editMode ? "Guardar" : "Editar Perfil"}
-              </button>
-              {editMode && (
-                <button
-                  onClick={() => {
-                    setEditMode(false);
-                    setFormData({ ...user });
-                  }}
-                  className="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 transition-colors duration-300"
-                >
-                  Cancelar
-                </button>
-              )}
-            </div>
-            {msg && <p className={`mt-2 ${msg.startsWith("✅") ? "text-green-600" : "text-red-600"}`}>{msg}</p>}
-          </div>
-
-          {/* Información del usuario */}
-          <div className="md:w-2/3 md:pl-8">
-            <h1 className="text-2xl font-bold text-indigo-600 mb-2">
-              {editMode ? (
+    <div style={{ padding: '20px' }}>
+      <h1>Mi Perfil</h1>
+      {!user ? (
+        <p>Cargando perfil...</p>
+      ) : (
+        <div>
+          {editMode ? (
+            // Modo Edición: Solo nombre de usuario editable, email fijo
+            <form onSubmit={(e) => { e.preventDefault(); updateMyProfile(); }}>
+              <label>
+                Nombre de usuario:
                 <input
                   type="text"
-                  name="fullName"
-                  value={`${formData.firstName} ${formData.lastName}`}
-                  onChange={(e) => {
-                    const [firstName, ...lastName] = e.target.value.split(" ");
-                    setFormData({ ...formData, firstName, lastName: lastName.join(" ") });
-                  }}
-                  className="border-b border-indigo-400 text-gray-800 font-bold text-2xl focus:outline-none w-full bg-gray-100"
+                  name="username"
+                  value={formData.username || ''}
+                  onChange={handleChange}
+                  style={{ marginLeft: '10px', marginBottom: '10px', padding: '5px' }}
                 />
-              ) : (
-                `${user.firstName} ${user.lastName}`
-              )}
-            </h1>
-            <p className="text-gray-600 mb-6">Rol: {user.role}</p>
-
-            <h2 className="text-xl font-semibold text-indigo-600 mb-4">
-              Información Personal
-            </h2>
-            <ul className="space-y-2 text-gray-700">
-              <li className="flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-indigo-600" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                  <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                </svg>
-                {user.email}
-              </li>
-              <li className="flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-indigo-600" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-                </svg>
-                {user.phone}
-              </li>
-            </ul>
-
-            {/* Nota de privacidad */}
-            <p className="mt-8 text-sm text-gray-500">
-              🔒 Tus datos se usan únicamente para gestionar tus reservas. Nunca
-              serán compartidos con terceros.
-            </p>
-          </div>
+              </label>
+              <br />
+              <p><strong>Email:</strong> {user.email}</p> {/* Email fijo, no editable */}
+              <br />
+              <button type="submit" style={{ padding: '10px 15px', backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer', marginRight: '10px' }}>
+                Guardar
+              </button>
+              <button type="button" onClick={() => { setEditMode(false); setFormData(user); setMsg(''); }} style={{ padding: '10px 15px', backgroundColor: '#f44336', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+                Cancelar
+              </button>
+            </form>
+          ) : (
+            // Modo Visualización: Mostrar nombre de usuario, email, rol, createdAt y contraseña (si disponible)
+            <div>
+              <p><strong>Nombre de usuario:</strong> {user.username}</p>
+              <p><strong>Email:</strong> {user.email}</p>
+              {/*<p><strong>Rol:</strong> {user.role}</p>        esperar para ver rol segun rol*/}
+              <p><strong>Contraseña:</strong> {user.password ? '********' : 'No disponible'}</p> {/* Asumiendo que `user.password` existe y lo quieres mostrar ofuscado */}
+              <p><strong>Miembro desde:</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
+              <button onClick={() => { setEditMode(true); setMsg(''); }} style={{ padding: '10px 15px', backgroundColor: '#008CBA', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+                Editar Perfil
+              </button>
+            </div>
+          )}
+          {msg && <p style={{ marginTop: '15px', color: msg.startsWith('✅') ? 'green' : 'red' }}>{msg}</p>}
         </div>
-      </div>
+      )}
     </div>
   );
 }
-

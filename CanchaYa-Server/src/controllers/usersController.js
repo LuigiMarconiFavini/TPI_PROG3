@@ -26,3 +26,40 @@ export const getUserById = async(req, res) => {
     }
 
 };
+
+// obtener perfil del usuario autenticado
+export const getMyProfile = async (req, res) => {
+  try {
+    // en verifyToken guardamos el payload en req.user
+    const user = await User.findByPk(req.user.id, {
+      attributes: ['id', 'username', 'password', 'email', 'createdAt']
+    });
+
+    if (!user) return res.status(404).json({ message: "Usuario no encontrado" });
+
+    res.json(user);
+  } catch (error) {
+    console.error("Error al obtener perfil:", error);
+    res.status(500).json({ message: "Error del servidor" });
+  }
+};
+
+//update users
+export const updateUser = async (req,res) => {
+    const {id} = req.params;
+    const {username,email,password,role} = req.body;
+    try{
+        const user = await User.findByPk(id);
+        if(!user) return res.status(404).json({message: "Usuario no encontrado"});
+
+        user.username = username ?? user.username;
+        user.email = email ?? user.email;
+        user.password = email ?? user.password;
+        user.role = role ?? user.role;
+
+        await user.save();
+        res.json({message: "Usuario actualizado", user});
+    }catch{
+        res.status(500).json({message:"error del server"});
+    }
+};
