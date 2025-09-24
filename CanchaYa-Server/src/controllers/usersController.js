@@ -47,14 +47,14 @@ export const getMyProfile = async (req, res) => {
 //update users
 export const updateUser = async (req,res) => {
     const {id} = req.params;
-    const {username,email,password,role} = req.body;
+    const {username,email,role} = req.body; //ver si aca adentro va password tambien
     try{
         const user = await User.findByPk(id);
         if(!user) return res.status(404).json({message: "Usuario no encontrado"});
 
         user.username = username ?? user.username;
         user.email = email ?? user.email;
-        user.password = email ?? user.password;
+        //user.password = email ?? user.password;
         user.role = role ?? user.role;
 
         await user.save();
