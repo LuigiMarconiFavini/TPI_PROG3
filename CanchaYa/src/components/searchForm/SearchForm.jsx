@@ -37,21 +37,21 @@ const SearchForm = () => {
   };
 
   return (
-    <div className="p-6 min-h-screen bg-gray-900 text-white">
-      {/* // Aca empieza el form */}
+    <div className="p-6 min-h-screen bg-white text-black dark:bg-gray-900 dark:text-white transition-colors duration-300">
+      {/* Formulario de filtros */}
       <form
         onSubmit={handleFilter}
-        className="flex flex-wrap gap-6 items-end bg-white p-6 rounded-2xl shadow-md justify-center"
+        className="flex flex-wrap gap-6 items-end bg-white dark:bg-gray-800 text-black dark:text-white p-6 rounded-2xl shadow-md justify-center transition-colors duration-300"
       >
-        {/* // Este es el select de deportes */}
+        {/* Select de deporte */}
         <div className="flex flex-col w-48">
-          <label className="text-sm font-semibold text-gray-700 mb-2">
+          <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
             Deporte
           </label>
           <select
             value={deporte}
             onChange={handleDeporte}
-            className="border border-gray-600 rounded-lg px-3 py-2 shadow-sm bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 shadow-sm bg-white dark:bg-gray-700 text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors"
           >
             <option value="">Elegir Deporte</option>
             {deportes.map((d) => (
@@ -61,16 +61,17 @@ const SearchForm = () => {
             ))}
           </select>
         </div>
-        {/* // Este es el select de canchas */}
+
+        {/* Select de tipo de cancha */}
         {deporte && (
           <div className="flex flex-col w-48">
-            <label className="text-sm font-semibold text-gray-700 mb-2">
+            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
               Tipo de Cancha
             </label>
             <select
               value={tipoCancha}
               onChange={handleTipoCancha}
-              className="border border-gray-600 rounded-lg px-3 py-2 shadow-sm bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 shadow-sm bg-white dark:bg-gray-700 text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors"
             >
               <option value="">Selecciona Tipo</option>
               {tiposPorDeporte[deporte].map((t) => (
@@ -81,15 +82,16 @@ const SearchForm = () => {
             </select>
           </div>
         )}
-        {/* // select de horario */}
+
+        {/* Select de horario */}
         <div className="flex flex-col w-48">
-          <label className="text-sm font-semibold text-gray-700 mb-2">
+          <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
             Horario
           </label>
           <select
             value={horarioSeleccionado}
             onChange={handleHorario}
-            className="border border-gray-600 rounded-lg px-3 py-2 shadow-sm bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 shadow-sm bg-white dark:bg-gray-700 text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors"
           >
             <option value="">Elige Horario</option>
             {horarios.map((h) => (
@@ -99,24 +101,26 @@ const SearchForm = () => {
             ))}
           </select>
         </div>
-        {/* // aca se busca */}
+
+        {/* Botón */}
         <div className="flex flex-col w-48">
           <label className="invisible mb-2">Buscar</label>
           <button
             type="submit"
-            className="border border-gray-600 rounded-lg px-3 py-2 shadow-sm bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="border border-gray-300 dark:border-gray-600 bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
           >
             Buscar Canchas
           </button>
         </div>
       </form>
-      {/* // aca muestra lo que busca */}
+
+      {/* Resultados */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-10">
         {resultados.length > 0 ? (
           resultados.map((c) => <CardCourts key={c.id} cancha={c} />)
         ) : (
           <div className="col-span-full flex justify-center items-center h-32">
-            <p className="text-gray-500 text-lg font-medium">
+            <p className="text-gray-500 text-lg font-medium dark:text-gray-400">
               No se encontraron canchas 😢
             </p>
           </div>
@@ -125,5 +129,5 @@ const SearchForm = () => {
     </div>
   );
 };
-// este es uno de oro
+
 export default SearchForm;

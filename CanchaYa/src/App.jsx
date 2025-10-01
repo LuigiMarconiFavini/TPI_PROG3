@@ -11,6 +11,9 @@ import MainLayout from "./components/layouts/MainLayout";
 import Promotions from "./components/promotions/Promotions";
 import PublicPromotions from "./components/promotions/PublicPromotions";
 
+
+import { ThemeProvider } from "./components/context/ThemeProvider";
+
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
 
@@ -18,66 +21,72 @@ function App() {
   const handleSignOut = () => setLoggedIn(false);
 
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Páginas públicas */}
-        <Route path="/login" element={<Login onLogin={handleLogin} />} />
-        <Route path="/register" element={<Register />} />
-        <Route
-          path="/promotions"
-          element={
-            <MainLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
-              <PublicPromotions />
-            </MainLayout>
-          }
-        />
+  
+    <ThemeProvider>
+      {/*  aplicamos estilos globales para dark/light */}
+      <div className="min-h-screen bg-white text-black dark:bg-gray-900 dark:text-white transition-colors duration-300">
+        <BrowserRouter>
+          <Routes>
+            {/* Páginas públicas */}
+            <Route path="/login" element={<Login onLogin={handleLogin} />} />
+            <Route path="/register" element={<Register />} />
+            <Route
+              path="/promotions"
+              element={
+                <MainLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
+                  <PublicPromotions />
+                </MainLayout>
+              }
+            />
 
-        {/* Dashboard público */}
-        <Route
-          path="/"
-          element={
-            <MainLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
-              <Dashboard />
-            </MainLayout>
-          }
-        />
+            {/* Dashboard público */}
+            <Route
+              path="/"
+              element={
+                <MainLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
+                  <Dashboard />
+                </MainLayout>
+              }
+            />
 
-        {/* Rutas privadas */}
-        <Route
-          path="/promotions/private"
-          element={
-            <Protected isSignedIn={loggedIn}>
-              <MainLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
-                <Promotions />
-              </MainLayout>
-            </Protected>
-          }
-        />
+            {/* Rutas privadas */}
+            <Route
+              path="/promotions/private"
+              element={
+                <Protected isSignedIn={loggedIn}>
+                  <MainLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
+                    <Promotions />
+                  </MainLayout>
+                </Protected>
+              }
+            />
 
-        <Route
-          path="/my-profile"
-          element={
-            <Protected isSignedIn={loggedIn}>
-              <MainLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
-                <MyProfile />
-              </MainLayout>
-            </Protected>
-          }
-        />
+            <Route
+              path="/my-profile"
+              element={
+                <Protected isSignedIn={loggedIn}>
+                  <MainLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
+                    <MyProfile />
+                  </MainLayout>
+                </Protected>
+              }
+            />
 
-        <Route
-          path="/contact"
-          element={
-            <MainLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
-              <Contact />
-            </MainLayout>
-          }
-        />
+            <Route
+              path="/contact"
+              element={
+                <MainLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
+                  <Contact />
+                </MainLayout>
+              }
+            />
 
-        {/* NotFound */}
-        <Route path="/*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+            {/* NotFound */}
+            <Route path="/*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
+    </ThemeProvider>
   );
 }
 
