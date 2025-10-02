@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useContext } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./components/dashboard/Dashboard";
 import NotFound from "./components/notFound/NotFound";
 import Login from "./components/auth/login/Login";
@@ -10,83 +10,78 @@ import Contact from "./components/contact/Contact";
 import MainLayout from "./components/layouts/MainLayout";
 import Promotions from "./components/promotions/Promotions";
 import PublicPromotions from "./components/promotions/PublicPromotions";
-
+import { AuthenticationContext } from "./components/services/auth.context";
 
 import { ThemeProvider } from "./components/context/ThemeProvider";
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  const handleLogin = () => setLoggedIn(true);
-  const handleSignOut = () => setLoggedIn(false);
+  const { token, handleUserLogout } = useContext(AuthenticationContext);
 
   return (
-  
-    <ThemeProvider>
-      {/*  aplicamos estilos globales para dark/light */}
-      <div className="min-h-screen bg-white text-black dark:bg-gray-900 dark:text-white transition-colors duration-300">
-        <BrowserRouter>
-          <Routes>
-            {/* Páginas públicas */}
-            <Route path="/login" element={<Login onLogin={handleLogin} />} />
-            <Route path="/register" element={<Register />} />
-            <Route
-              path="/promotions"
-              element={
-                <MainLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
-                  <PublicPromotions />
-                </MainLayout>
-              }
-            />
 
-            {/* Dashboard público */}
-            <Route
-              path="/"
-              element={
-                <MainLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
-                  <Dashboard />
-                </MainLayout>
-              }
-            />
+  <ThemeProvider>
+    <BrowserRouter>
+      <Routes>
+        {/* Páginas públicas */}
+        <Route
+          path="/login"
+          element={token ? <Navigate to="/" /> : <Login />}
+        />
+        <Route
+          path="/register"
+          element={token ? <Navigate to="/" /> : <Register />}
+        />
+        <Route
+          path="/promotions"
+          element={
+            <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+              <PublicPromotions />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/"
+          element={
+            <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+              <Dashboard />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/contact"
+          element={
+            <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+              <Contact />
+            </MainLayout>
+          }
+        />
 
-            {/* Rutas privadas */}
-            <Route
-              path="/promotions/private"
-              element={
-                <Protected isSignedIn={loggedIn}>
-                  <MainLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
-                    <Promotions />
-                  </MainLayout>
-                </Protected>
-              }
-            />
+        {/* Rutas privadas usando Protected + Outlet */}
+        <Route element={<Protected />}>
+          <Route
+            path="/promotions/private"
+            element={
+              <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+                <Promotions />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/my-profile"
+            element={
+              <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+                <MyProfile />
+              </MainLayout>
+            }
+          />
+        </Route>
 
-            <Route
-              path="/my-profile"
-              element={
-                <Protected isSignedIn={loggedIn}>
-                  <MainLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
-                    <MyProfile />
-                  </MainLayout>
-                </Protected>
-              }
-            />
+        {/* NotFound */}
+        <Route path="/*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
+ </ThemeProvider>
 
-            <Route
-              path="/contact"
-              element={
-                <MainLayout loggedIn={loggedIn} onSignOut={handleSignOut}>
-                  <Contact />
-                </MainLayout>
-              }
-            />
-
-            {/* NotFound */}
-            <Route path="/*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </div>
-    </ThemeProvider>
   );
 }
 

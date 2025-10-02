@@ -1,5 +1,6 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { AuthenticationContext } from "../../services/auth.context";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -19,6 +20,8 @@ const Register = () => {
   const passwordRef = useRef(null);
   const confirmPasswordRef = useRef(null);
   const navigate = useNavigate();
+
+  const { handleUserLogin } = useContext(AuthenticationContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -45,9 +48,14 @@ const Register = () => {
       return;
     }
 
-    setErrors({ username: false, email: false, password: false, confirmPassword: false });
-
+    setErrors({
+      username: false,
+      email: false,
+      password: false,
+      confirmPassword: false,
+    });
     setSubmitting(true);
+
     try {
       const res = await fetch("http://localhost:3000/api/auth/register", {
         method: "POST",
@@ -58,13 +66,13 @@ const Register = () => {
       const data = await res.json();
 
       if (res.ok) {
-        alert("✅ Registro exitoso. Por favor iniciá sesión.");
-        navigate("/login");
+        // Login automático después de registrarse
+        handleUserLogin(data.token, data.user);
+        navigate("/"); // Redirigir al home
       } else {
-        // mostrar mensaje del backend si lo envía
         alert(data?.msg || data?.message || "No se pudo realizar el registro");
       }
-    // eslint-disable-next-line no-unused-vars
+      // eslint-disable-next-line no-unused-vars
     } catch (err) {
       alert("Error al conectar con el servidor");
     } finally {
@@ -84,71 +92,100 @@ const Register = () => {
 
       <div className="flex flex-col justify-center px-6 py-12 lg:px-16">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <img alt="CanchaYa" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500" className="mx-auto h-10 w-auto" />
-          <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">Crear cuenta en CanchaYa</h2>
+          <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">
+            Crear cuenta en CanchaYa
+          </h2>
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-md">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Username */}
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700">Nombre de usuario</label>
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Nombre de usuario
+              </label>
               <input
                 id="username"
-                name="username"
                 ref={usernameRef}
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className={`mt-2 w-full rounded-md border px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 sm:text-sm
-                  ${errors.username ? "border-red-500 ring-2 ring-red-500" : "border-gray-300 focus:ring-blue-600"}`}
+                className={`mt-2 w-full rounded-md border px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 sm:text-sm ${
+                  errors.username
+                    ? "border-red-500 ring-2 ring-red-500"
+                    : "border-gray-300 focus:ring-blue-600"
+                }`}
                 placeholder="Ej: fran123"
               />
             </div>
 
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Email
+              </label>
               <input
                 id="email"
-                name="email"
                 type="email"
                 ref={emailRef}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className={`mt-2 w-full rounded-md border px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 sm:text-sm
-                  ${errors.email ? "border-red-500 ring-2 ring-red-500" : "border-gray-300 focus:ring-blue-600"}`}
+                className={`mt-2 w-full rounded-md border px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 sm:text-sm ${
+                  errors.email
+                    ? "border-red-500 ring-2 ring-red-500"
+                    : "border-gray-300 focus:ring-blue-600"
+                }`}
                 placeholder="tu@ejemplo.com"
               />
             </div>
 
             {/* Password */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">Contraseña</label>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Contraseña
+              </label>
               <input
                 id="password"
-                name="password"
                 type="password"
                 ref={passwordRef}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className={`mt-2 w-full rounded-md border px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 sm:text-sm
-                  ${errors.password ? "border-red-500 ring-2 ring-red-500" : "border-gray-300 focus:ring-blue-600"}`}
+                className={`mt-2 w-full rounded-md border px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 sm:text-sm ${
+                  errors.password
+                    ? "border-red-500 ring-2 ring-red-500"
+                    : "border-gray-300 focus:ring-blue-600"
+                }`}
                 placeholder="Mínimo 6 caracteres"
               />
             </div>
 
             {/* Confirm Password */}
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">Confirmar contraseña</label>
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Confirmar contraseña
+              </label>
               <input
                 id="confirmPassword"
-                name="confirmPassword"
                 type="password"
                 ref={confirmPasswordRef}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className={`mt-2 w-full rounded-md border px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 sm:text-sm
-                  ${errors.confirmPassword ? "border-red-500 ring-2 ring-red-500" : "border-gray-300 focus:ring-blue-600"}`}
+                className={`mt-2 w-full rounded-md border px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 sm:text-sm ${
+                  errors.confirmPassword
+                    ? "border-red-500 ring-2 ring-red-500"
+                    : "border-gray-300 focus:ring-blue-600"
+                }`}
                 placeholder="Reingresá la contraseña"
               />
             </div>
@@ -166,7 +203,12 @@ const Register = () => {
 
           <p className="mt-10 text-center text-sm text-gray-600">
             ¿Ya tenés cuenta?{" "}
-            <Link to="/login" className="font-semibold text-blue-600 hover:text-blue-500">Iniciá sesión</Link>
+            <Link
+              to="/login"
+              className="font-semibold text-blue-600 hover:text-blue-500"
+            >
+              Iniciá sesión
+            </Link>
           </p>
         </div>
       </div>

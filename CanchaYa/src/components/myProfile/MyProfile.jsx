@@ -1,15 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { AuthenticationContext } from "../services/auth.context";
 
 export default function MyProfile() {
+  const { token } = useContext(AuthenticationContext); // <-- usamos el token del context
   const [user, setUser] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({});
   const [msg, setMsg] = useState("");
 
   const fetchMyProfile = async () => {
-    try {
-      const token = localStorage.getItem("canchaYa-token");
+    if (!token) return; // si no hay token, no hacemos fetch
 
+    try {
       const res = await fetch("http://localhost:3000/api/users/me", {
         method: "GET",
         headers: {
@@ -33,9 +35,9 @@ export default function MyProfile() {
   };
 
   const updateMyProfile = async () => {
-    try {
-      const token = localStorage.getItem("canchaYa-token");
+    if (!token || !user) return;
 
+    try {
       const res = await fetch(`http://localhost:3000/api/users/${user.id}`, {
         method: "PUT",
         headers: {
@@ -72,11 +74,10 @@ export default function MyProfile() {
 
   useEffect(() => {
     fetchMyProfile();
-  }, []);
+  }, [token]); // si cambia el token, re-fetch
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4 py-4">
-      {/* Card principal con borde azul translúcido más notorio */}
       <div className="w-full max-w-lg p-8 rounded-xl shadow-xl bg-white/20 backdrop-blur-md border border-blue-500/40">
         <h1 className="text-2xl font-bold text-center text-blue-700 mb-6">
           Mi Perfil
@@ -133,7 +134,6 @@ export default function MyProfile() {
               </form>
             ) : (
               <div className="space-y-4">
-                {/* Bloques de datos con borde sutil */}
                 <div className="p-3 text-base rounded-lg bg-white/10 backdrop-blur-lg border border-blue-400/20 shadow-sm transform transition-all duration-200 ease-in-out hover:-translate-y-1 hover:scale-105 hover:shadow-md hover:border-blue-400/50 cursor-pointer">
                   <strong>Nombre de usuario:</strong> {user.username}
                 </div>
