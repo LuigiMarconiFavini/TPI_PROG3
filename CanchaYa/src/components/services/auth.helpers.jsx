@@ -1,15 +1,18 @@
 import { jwtDecode } from "jwt-decode";
 
-export const isTokenValid = (token) => {
-  if (!token) return false;
+export const decodeToken = (token) => {
   try {
-    const decodedToken = jwtDecode(token);
-
-    const currenTime = Date.now() / 1000;
-
-    return currenTime < decodedToken.exp;
+    return jwtDecode(token);
   } catch (error) {
-    console.error("Error decodind token:", error);
-    return false;
+    console.error("Error decoding token:", error);
+    return null;
   }
+};
+
+export const isTokenValid = (token) => {
+  const decoded = decodeToken(token);
+  if (!decoded) return false;
+
+  const currenTime = Date.now() / 1000;
+  return currenTime < decoded.exp;
 };

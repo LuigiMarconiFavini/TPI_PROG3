@@ -13,6 +13,7 @@ import PublicPromotions from "./components/promotions/PublicPromotions";
 import { AuthenticationContext } from "./components/services/auth.context";
 
 import { ThemeProvider } from "./components/context/ThemeProvider";
+import AllUsers from "./components/allUsers/allUsers";
 
 function App() {
   const { token, handleUserLogout } = useContext(AuthenticationContext);
@@ -52,6 +53,14 @@ function App() {
           element={
             <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
               <Contact />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/all-users"
+          element={
+            <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+              <AllUsers />
             </MainLayout>
           }
         />
