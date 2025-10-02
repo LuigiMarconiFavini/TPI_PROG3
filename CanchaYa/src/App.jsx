@@ -12,10 +12,14 @@ import Promotions from "./components/promotions/Promotions";
 import PublicPromotions from "./components/promotions/PublicPromotions";
 import { AuthenticationContext } from "./components/services/auth.context";
 
+import { ThemeProvider } from "./components/context/ThemeProvider";
+
 function App() {
   const { token, handleUserLogout } = useContext(AuthenticationContext);
 
   return (
+
+  <ThemeProvider>
     <BrowserRouter>
       <Routes>
         {/* Páginas públicas */}
@@ -76,6 +80,8 @@ function App() {
         <Route path="/*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
+ </ThemeProvider>
+
   );
 }
 

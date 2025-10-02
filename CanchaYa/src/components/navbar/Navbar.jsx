@@ -1,22 +1,25 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import ThemeToggle from "../themeToggle/ThemeToggle";
 
 const Navbar = ({ loggedIn, onSignOut }) => {
   const handleClick = () => {
     onSignOut();
-    localStorage.removeItem("canchaYa-token")
+    localStorage.removeItem("canchaYa-token");
   };
 
   return (
-    <div className="w-full top-0 py-2 bg-white shadow z-50">
+    <div className="w-full top-0 py-2 bg-gray-100 dark:bg-gray-900 shadow z-50 transition-colors duration-300">
       <nav className="max-w-7xl mx-auto px-5 lg:px-8 flex items-center justify-between">
         {/* Logo */}
         <Link to="/">
-          <h2 className="text-black font-bold text-2xl">CanchaYa</h2>
+          <h2 className="text-black dark:text-white font-bold text-2xl transition-colors duration-300">
+            CanchaYa
+          </h2>
         </Link>
 
         {/* Links */}
-        <div className="hidden lg:flex space-x-8 items-center text-base font-bold text-black/80">
+        <div className="hidden lg:flex space-x-8 items-center text-base font-bold text-black/80 dark:text-gray-200 transition-colors duration-300">
           <Link to="/" className="hover:underline hover:underline-offset-4">
             Inicio
           </Link>
@@ -26,7 +29,6 @@ const Navbar = ({ loggedIn, onSignOut }) => {
           >
             Reservar Cancha
           </Link>
-
           <Link
             to={loggedIn ? "/promotions/private" : "/promotions"}
             className="hover:underline hover:underline-offset-4"
@@ -39,7 +41,6 @@ const Navbar = ({ loggedIn, onSignOut }) => {
           >
             Contactanos
           </Link>
-
           <Link
             to="/my-reservations"
             className="hover:underline hover:underline-offset-4"
@@ -56,6 +57,7 @@ const Navbar = ({ loggedIn, onSignOut }) => {
 
         {/* Botones */}
         <div className="hidden lg:flex lg:items-center gap-x-2">
+          <ThemeToggle />
           {!loggedIn ? (
             <>
               <Link
