@@ -3,34 +3,34 @@ import React from "react";
 const PublicPromotions = () => {
   const promotionsInfo = [
     {
-      title: "¿Cómo funcionan las promociones?",
+      title: "¿Qué son las promociones?",
       description:
-        "Nuestras promociones te permiten acceder a descuentos especiales y otros beneficios en reservas de canchas.",
-      icon: "🎁",
+        "Son descuentos aplicados directamente sobre el precio de la cancha para que disfrutes más pagando menos.",
+      icon: "⚽",
     },
     {
-      title: "¿Cómo se canjean?",
+      title: "¿Cómo aplicarlas?",
       description:
-        "Cuando hagas una reserva, podrás aplicar la promoción disponible directamente en el proceso de pago.",
+        "Al momento de reservar tu cancha, si hay una promoción activa, podrás verla y aplicarla antes de confirmar el pago.",
       icon: "💳",
     },
     {
-      title: "Tipos de promociones",
+      title: "Tipos de descuentos",
       description:
-        "Contamos con descuentos por cantidad de reservas, beneficios para socios frecuentes y ofertas por temporada.",
-      icon: "⭐",
+        "Ofrecemos rebajas por temporada, descuentos en determinados días y precios especiales en horarios seleccionados.",
+      icon: "📉",
     },
     {
       title: "Condiciones de uso",
       description:
-        "Cada promoción puede tener reglas específicas: duración, días aplicables o canchas disponibles. Revisá siempre los detalles antes de reservar.",
+        "Los descuentos solo son válidos en reservas online y no se combinan con otras promociones. Revisá siempre los días y horarios habilitados antes de confirmar.",
       icon: "📋",
     },
     {
-      title: "Beneficios para socios",
+      title: "Próximamente...",
       description:
-        "Los socios registrados acceden a promociones exclusivas, sorteos especiales y descuentos adicionales.",
-      icon: "👥",
+        "Muy pronto vas a poder acceder a otro tipo de beneficios además de descuentos en el precio, como premios y experiencias exclusivas.",
+      icon: "🚀",
     },
   ];
 
@@ -39,14 +39,14 @@ const PublicPromotions = () => {
       {/* Cabecera estilo banner */}
       <div className="w-full bg-gradient-to-b from-green-500 to-green-600 text-white py-16 px-4 text-center">
         <p className="uppercase tracking-widest text-sm font-medium">
-          BENEFICIOS EXCLUSIVOS
+          DESCUENTOS DISPONIBLES
         </p>
         <h1 className="text-4xl md:text-5xl font-extrabold mt-2 mb-4">
-          ¿Cómo aprovechar nuestras promociones?
+          Aprovechá nuestras promociones
         </h1>
         <p className="text-lg max-w-2xl mx-auto">
-          Descubrí cómo funcionan, cómo podés canjearlas y cuáles son las
-          promociones disponibles para que aproveches al máximo tus reservas.
+          Reservá tu cancha con descuentos especiales en precio. Conocé cómo
+          funcionan, cómo aplicarlos y cuáles son las condiciones.
         </p>
       </div>
 

@@ -57,7 +57,7 @@ const Login = () => {
       {/* Imagen */}
       <div className="hidden lg:block">
         <img
-          src="https://realidadgeselinaonline.com.ar/wp-content/uploads/2025/06/MINIBLOGS-6.png"
+          src="/images/foto-login.png"
           alt="Fútbol / Padel"
           className="h-full w-full object-cover"
         />

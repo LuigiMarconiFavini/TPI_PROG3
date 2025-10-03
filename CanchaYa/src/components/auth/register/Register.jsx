@@ -84,7 +84,7 @@ const Register = () => {
     <div className="grid grid-cols-1 lg:grid-cols-2 min-h-screen bg-white">
       <div className="hidden lg:block">
         <img
-          src="https://www.elneverazo.com/wp-content/uploads/2022/03/bolahs-1170x658-1.jpg"
+          src="/images/foto-register.jpg"
           alt="Cancha Azul"
           className="h-full w-full object-cover"
         />
