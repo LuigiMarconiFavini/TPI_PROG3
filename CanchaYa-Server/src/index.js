@@ -3,7 +3,7 @@ import { sequelize } from "./config/db.js";
 import cors from "cors";
 
 //Rutas...
-//import canchasRoutes from "./routes/canchasRoutes.js";
+import canchasRoutes from "./routes/canchasRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import usersRoutes from "./routes/usersRoutes.js";
 
@@ -18,8 +18,7 @@ app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", usersRoutes);
-
-//app.use("/api/canchas", canchasRoutes);
+app.use("/api/canchas", canchasRoutes);
 
 (async () => {
   try {
