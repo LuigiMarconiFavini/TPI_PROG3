@@ -1,39 +1,52 @@
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import CardCourts from "../cardCourts/CardCourts";
-import { canchas, deportes, tiposPorDeporte, horarios } from "../../mocks/mock";
+import { deportes, tiposPorDeporte, horarios } from "../../mocks/mock";
+import { AuthenticationContext } from "../services/auth.context";
 
 const SearchForm = () => {
+  const { token, user } = useContext(AuthenticationContext);
+
   const [deporte, setDeporte] = useState("");
   const [tipoCancha, setTipoCancha] = useState("");
   const [horarioSeleccionado, setHorarioSeleccionado] = useState("");
-  const [resultados, setResultados] = useState(canchas);
+  const [resultados, setResultados] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleDeporte = (e) => {
-    setDeporte(e.target.value);
-    setTipoCancha("");
+  const fetchCanchas = async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const query = new URLSearchParams();
+      if (deporte) query.append("deporte", deporte);
+      if (tipoCancha) query.append("tipo", tipoCancha);
+      if (horarioSeleccionado) query.append("horario", horarioSeleccionado);
+
+      const res = await fetch(`http://localhost:3000/canchas?${query}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) throw new Error("Error al traer las canchas");
+      const data = await res.json();
+      setResultados(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleTipoCancha = (e) => {
-    setTipoCancha(e.target.value);
-  };
-
-  const handleHorario = (e) => {
-    setHorarioSeleccionado(e.target.value);
-  };
+  useEffect(() => {
+    fetchCanchas();
+  }, []); // Traer todas las canchas al montar el componente
 
   const handleFilter = (e) => {
     e.preventDefault();
-
-    const filtradas = canchas.filter((c) => {
-      const matchDeporte = deporte ? c.deporte === deporte : true;
-      const matchTipo = tipoCancha ? c.tipo === tipoCancha : true;
-      const matchHorario = horarioSeleccionado
-        ? c.horarios.includes(horarioSeleccionado)
-        : true;
-      return matchDeporte && matchTipo && matchHorario;
-    });
-
-    setResultados(filtradas);
+    fetchCanchas(); // Volvemos a traer del backend con los filtros
   };
 
   return (
@@ -50,7 +63,10 @@ const SearchForm = () => {
           </label>
           <select
             value={deporte}
-            onChange={handleDeporte}
+            onChange={(e) => {
+              setDeporte(e.target.value);
+              setTipoCancha("");
+            }}
             className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 shadow-sm bg-white dark:bg-gray-700 text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors"
           >
             <option value="">Elegir Deporte</option>
@@ -70,7 +86,7 @@ const SearchForm = () => {
             </label>
             <select
               value={tipoCancha}
-              onChange={handleTipoCancha}
+              onChange={(e) => setTipoCancha(e.target.value)}
               className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 shadow-sm bg-white dark:bg-gray-700 text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors"
             >
               <option value="">Selecciona Tipo</option>
@@ -90,7 +106,7 @@ const SearchForm = () => {
           </label>
           <select
             value={horarioSeleccionado}
-            onChange={handleHorario}
+            onChange={(e) => setHorarioSeleccionado(e.target.value)}
             className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 shadow-sm bg-white dark:bg-gray-700 text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors"
           >
             <option value="">Elige Horario</option>
@@ -115,17 +131,31 @@ const SearchForm = () => {
       </form>
 
       {/* Resultados */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-10">
-        {resultados.length > 0 ? (
-          resultados.map((c) => <CardCourts key={c.id} cancha={c} />)
-        ) : (
-          <div className="col-span-full flex justify-center items-center h-32">
-            <p className="text-gray-500 text-lg font-medium dark:text-gray-400">
-              No se encontraron canchas 😢
-            </p>
-          </div>
-        )}
-      </div>
+      {loading ? (
+        <p className="text-center mt-10 text-gray-500 dark:text-gray-400">
+          Cargando...
+        </p>
+      ) : error ? (
+        <p className="text-center mt-10 text-red-500">{error}</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-10">
+          {resultados.length > 0 ? (
+            resultados.map((c) => (
+              <CardCourts
+                key={c.id}
+                cancha={c}
+                showAdminButtons={user?.role === "admin"}
+              />
+            ))
+          ) : (
+            <div className="col-span-full flex justify-center items-center h-32">
+              <p className="text-gray-500 text-lg font-medium dark:text-gray-400">
+                No se encontraron canchas 😢
+              </p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

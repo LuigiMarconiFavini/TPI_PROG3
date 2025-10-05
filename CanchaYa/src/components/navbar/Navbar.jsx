@@ -1,24 +1,27 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import ThemeToggle from "../themeToggle/ThemeToggle";
 import { AuthenticationContext } from "../services/auth.context";
+import NewCourts from "../newCourts/NewCourts";
 
 const Navbar = () => {
   const { token, handleUserLogout, user } = useContext(AuthenticationContext);
-
   const loggedIn = !!token;
   const role = user?.role;
+
+  const [openNewCourt, setOpenNewCourt] = useState(false);
 
   return (
     <div className="w-full top-0 py-2 bg-gray-100 dark:bg-gray-900 shadow z-50 transition-colors duration-300">
       <nav className="max-w-7xl mx-auto px-5 lg:px-8 flex items-center justify-between">
-        {/* FALTA Logo */}
+        {/* Logo */}
         <Link to="/">
           <h2 className="text-black dark:text-white font-bold text-2xl transition-colors duration-300">
             CanchaYa
           </h2>
         </Link>
 
+        {/* Links principales */}
         <div className="hidden lg:flex space-x-8 items-center text-base font-bold text-black/80 dark:text-gray-200 transition-colors duration-300">
           <Link to="/" className="hover:underline hover:underline-offset-4">
             Inicio
@@ -47,7 +50,18 @@ const Navbar = () => {
           >
             Mi Perfil
           </Link>
-          {/* ----------------------------------------------- */}
+
+          {/* Botón Nueva Cancha solo para admin/sysadmin */}
+          {(role === "admin" || role === "sysadmin") && (
+            <button
+              onClick={() => setOpenNewCourt(true)}
+              className="ml-4 flex items-center justify-center rounded-md bg-green-500 text-white px-4 py-2 font-semibold hover:bg-green-600 transition duration-200"
+            >
+              Nueva Cancha
+            </button>
+          )}
+
+          {/* Link Ver Usuarios solo para sysadmin */}
           {role === "sysadmin" && (
             <Link to="/all-users" className="text-red-500">
               Ver Usuarios
@@ -55,6 +69,7 @@ const Navbar = () => {
           )}
         </div>
 
+        {/* Botones de login/logout y toggle */}
         <div className="hidden lg:flex lg:items-center gap-x-2">
           <ThemeToggle />
           {!loggedIn ? (
@@ -82,6 +97,21 @@ const Navbar = () => {
           )}
         </div>
       </nav>
+
+      {/* Modal Nueva Cancha */}
+      {openNewCourt && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg max-w-lg w-full relative">
+            <button
+              onClick={() => setOpenNewCourt(false)}
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 font-bold text-lg"
+            >
+              ✕
+            </button>
+            <NewCourts onSaved={() => setOpenNewCourt(false)} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
