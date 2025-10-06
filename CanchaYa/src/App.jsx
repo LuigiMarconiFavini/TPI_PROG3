@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./components/dashboard/Dashboard";
 import NotFound from "./components/notFound/NotFound";
 import Login from "./components/auth/login/Login";
+import Reservations from "./components/reservations/Reservations";
 import Register from "./components/auth/register/Register";
 import Protected from "./components/protected/Protected";
 import MyProfile from "./components/myProfile/MyProfile";
@@ -85,8 +86,19 @@ function App() {
           />
         </Route>
 
+         <Route
+            path="/reservations"
+            element={
+              <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+                <MyProfile />
+              <Reservations/>
+            }
+          />
+        </Route>
+          
         {/* NotFound */}
         <Route path="/*" element={<NotFound />} />
+
       </Routes>
     </BrowserRouter>
  </ThemeProvider>

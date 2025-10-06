@@ -8,7 +8,7 @@ const CardCourts = ({ cancha, onEdit, onDelete }) => {
 
   const showReservar = !canEditOrDelete;
 
-  return (
+ return (
     <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden flex flex-col transition-colors">
       <img
         src={cancha.imagen}
