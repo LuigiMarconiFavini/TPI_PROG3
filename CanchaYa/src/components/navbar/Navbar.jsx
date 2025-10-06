@@ -26,14 +26,6 @@ const Navbar = () => {
           <Link to="/" className="hover:underline hover:underline-offset-4">
             Inicio
           </Link>
-          {(role === "user" ) && (
-            <Link
-            to={loggedIn ? "/promotions/private" : "/promotions"}
-            className="hover:underline hover:underline-offset-4"
-          >
-            {loggedIn ? "Mis Promociones" : "Promociones"}
-          </Link>
-          )}
           
           {(role === "user" ) && (
             <Link to="/contact" className="hover:underline hover:underline-offset-4">
@@ -44,6 +36,14 @@ const Navbar = () => {
             Mi Perfil
           </Link>
 
+          {(role === "user" ) && (
+            <Link
+            to={loggedIn ? "/promotions/private" : "/promotions"}
+            className="hover:underline hover:underline-offset-4"
+          >
+            {loggedIn ? "Mis Promociones" : "Promociones"}
+          </Link>
+          )}
           {(role === "user" ) && (
             <Link to="/reservations" className="hover:underline hover:underline-offset-4">
             Mis Reservas
