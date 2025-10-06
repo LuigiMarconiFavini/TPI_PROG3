@@ -1,7 +1,8 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthenticationContext } from "../../services/auth.context";
 
-const Login = ({ onLogin }) => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({ email: false, password: false });
@@ -10,103 +11,132 @@ const Login = ({ onLogin }) => {
   const passwordRef = useRef(null);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const { handleUserLogin } = useContext(AuthenticationContext);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!email.trim()) {
       setErrors({ ...errors, email: true });
-      alert("Email vacío");
       emailRef.current.focus();
       return;
     }
 
     if (!password.trim() || password.length < 6) {
       setErrors({ ...errors, password: true });
-      alert("Contraseña incorrecta (mínimo 6 caracteres)");
       passwordRef.current.focus();
       return;
     }
 
-    // Simulación login correcto
     setErrors({ email: false, password: false });
-    onLogin();
-    navigate("/");
+
+    try {
+      const res = await fetch("http://localhost:3000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        // Guardamos token y usuario en el context
+        handleUserLogin(data.token, data.user);
+        navigate("/"); // Redirigimos al home
+      } else {
+        alert(data?.msg || "❌ Credenciales inválidas");
+      }
+      // eslint-disable-next-line no-unused-vars
+    } catch (err) {
+      alert("⚠️ Error al conectar con el servidor");
+    }
   };
 
   return (
-    <div className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8 bg-gray-900">
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+    <div className="grid grid-cols-1 lg:grid-cols-2 min-h-screen bg-white">
+      {/* Imagen */}
+      <div className="hidden lg:block">
         <img
-          alt="CanchaYa"
-          src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-          className="mx-auto h-10 w-auto"
+          src="/images/foto-login.png"
+          alt="Fútbol / Padel"
+          className="h-full w-full object-cover"
         />
-        <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-white">
-          Iniciar sesión en CanchaYa
-        </h2>
       </div>
 
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Formulario */}
+      <div className="flex flex-col justify-center px-6 py-12 lg:px-16">
+        <div className="sm:mx-auto sm:w-full sm:max-w-md">
+          {/* <img alt="CanchaYa" src="" className="mx-auto h-10 w-auto" /> */}
+          <h2 className="mt-10 text-center text-2xl font-bold text-gray-900">
+            Iniciar sesión en CanchaYa
+          </h2>
+        </div>
+
+        <form
+          onSubmit={handleSubmit}
+          className="mt-10 space-y-6 sm:mx-auto sm:w-full sm:max-w-md"
+        >
           {/* EMAIL */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-100">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
               Email
             </label>
-            <div className="mt-2">
-              <input
-                id="email"
-                name="email"
-                type="email"
-                ref={emailRef}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className={`block w-full rounded-md px-3 py-1.5 text-white bg-white/5 placeholder:text-gray-500 focus:outline-none focus:ring-2 sm:text-sm
-                  ${errors.email ? "ring-2 ring-red-500" : "focus:ring-indigo-500"}`}
-              />
-            </div>
+            <input
+              id="email"
+              type="email"
+              ref={emailRef}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className={`mt-2 w-full rounded-md border px-3 py-2 sm:text-sm ${
+                errors.email
+                  ? "border-red-500 ring-2 ring-red-500"
+                  : "border-gray-300 focus:ring-indigo-500"
+              }`}
+              placeholder="tu@ejemplo.com"
+            />
           </div>
 
           {/* PASSWORD */}
           <div>
-            <div className="flex items-center justify-between">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-100">
-                Contraseña
-              </label>
-              <div className="text-sm">
-                <a href="#" className="font-semibold text-indigo-400 hover:text-indigo-300">
-                  ¿Olvidaste tu contraseña?
-                </a>
-              </div>
-            </div>
-            <div className="mt-2">
-              <input
-                id="password"
-                name="password"
-                type="password"
-                ref={passwordRef}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className={`block w-full rounded-md px-3 py-1.5 text-white bg-white/5 placeholder:text-gray-500 focus:outline-none focus:ring-2 sm:text-sm
-                  ${errors.password ? "ring-2 ring-red-500" : "focus:ring-indigo-500"}`}
-              />
-            </div>
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Contraseña
+            </label>
+            <input
+              id="password"
+              type="password"
+              ref={passwordRef}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={`mt-2 w-full rounded-md border px-3 py-2 sm:text-sm ${
+                errors.password
+                  ? "border-red-500 ring-2 ring-red-500"
+                  : "border-gray-300 focus:ring-indigo-500"
+              }`}
+              placeholder="Mínimo 6 caracteres"
+            />
           </div>
 
           {/* SUBMIT */}
-          <div>
-            <button
-              type="submit"
-              className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            >
-              Iniciar sesión
-            </button>
-          </div>
+          <button
+            type="submit"
+            className="flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white hover:bg-green-500"
+          >
+            Iniciar sesión
+          </button>
         </form>
 
-        <p className="mt-10 text-center text-sm text-gray-400">
+        <p className="mt-10 text-center text-sm text-gray-600">
           ¿No tenés cuenta?{" "}
-          <a href="/register" className="font-semibold text-indigo-400 hover:text-indigo-300">
+          <a
+            href="/register"
+            className="font-semibold text-green-600 hover:text-green-500"
+          >
             Registrate
           </a>
         </p>

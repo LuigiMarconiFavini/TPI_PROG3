@@ -1,37 +1,109 @@
-import { useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useContext } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./components/dashboard/Dashboard";
 import NotFound from "./components/notFound/NotFound";
 import Login from "./components/auth/login/Login";
 import Reservations from "./components/reservations/Reservations";
+import Register from "./components/auth/register/Register";
+import Protected from "./components/protected/Protected";
+import MyProfile from "./components/myProfile/MyProfile";
+import Contact from "./components/contact/Contact";
+import MainLayout from "./components/layouts/MainLayout";
+import Promotions from "./components/promotions/Promotions";
+import PublicPromotions from "./components/promotions/PublicPromotions";
+import { AuthenticationContext } from "./components/services/auth.context";
+
+import { ThemeProvider } from "./components/context/ThemeProvider";
+import AllUsers from "./components/allUsers/allUsers";
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  const handleLogin = () => {
-    setLoggedIn(true); // cambia el estado al loguearse
-  };
+  const { token, handleUserLogout } = useContext(AuthenticationContext);
 
   return (
+
+  <ThemeProvider>
     <BrowserRouter>
       <Routes>
-        {/* Ruta raíz "/" */}
+        {/* Páginas públicas */}
+        <Route
+          path="/login"
+          element={token ? <Navigate to="/" /> : <Login />}
+        />
+        <Route
+          path="/register"
+          element={token ? <Navigate to="/" /> : <Register />}
+        />
+        <Route
+          path="/promotions"
+          element={
+            <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+              <PublicPromotions />
+            </MainLayout>
+          }
+        />
         <Route
           path="/"
-          element={loggedIn ? <Dashboard /> : <Login onLogin={handleLogin} />}
+          element={
+            <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+              <Dashboard />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/contact"
+          element={
+            <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+              <Contact />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/all-users"
+          element={
+            <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+              <AllUsers />
+            </MainLayout>
+          }
         />
 
-        {/* Ruta para login explícita */}
-        <Route path="/login" element={<Login onLogin={handleLogin} />} />
+        {/* Rutas privadas usando Protected + Outlet */}
+        <Route element={<Protected />}>
+          <Route
+            path="/promotions/private"
+            element={
+              <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+                <Promotions />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/my-profile"
+            element={
+              <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+                <MyProfile />
+              </MainLayout>
+            }
+          />
+        </Route>
 
-        <Route path="/reservations" element={<Reservations/>} />
+         <Route
+            path="/reservations"
+            element={
+              <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+                <MyProfile />
+              <Reservations/>
+            }
+          />
+        </Route>
+          
+        {/* NotFound */}
+        <Route path="/*" element={<NotFound />} />
 
-        {/* Ruta para cualquier cosa no encontrada */} 
-        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
+ </ThemeProvider>
+
   );
 }
 
 export default App;
-
