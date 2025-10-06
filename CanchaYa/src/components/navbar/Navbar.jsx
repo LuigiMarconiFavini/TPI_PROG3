@@ -26,9 +26,6 @@ const Navbar = () => {
           <Link to="/" className="hover:underline hover:underline-offset-4">
             Inicio
           </Link>
-          <Link to="/services" className="hover:underline hover:underline-offset-4">
-            Reservar Cancha
-          </Link>
           <Link
             to={loggedIn ? "/promotions/private" : "/promotions"}
             className="hover:underline hover:underline-offset-4"
@@ -41,6 +38,13 @@ const Navbar = () => {
           <Link to="/my-profile" className="hover:underline hover:underline-offset-4">
             Mi Perfil
           </Link>
+
+          {(role === "user" ) && (
+            <Link to="/reservations" className="hover:underline hover:underline-offset-4">
+            Mis Reservas
+          </Link>
+          )}
+
 
           {(role === "admin" || role === "sysadmin") && (
             <button

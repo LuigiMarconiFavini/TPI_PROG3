@@ -86,15 +86,14 @@ function App() {
           />
         </Route>
 
-         <Route
-            path="/reservations"
-            element={
-              <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
-                <MyProfile />
-              <Reservations/>
-            }
-          />
-        </Route>
+        <Route
+          path="/reservations"
+          element={
+            <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+                <Reservations />
+              </MainLayout>
+          }
+        />
           
         {/* NotFound */}
         <Route path="/*" element={<NotFound />} />
