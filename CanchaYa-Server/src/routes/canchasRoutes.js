@@ -1,6 +1,4 @@
-import express from "express"; // 🔹 Esto faltaba
-
-import { Router } from "express";
+import express from "express";
 import {
   createCancha,
   deleteCancha,
@@ -8,13 +6,16 @@ import {
   getCanchas,
   updateCancha,
 } from "../controllers/canchaController.js";
+import { verifyToken } from "../Middleware/authMiddleware.js";
+import { checkRole } from "../Middleware/roleMiddleware.js";
 
 const router = express.Router();
 
 router.get("/", getCanchas);
 router.get("/:id", getCanchaById);
-router.post("/", createCancha);
-router.put("/:id", updateCancha);
-router.delete("/:id", deleteCancha);
+
+router.post("/", verifyToken, checkRole("admin", "sysadmin"), createCancha);
+router.put("/:id", verifyToken, checkRole("admin", "sysadmin"), updateCancha);
+router.delete("/:id", verifyToken, checkRole("sysadmin"), deleteCancha);
 
 export default router;
