@@ -1,15 +1,15 @@
-import React from 'react'
+import React from 'react';
 
 const Reservations = () => {
   return (
-    <>
-        <div className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8 bg-gray-900 text-white">
-            <h1 className='text-center'>Mis Reservas</h1>
-            <p></p>
-            {/*FALTA LOGICA*/}
-        </div>
-    </>
-  )
+    <div className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+      <h1 className="text-center text-3xl font-bold mb-4">Mis Reservas</h1>
+      <p className="text-center text-gray-700 dark:text-gray-300">
+        Aquí podrás ver todas tus reservas realizadas.
+      </p>
+      {/* FALTA LÓGICA */}
+    </div>
+  );
 }
 
-export default Reservations
+export default Reservations;

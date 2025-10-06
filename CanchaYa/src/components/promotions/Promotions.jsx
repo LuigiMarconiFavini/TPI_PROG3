@@ -24,11 +24,10 @@ export default function Promotions() {
   // Barra de progreso circular
   const circleRadius = 50;
   const circleCircumference = 2 * Math.PI * circleRadius;
-  const progressPercentage = (progress / promotions.rewardsCycle) * 100;
   const offset = circleCircumference - (progress / promotions.rewardsCycle) * circleCircumference;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen">
       {/* Banner full width */}
       <div className="w-full bg-gradient-to-r from-purple-500 to-pink-500 shadow-xl">
         <div className="max-w-7xl mx-auto p-12 text-center text-white rounded-b-3xl">
@@ -42,42 +41,41 @@ export default function Promotions() {
       <div className="max-w-5xl mx-auto p-6 space-y-6">
         {/* Cards explicativas */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="p-6 bg-gradient-to-r from-green-400 to-green-200 rounded-2xl shadow-lg text-center">
+          <div className="p-6 bg-gradient-to-r from-green-400 to-green-200 dark:from-green-700 dark:to-green-500 rounded-2xl shadow-lg text-center">
             <div className="text-6xl mb-4">⚽</div>
             <h3 className="font-bold text-2xl mb-2">Reservá tu cancha</h3>
-            <p className="text-gray-800 text-lg">
+            <p className="text-gray-800 dark:text-gray-200 text-lg">
               Cada reserva suma para tu próxima recompensa, ya sea fútbol o pádel.
             </p>
           </div>
-          <div className="p-6 bg-gradient-to-r from-blue-400 to-blue-200 rounded-2xl shadow-lg text-center">
+          <div className="p-6 bg-gradient-to-r from-blue-400 to-blue-200 dark:from-blue-700 dark:to-blue-500 rounded-2xl shadow-lg text-center">
             <div className="text-6xl mb-4">🏆</div>
             <h3 className="font-bold text-2xl mb-2">Canjea tu recompensa</h3>
-            <p className="text-gray-800 text-lg">
+            <p className="text-gray-800 dark:text-gray-200 text-lg">
               Cada 5 reservas completadas, podrás canjear un descuento en tu siguiente reserva.
             </p>
           </div>
         </div>
 
-        {/* Contenedor de promociones dividido */}
-        <div className="bg-gray-100 rounded-xl shadow-lg p-6 md:flex md:space-x-6">
-          {/* Columna izquierda: progreso de reservas con barra circular */}
+        {/* Contenedor de promociones */}
+        <div className="bg-gray-100 dark:bg-gray-800 rounded-xl shadow-lg p-6 md:flex md:space-x-6">
+          {/* Progreso circular */}
           <div className="md:w-1/2 mb-6 md:mb-0 flex flex-col items-center justify-center">
             <svg width={120} height={120} className="mb-4">
-              {/* Fondo del círculo */}
               <circle
                 cx="60"
                 cy="60"
                 r={circleRadius}
-                stroke="#d1d5db"   // gris claro distinto al contenedor
+                stroke="#d1d5db"
                 strokeWidth="10"
                 fill="transparent"
+                className="dark:stroke-gray-700"
               />
-              {/* Progreso */}
               <circle
                 cx="60"
                 cy="60"
                 r={circleRadius}
-                stroke="#fbbf24"   // dorado brillante
+                stroke="#fbbf24"
                 strokeWidth="10"
                 fill="transparent"
                 strokeDasharray={circleCircumference}
@@ -90,41 +88,41 @@ export default function Promotions() {
                 y="50%"
                 dominantBaseline="middle"
                 textAnchor="middle"
-                className="text-gray-900 font-bold text-lg"
+                className="text-gray-900 dark:text-gray-100 font-bold text-lg"
               >
                 {progress}/{promotions.rewardsCycle}
               </text>
             </svg>
             {rewardAvailable ? (
               <div className="text-center">
-                <p className="text-green-600 font-semibold mb-2">
+                <p className="text-green-600 dark:text-green-400 font-semibold mb-2">
                   🎉 ¡Felicitaciones! Recompensa disponible
                 </p>
                 <button
                   onClick={handleRedeem}
-                  className="mt-2 px-6 py-3 bg-green-500 text-white rounded-full hover:bg-green-400 transition transform hover:scale-105"
+                  className="mt-2 px-6 py-3 bg-green-500 dark:bg-green-600 text-white rounded-full hover:bg-green-400 dark:hover:bg-green-500 transition transform hover:scale-105"
                 >
                   Canjear Recompensa
                 </button>
               </div>
             ) : (
-              <p className="text-gray-700 text-center mt-2">
+              <p className="text-gray-700 dark:text-gray-300 text-center mt-2">
                 Faltan {nextRewardAt} reservas para la próxima recompensa
               </p>
             )}
           </div>
 
-          {/* Columna derecha: historial de recompensas */}
-          <div className="md:w-1/2 bg-gray-200 rounded-lg p-4">
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Historial de Recompensas</h3>
+          {/* Historial de recompensas */}
+          <div className="md:w-1/2 bg-gray-200 dark:bg-gray-700 rounded-lg p-4">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Historial de Recompensas</h3>
             {promotions.redeemedRewards.length > 0 ? (
-              <ul className="list-disc list-inside text-gray-800">
+              <ul className="list-disc list-inside text-gray-800 dark:text-gray-200">
                 {promotions.redeemedRewards.map((r, i) => (
                   <li key={i}>{r}</li>
                 ))}
               </ul>
             ) : (
-              <p className="text-gray-500">No tenés recompensas canjeadas todavía.</p>
+              <p className="text-gray-500 dark:text-gray-300">No tenés recompensas canjeadas todavía.</p>
             )}
           </div>
         </div>
