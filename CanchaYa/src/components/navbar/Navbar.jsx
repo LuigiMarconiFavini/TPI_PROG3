@@ -26,15 +26,20 @@ const Navbar = () => {
           <Link to="/" className="hover:underline hover:underline-offset-4">
             Inicio
           </Link>
-          <Link
+          {(role === "user" ) && (
+            <Link
             to={loggedIn ? "/promotions/private" : "/promotions"}
             className="hover:underline hover:underline-offset-4"
           >
             {loggedIn ? "Mis Promociones" : "Promociones"}
           </Link>
-          <Link to="/contact" className="hover:underline hover:underline-offset-4">
+          )}
+          
+          {(role === "user" ) && (
+            <Link to="/contact" className="hover:underline hover:underline-offset-4">
             Contactanos
           </Link>
+          )}
           <Link to="/my-profile" className="hover:underline hover:underline-offset-4">
             Mi Perfil
           </Link>
