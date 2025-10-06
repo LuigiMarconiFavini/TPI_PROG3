@@ -2,9 +2,11 @@ import { useState, useEffect, useContext } from "react";
 import CardCourts from "../cardCourts/CardCourts";
 import { deportes, tiposPorDeporte, horarios } from "../../mocks/mock";
 import { AuthenticationContext } from "../services/auth.context";
+import toast from "react-hot-toast";
+import NewCourts from "../newCourts/NewCourts";
 
 const SearchForm = () => {
-  const { token, user } = useContext(AuthenticationContext);
+  const { token } = useContext(AuthenticationContext);
 
   const [deporte, setDeporte] = useState("");
   const [tipoCancha, setTipoCancha] = useState("");
@@ -12,6 +14,9 @@ const SearchForm = () => {
   const [resultados, setResultados] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const [editingCourt, setEditingCourt] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const fetchCanchas = async () => {
     try {
@@ -35,6 +40,7 @@ const SearchForm = () => {
       setResultados(data);
     } catch (err) {
       setError(err.message);
+      toast.error("❌ " + err.message);
     } finally {
       setLoading(false);
     }
@@ -49,6 +55,67 @@ const SearchForm = () => {
     fetchCanchas(); // Volvemos a traer del backend con los filtros
   };
 
+  const handleDelete = async (cancha) => {
+    if (!token) return toast.error("No estás autenticado");
+
+    // Confirmación usando toast
+    toast(
+      (t) => (
+        <div className="flex flex-col gap-2">
+          <p>❌ ¿Seguro que querés eliminar la cancha "{cancha.nombre}"?</p>
+          <div className="flex gap-2 justify-end mt-2">
+            <button
+              onClick={async () => {
+                toast.dismiss(t.id); // cerrar el toast
+                try {
+                  const res = await fetch(
+                    `http://localhost:3000/api/canchas/${cancha.id}`,
+                    {
+                      method: "DELETE",
+                      headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                      },
+                    }
+                  );
+                  if (!res.ok) throw new Error("Error al eliminar la cancha");
+                  setResultados((prev) =>
+                    prev.filter((c) => c.id !== cancha.id)
+                  );
+                  toast.success("✅ Cancha eliminada correctamente");
+                } catch (err) {
+                  console.error(err);
+                  toast.error("❌ " + err.message);
+                }
+              }}
+              className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded-lg"
+            >
+              Sí, eliminar
+            </button>
+            <button
+              onClick={() => toast.dismiss(t.id)}
+              className="bg-gray-400 hover:bg-gray-500 text-white py-1 px-3 rounded-lg"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      ),
+      { duration: Infinity }
+    );
+  };
+
+  const handleEdit = (cancha) => {
+    setEditingCourt(cancha);
+    setModalOpen(true);
+  };
+
+  const handleSaved = (updateCourt) => {
+    setResultados((prev) =>
+      prev.map((c) => (c.id === updateCourt.id ? updateCourt : c))
+    );
+    setModalOpen(false);
+  };
   return (
     <div className="p-6 min-h-screen bg-white text-black dark:bg-gray-900 dark:text-white transition-colors duration-300">
       {/* Formulario de filtros */}
@@ -144,7 +211,8 @@ const SearchForm = () => {
               <CardCourts
                 key={c.id}
                 cancha={c}
-                showAdminButtons={user?.role === "admin"}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
               />
             ))
           ) : (
@@ -154,6 +222,20 @@ const SearchForm = () => {
               </p>
             </div>
           )}
+        </div>
+      )}
+
+      {modalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-lg max-w-md w-full">
+            <button
+              className="text-gray-500 dark:text-gray-300 float-right"
+              onClick={() => setModalOpen(false)}
+            >
+              ✖
+            </button>
+            <NewCourts existingCourt={editingCourt} onSaved={handleSaved} />
+          </div>
         </div>
       )}
     </div>
