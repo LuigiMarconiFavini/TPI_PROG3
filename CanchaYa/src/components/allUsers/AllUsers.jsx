@@ -5,6 +5,7 @@ const AllUsers = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [openDropdown, setOpenDropdown] = useState(null);
 
   const navigate = useNavigate()
   const handleClick = () => {
@@ -41,13 +42,60 @@ const AllUsers = () => {
     }
   };
 
+  const handleChangeRole = async (id, selectedRole) => {
+    const token = localStorage.getItem("canchaYa-token");
+    try {
+      const res = await fetch(`http://localhost:3000/api/users/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({ role: selectedRole }),
+      });
+
+      if (res.ok) {
+        setUsers(users.map(u => u.id === id ? { ...u, role: selectedRole } : u));
+        setOpenDropdown(null);
+      } else {
+        alert("Error al cambiar el rol");
+      }
+    } catch (error) {
+      console.error("Error al cambiar el rol:", error);
+    }
+  };
+  
+  const handleDeleteUser = async (id) => {
+    const confirmDelete = window.confirm("¿Seguro que deseas eliminar este usuario?");
+    if (!confirmDelete) return;
+
+    const token = localStorage.getItem("canchaYa-token");
+
+    try {
+      const res = await fetch(`http://localhost:3000/api/users/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        setUsers(users.filter(u => u.id !== id));
+        setOpenDropdown(null);
+      } else {
+        alert("Error al eliminar usuario");
+      }
+    } catch (error) {
+      console.error("Error al eliminar usuario:", error);
+    }
+  };
 
   useEffect(() => {
     fetchGetUsers();
   }, []);
 
   return (
-    <div className="container mx-auto p-4 sm:p-6 lg:p-8 bg-gray-50 min-h-screen">
+    <div className="container mx-auto p-4 sm:p-6 lg:p-8 bg-gray-50 min-h-[80vh]">
       <h1 className="text-3xl font-bold text-gray-800 mb-6 border-b pb-4">
         Gestión de Usuarios
       </h1>
@@ -72,7 +120,7 @@ const AllUsers = () => {
       )}
 
       {!loading && !error && users.length > 0 && (
-        <div className="overflow-x-auto bg-white rounded-lg shadow-xl ring-1 ring-gray-100">
+        <div className="bg-white rounded-lg shadow-xl ring-1 ring-gray-100">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-100">
               <tr>
@@ -101,15 +149,39 @@ const AllUsers = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {new Date(user.createdAt).toLocaleDateString()}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                   {/* <button
-                      onClick={() => handleDeleteUser(user.id)}
-                      className="text-red-600 hover:text-red-900 px-2 py-1 rounded-md hover:bg-red-50 transition duration-150 ease-in-out"
-                      title="Eliminar"
+                  <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium relative">
+                  <div className="inline-block text-left">
+                    <button
+                      onClick={() => setOpenDropdown(openDropdown === user.id ? null : user.id)}
+                      className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded-md font-semibold"
                     >
-                      🗑️ Eliminar
-                    </button> */}
-                  </td>
+                      Acciones
+                    </button>
+
+                    {openDropdown === user.id && (
+                      <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                        <div className="px-4 py-2 text-sm">
+                          <label className="block text-gray-700 mb-1">Cambiar Rol:</label>
+                          <select
+                            className="w-full border rounded-md p-1"
+                            value={user.role}
+                            onChange={(e) => handleChangeRole(user.id, e.target.value)}
+                          >
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                            <option value="sysadmin">Sysadmin</option>
+                          </select>
+                        </div>
+                        <button
+                          onClick={() => handleDeleteUser(user.id)}
+                          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100"
+                        >
+                          Eliminar Usuario
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </td>
                 </tr>
               ))}
             </tbody>
