@@ -36,8 +36,8 @@ const NewCourts = ({ existingCourt = null, onSaved }) => {
       };
 
       const url = existingCourt
-        ? `http://localhost:3000/canchas/${existingCourt.id}`
-        : "http://localhost:3000/canchas";
+        ? `http://localhost:3000/api/canchas/${existingCourt.id}`
+        : "http://localhost:3000/api/canchas";
 
       const method = existingCourt ? "PUT" : "POST";
 

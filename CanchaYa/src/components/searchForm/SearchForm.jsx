@@ -23,7 +23,7 @@ const SearchForm = () => {
       if (tipoCancha) query.append("tipo", tipoCancha);
       if (horarioSeleccionado) query.append("horario", horarioSeleccionado);
 
-      const res = await fetch(`http://localhost:3000/canchas?${query}`, {
+      const res = await fetch(`http://localhost:3000/api/canchas?${query}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
