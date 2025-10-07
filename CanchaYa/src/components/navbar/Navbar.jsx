@@ -26,21 +26,30 @@ const Navbar = () => {
           <Link to="/" className="hover:underline hover:underline-offset-4">
             Inicio
           </Link>
-          <Link to="/services" className="hover:underline hover:underline-offset-4">
-            Reservar Cancha
+          
+          {(role === "user" ) && (
+            <Link to="/contact" className="hover:underline hover:underline-offset-4">
+            Contactanos
           </Link>
-          <Link
+          )}
+          <Link to="/my-profile" className="hover:underline hover:underline-offset-4">
+            Mi Perfil
+          </Link>
+
+          {(role === "user" ) && (
+            <Link
             to={loggedIn ? "/promotions/private" : "/promotions"}
             className="hover:underline hover:underline-offset-4"
           >
             {loggedIn ? "Mis Promociones" : "Promociones"}
           </Link>
-          <Link to="/contact" className="hover:underline hover:underline-offset-4">
-            Contactanos
+          )}
+          {(role === "user" ) && (
+            <Link to="/reservations" className="hover:underline hover:underline-offset-4">
+            Mis Reservas
           </Link>
-          <Link to="/my-profile" className="hover:underline hover:underline-offset-4">
-            Mi Perfil
-          </Link>
+          )}
+
 
           {(role === "admin" || role === "sysadmin") && (
             <button

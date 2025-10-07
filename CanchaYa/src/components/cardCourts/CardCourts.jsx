@@ -1,10 +1,11 @@
 import React, { useContext } from "react";
 import { AuthenticationContext } from "../services/auth.context";
+import toast from "react-hot-toast";
 
 const CardCourts = ({ cancha, onEdit, onDelete }) => {
   const { user } = useContext(AuthenticationContext);
 
-  const canEditOrDelete = user?.rol === "admin" || user?.rol === "sysadmin";
+  const canEditOrDelete = user?.role === "admin" || user?.role === "sysadmin";
 
   const showReservar = !canEditOrDelete;
 
@@ -39,7 +40,12 @@ const CardCourts = ({ cancha, onEdit, onDelete }) => {
         </div>
 
         {showReservar && (
-          <button className="mt-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition">
+          <button
+            className="mt-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition"
+            onClick={() =>
+              toast.success(`✅ Reservaste la cancha "${cancha.nombre}"`)
+            }
+          >
             Reservar
           </button>
         )}
@@ -48,13 +54,13 @@ const CardCourts = ({ cancha, onEdit, onDelete }) => {
           <div className="flex gap-2 mt-2">
             <button
               onClick={() => onEdit(cancha)}
-              className="bg-yellow-500 hover:bg-yellow-600 text-white py-1 px-3 rounded-lg"
+              className="mt-auto py-2 px-4 rounded-lg bg-yellow-500 hover:bg-yellow-600 text-white "
             >
               Editar
             </button>
             <button
               onClick={() => onDelete(cancha)}
-              className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded-lg"
+              className="mt-auto bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg"
             >
               Eliminar
             </button>

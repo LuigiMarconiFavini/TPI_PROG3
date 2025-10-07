@@ -12,7 +12,7 @@ export default function ThemeToggle() {
                 dark:bg-gray-700 dark:text-white 
                 transition-colors duration-300"
         >
-            {theme === "dark" ? "☀️ Claro" : "🌙 Oscuro"}
+            {theme === "dark" ? "☀️" : "🌙"}
         </button>
     )
 }

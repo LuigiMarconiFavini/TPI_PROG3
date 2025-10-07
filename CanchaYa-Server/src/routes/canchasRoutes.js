@@ -18,6 +18,11 @@ router.get("/:id", getCanchaById);
 
 router.post("/", verifyToken, checkRole("admin", "sysadmin"), createCancha);
 router.put("/:id", verifyToken, checkRole("admin", "sysadmin"), updateCancha);
-router.delete("/:id", verifyToken, checkRole("sysadmin"), deleteCancha);
+router.delete(
+  "/:id",
+  verifyToken,
+  checkRole("admin", "sysadmin"),
+  deleteCancha
+);
 
 export default router;
