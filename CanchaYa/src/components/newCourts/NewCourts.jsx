@@ -79,8 +79,9 @@ const NewCourts = ({ existingCourt = null, onSaved }) => {
   };
 
   return (
-    <div className="p-6 bg-white dark:bg-gray-900 rounded-2xl shadow-md max-w-md mx-auto mt-10">
-      <h2 className="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-100">
+  <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50 px-4">
+    <div className="w-full max-w-lg sm:max-w-xl md:max-w-2xl bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 overflow-y-auto max-h-[90vh]">
+      <h2 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800 dark:text-gray-100 text-center">
         {existingCourt ? "Editar Cancha" : "Nueva Cancha"}
       </h2>
 
@@ -92,7 +93,7 @@ const NewCourts = ({ existingCourt = null, onSaved }) => {
           placeholder="Nombre de la Cancha"
           value={nombre}
           onChange={(e) => setNombre(e.target.value)}
-          className="border rounded-lg p-3 shadow-sm focus:ring-2 focus:ring-blue-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+          className="border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-blue-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
         />
 
         <select
@@ -101,7 +102,7 @@ const NewCourts = ({ existingCourt = null, onSaved }) => {
             setDeporte(e.target.value);
             setTipo("");
           }}
-          className="border rounded-lg p-3 shadow-sm focus:ring-2 focus:ring-blue-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+          className="border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-blue-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
         >
           <option value="">Deporte</option>
           {deportes.map((d) => (
@@ -115,7 +116,7 @@ const NewCourts = ({ existingCourt = null, onSaved }) => {
           <select
             value={tipo}
             onChange={(e) => setTipo(e.target.value)}
-            className="border rounded-lg p-3 shadow-sm focus:ring-2 focus:ring-blue-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+            className="border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-blue-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
           >
             <option value="">Tipo</option>
             {tiposPorDeporte[deporte]?.map((t) => (
@@ -131,7 +132,7 @@ const NewCourts = ({ existingCourt = null, onSaved }) => {
           placeholder="Dirección"
           value={direccion}
           onChange={(e) => setDireccion(e.target.value)}
-          className="border rounded-lg p-3 shadow-sm focus:ring-2 focus:ring-blue-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+          className="border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-blue-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
         />
 
         <input
@@ -139,7 +140,7 @@ const NewCourts = ({ existingCourt = null, onSaved }) => {
           placeholder="Precio"
           value={precio}
           onChange={(e) => setPrecio(e.target.value)}
-          className="border rounded-lg p-3 shadow-sm focus:ring-2 focus:ring-blue-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+          className="border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-blue-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
         />
 
         <input
@@ -147,19 +148,18 @@ const NewCourts = ({ existingCourt = null, onSaved }) => {
           placeholder="URL de la Imagen"
           value={imagen}
           onChange={(e) => setImagen(e.target.value)}
-          className="border rounded-lg p-3 shadow-sm focus:ring-2 focus:ring-blue-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+          className="border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-blue-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
         />
 
-        {/* Horarios como checkboxes */}
-        <div className="flex flex-col gap-2 mt-2">
+        <div className="flex flex-col gap-2 mt-4">
           <label className="font-semibold text-gray-700 dark:text-gray-300">
             Horarios Disponibles
           </label>
-          <div className="flex flex-wrap gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
             {horarios.map((h) => (
               <label
                 key={h}
-                className="flex items-center gap-2 border px-3 py-1 rounded-xl cursor-pointer bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+                className="flex items-center justify-center gap-2 border px-3 py-2 rounded-xl cursor-pointer bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition text-sm"
               >
                 <input
                   type="checkbox"
@@ -185,7 +185,7 @@ const NewCourts = ({ existingCourt = null, onSaved }) => {
         <button
           type="submit"
           disabled={loading}
-          className="bg-blue-600 text-white rounded-lg py-3 px-6 font-semibold hover:bg-blue-700 transition mt-4"
+          className="bg-blue-600 text-white rounded-lg py-3 px-6 font-semibold hover:bg-blue-700 transition mt-4 w-full"
         >
           {loading
             ? "Guardando..."
@@ -195,7 +195,10 @@ const NewCourts = ({ existingCourt = null, onSaved }) => {
         </button>
       </form>
     </div>
-  );
+  </div>
+);
+
+
 };
 
 export default NewCourts;
