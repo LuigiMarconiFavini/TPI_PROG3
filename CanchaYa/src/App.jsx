@@ -14,72 +14,11 @@ import PublicPromotions from "./components/promotions/PublicPromotions";
 import { AuthenticationContext } from "./components/services/auth.context";
 import { ThemeProvider } from "./components/context/ThemeProvider";
 import AllUsers from "./components/allUsers/allUsers";
-import AllCanchas from "./components/allCanchas/AllCanchas";
-
-import { Toaster } from "react-hot-toast";
 
 function App() {
   const { token, handleUserLogout } = useContext(AuthenticationContext);
 
   return (
-
-  <ThemeProvider>
-    <BrowserRouter>
-      <Routes>
-        {/* Páginas públicas */}
-        <Route
-          path="/login"
-          element={token ? <Navigate to="/" /> : <Login />}
-        />
-        <Route
-          path="/register"
-          element={token ? <Navigate to="/" /> : <Register />}
-        />
-        <Route
-          path="/promotions"
-          element={
-            <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
-              <PublicPromotions />
-            </MainLayout>
-          }
-        />
-        <Route
-          path="/"
-          element={
-            <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
-              <Dashboard />
-            </MainLayout>
-          }
-        />
-        <Route
-          path="/contact"
-          element={
-            <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
-              <Contact />
-            </MainLayout>
-          }
-        />
-        <Route
-          path="/all-users"
-          element={
-            <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
-              <AllUsers />
-            </MainLayout>
-          }
-        />
-
-        <Route
-          path="/all-canchas"
-          element={
-            <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
-              <AllCanchas />
-            </MainLayout>
-          }
-        />
-
-        {/* Rutas privadas usando Protected + Outlet */}
-        <Route element={<Protected />}>
-
     <ThemeProvider>
       <BrowserRouter>
         <Routes>
@@ -100,7 +39,6 @@ function App() {
               </MainLayout>
             }
           />
-
           <Route
             path="/"
             element={
@@ -125,6 +63,15 @@ function App() {
               </MainLayout>
             }
           />
+
+          <Route
+          path="/all-canchas"
+          element={
+            <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+              <AllCanchas />
+            </MainLayout>
+          }
+        />
 
           {/* Rutas privadas usando Protected + Outlet */}
           <Route element={<Protected />}>
