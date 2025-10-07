@@ -105,3 +105,16 @@ export const deleteCancha = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+
+export const getAllCanchas = async(req, res) => {
+  try {
+    const canchas = await Cancha.findAll({
+      attributes: ['id', 'nombre', 'deporte', 'tipo', 'direccion', 'precio', 'horarios', 'createdAt', 'updatedAt' ]
+    });
+    res.json(canchas);
+  } catch {
+    console.error("Error al obtener Canchas", error);
+    res.status(500).json({ message: "error del server" });
+  }
+}
