@@ -2,6 +2,7 @@ import express from "express";
 import {
   createCancha,
   deleteCancha,
+  getAllCanchas,
   getCanchaById,
   getCanchas,
   updateCancha,
@@ -11,6 +12,7 @@ import { checkRole } from "../Middleware/roleMiddleware.js";
 
 const router = express.Router();
 
+router.get("/getAll", verifyToken, checkRole("sysadmin"), getAllCanchas);
 router.get("/", getCanchas);
 router.get("/:id", getCanchaById);
 
