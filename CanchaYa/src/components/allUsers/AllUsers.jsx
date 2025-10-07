@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { showErrorToast, showConfirmToast, showSuccessToast } from '../../toast/toastNotifications.jsX';
 
 const AllUsers = () => {
   const [users, setUsers] = useState([]);
@@ -30,13 +31,13 @@ const AllUsers = () => {
       const data = await res.json();
 
       if (res.ok) {
-        setUsers(data)
+        setUsers(data);
       } else {
-        setError('Error al obtener los usuarios');
+        showErrorToast("Error al obtener los usuarios");
       }
     } catch (error) {
       console.error("Error al obtener usuarios:", error);
-      setError(error.message);
+      showErrorToast(error.message);
     } finally {
       setLoading(false);
     }
@@ -57,38 +58,42 @@ const AllUsers = () => {
       if (res.ok) {
         setUsers(users.map(u => u.id === id ? { ...u, role: selectedRole } : u));
         setOpenDropdown(null);
+        showSuccessToast("Rol actualizado correctamente");
       } else {
-        alert("Error al cambiar el rol");
+        showErrorToast("Error al cambiar el rol");
       }
     } catch (error) {
       console.error("Error al cambiar el rol:", error);
+      showErrorToast("Error al cambiar el rol");
     }
   };
+
   
   const handleDeleteUser = async (id) => {
-    const confirmDelete = window.confirm("¿Seguro que deseas eliminar este usuario?");
-    if (!confirmDelete) return;
+    showConfirmToast("¿Seguro que deseas eliminar este usuario?", async () => {
+      const token = localStorage.getItem("canchaYa-token");
+      try {
+        const res = await fetch(`http://localhost:3000/api/users/${id}`, {
+          method: "DELETE",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+          },
+        });
 
-    const token = localStorage.getItem("canchaYa-token");
-
-    try {
-      const res = await fetch(`http://localhost:3000/api/users/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        },
-      });
-
-      if (res.ok) {
-        setUsers(users.filter(u => u.id !== id));
-        setOpenDropdown(null);
-      } else {
-        alert("Error al eliminar usuario");
+        if (res.ok) {
+          setUsers(users.filter(u => u.id !== id));
+          setOpenDropdown(null);
+          showSuccessToast("Usuario eliminado correctamente");
+        } else {
+          showErrorToast("Error al eliminar usuario");
+        }
+      } catch (error) {
+        console.error("Error al eliminar usuario:", error);
+        showErrorToast("Error al eliminar usuario");
       }
-    } catch (error) {
-      console.error("Error al eliminar usuario:", error);
-    }
+    });
   };
+
 
   useEffect(() => {
     fetchGetUsers();

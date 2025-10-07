@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { showErrorToast, showConfirmToast, showSuccessToast } from '../../toast/toastNotifications.jsX';
 const AllCanchas = () => {
   const [canchas, setCanchas] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
@@ -15,7 +14,6 @@ const AllCanchas = () => {
   // Fetch de todas las canchas
   const fetchCanchas = async () => {
     setLoading(true);
-    setError(null);
     try {
       const token = localStorage.getItem("canchaYa-token");
       const res = await fetch("http://localhost:3000/api/canchas/getAll", {
@@ -24,14 +22,15 @@ const AllCanchas = () => {
         }
       });
       const data = await res.json();
+
       if (res.ok) {
         setCanchas(data);
       } else {
-        setError("Error al obtener las canchas");
+        showErrorToast("Error al obtener las canchas");
       }
     } catch (error) {
       console.error("Error al obtener canchas:", error);
-      setError("Error al obtener las canchas");
+      showErrorToast("Error al obtener las canchas");
     } finally {
       setLoading(false);
     }
@@ -39,27 +38,27 @@ const AllCanchas = () => {
 
   // Eliminar cancha
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm("¿Seguro que deseas eliminar esta cancha?");
-    if (!confirmDelete) return;
+    showConfirmToast("¿Seguro que deseas eliminar esta cancha?", async () => {
+      const token = localStorage.getItem("canchaYa-token");
+      try {
+        const res = await fetch(`http://localhost:3000/api/canchas/${id}`, {
+          method: "DELETE",
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
 
-    const token = localStorage.getItem("canchaYa-token");
-
-    try {
-      const res = await fetch(`http://localhost:3000/api/canchas/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Authorization": `Bearer ${token}`
+        if (res.ok) {
+          setCanchas(prev => prev.filter(c => c.id !== id));
+          showSuccessToast("Cancha eliminada correctamente");
+        } else {
+          showErrorToast("Error al eliminar la cancha");
         }
-      });
-
-      if (res.ok) {
-        setCanchas(canchas.filter(c => c.id !== id));
-      } else {
-        alert("Error al eliminar la cancha");
+      } catch (error) {
+        console.error("Error al eliminar cancha:", error);
+        showErrorToast("Error al eliminar la cancha");
       }
-    } catch (error) {
-      console.error("Error al eliminar cancha:", error);
-    }
+    });
   };
 
   useEffect(() => {
@@ -78,20 +77,13 @@ const AllCanchas = () => {
         </div>
       )}
 
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
-          <strong className="font-bold">Error:</strong>
-          <span className="ml-2">{error}</span>
-        </div>
-      )}
-
-      {!loading && !error && canchas.length === 0 && (
+      {!loading && canchas.length === 0 && (
         <div className="text-center py-8">
           <p className="text-lg text-gray-600">No hay canchas registradas.</p>
         </div>
       )}
 
-      {!loading && !error && canchas.length > 0 && (
+      {!loading && canchas.length > 0 && (
         <div className="bg-white rounded-lg shadow-xl ring-1 ring-gray-100 overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-100">
