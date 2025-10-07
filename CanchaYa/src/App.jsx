@@ -14,6 +14,7 @@ import { AuthenticationContext } from "./components/services/auth.context";
 
 import { ThemeProvider } from "./components/context/ThemeProvider";
 import AllUsers from "./components/allUsers/allUsers";
+import AllCanchas from "./components/allCanchas/AllCanchas";
 
 function App() {
   const { token, handleUserLogout } = useContext(AuthenticationContext);
@@ -61,6 +62,15 @@ function App() {
           element={
             <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
               <AllUsers />
+            </MainLayout>
+          }
+        />
+
+        <Route
+          path="/all-canchas"
+          element={
+            <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+              <AllCanchas />
             </MainLayout>
           }
         />
