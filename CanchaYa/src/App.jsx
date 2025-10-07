@@ -14,6 +14,9 @@ import PublicPromotions from "./components/promotions/PublicPromotions";
 import { AuthenticationContext } from "./components/services/auth.context";
 import { ThemeProvider } from "./components/context/ThemeProvider";
 import AllUsers from "./components/allUsers/allUsers";
+import AllCanchas from "./components/allCanchas/AllCanchas";
+
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const { token, handleUserLogout } = useContext(AuthenticationContext);
