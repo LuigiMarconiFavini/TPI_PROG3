@@ -12,96 +12,95 @@ import MainLayout from "./components/layouts/MainLayout";
 import Promotions from "./components/promotions/Promotions";
 import PublicPromotions from "./components/promotions/PublicPromotions";
 import { AuthenticationContext } from "./components/services/auth.context";
-
 import { ThemeProvider } from "./components/context/ThemeProvider";
 import AllUsers from "./components/allUsers/allUsers";
+
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const { token, handleUserLogout } = useContext(AuthenticationContext);
 
   return (
-
-  <ThemeProvider>
-    <BrowserRouter>
-      <Routes>
-        {/* Páginas públicas */}
-        <Route
-          path="/login"
-          element={token ? <Navigate to="/" /> : <Login />}
-        />
-        <Route
-          path="/register"
-          element={token ? <Navigate to="/" /> : <Register />}
-        />
-        <Route
-          path="/promotions"
-          element={
-            <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
-              <PublicPromotions />
-            </MainLayout>
-          }
-        />
-        <Route
-          path="/"
-          element={
-            <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
-              <Dashboard />
-            </MainLayout>
-          }
-        />
-        <Route
-          path="/contact"
-          element={
-            <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
-              <Contact />
-            </MainLayout>
-          }
-        />
-        <Route
-          path="/all-users"
-          element={
-            <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
-              <AllUsers />
-            </MainLayout>
-          }
-        />
-
-        {/* Rutas privadas usando Protected + Outlet */}
-        <Route element={<Protected />}>
+    <ThemeProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* Páginas públicas */}
           <Route
-            path="/promotions/private"
+            path="/login"
+            element={token ? <Navigate to="/" /> : <Login />}
+          />
+          <Route
+            path="/register"
+            element={token ? <Navigate to="/" /> : <Register />}
+          />
+          <Route
+            path="/promotions"
             element={
               <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
-                <Promotions />
+                <PublicPromotions />
               </MainLayout>
             }
           />
           <Route
-            path="/my-profile"
+            path="/"
             element={
               <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
-                <MyProfile />
+                <Dashboard />
               </MainLayout>
             }
           />
-        </Route>
+          <Route
+            path="/contact"
+            element={
+              <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+                <Contact />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/all-users"
+            element={
+              <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+                <AllUsers />
+              </MainLayout>
+            }
+          />
 
-        <Route
-          path="/reservations"
-          element={
-            <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+          {/* Rutas privadas usando Protected + Outlet */}
+          <Route element={<Protected />}>
+            <Route
+              path="/promotions/private"
+              element={
+                <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+                  <Promotions />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/my-profile"
+              element={
+                <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+                  <MyProfile />
+                </MainLayout>
+              }
+            />
+          </Route>
+
+          <Route
+            path="/reservations"
+            element={
+              <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
                 <Reservations />
               </MainLayout>
-          }
-        />
-          
-        {/* NotFound */}
-        <Route path="/*" element={<NotFound />} />
+            }
+          />
 
-      </Routes>
-    </BrowserRouter>
- </ThemeProvider>
-
+          {/* NotFound */}
+          <Route path="/*" element={<NotFound />} />
+        </Routes>
+        <Toaster position="top-right" reverseOrder={false} />
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

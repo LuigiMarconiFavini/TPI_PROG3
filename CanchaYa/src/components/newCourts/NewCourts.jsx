@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { AuthenticationContext } from "../services/auth.context";
 import { deportes, tiposPorDeporte, horarios } from "../../mocks/mock";
+import toast from "react-hot-toast";
 
 const NewCourts = ({ existingCourt = null, onSaved }) => {
   const { token } = useContext(AuthenticationContext);
@@ -53,8 +54,25 @@ const NewCourts = ({ existingCourt = null, onSaved }) => {
       if (!res.ok) throw new Error("Error al guardar la cancha");
       const data = await res.json();
       if (onSaved) onSaved(data);
+
+      toast.success(
+        existingCourt
+          ? "✅ Cancha actualizada correctamente"
+          : "✅ Cancha agregada correctamente"
+      );
+      if (!existingCourt) {
+        setNombre("");
+        setDeporte("");
+        setTipo("");
+        setDireccion("");
+        setPrecio("");
+        setImagen("");
+        setHorariosSeleccionados([]);
+      }
     } catch (err) {
+      console.error(err);
       setError(err.message);
+      toast.error("❌ " + err.message);
     } finally {
       setLoading(false);
     }
