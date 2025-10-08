@@ -17,6 +17,7 @@ import AllUsers from "./components/allUsers/allUsers";
 import AllCanchas from "./components/allCanchas/AllCanchas";
 
 import { Toaster } from "react-hot-toast";
+import MyReservations from "./components/reservations/MyReservations";
 
 function App() {
   const { token, handleUserLogout } = useContext(AuthenticationContext);
@@ -101,6 +102,14 @@ function App() {
             element={
               <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
                 <Reservations />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/my-reservations/:id"
+            element={
+              <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+                <MyReservations />
               </MainLayout>
             }
           />

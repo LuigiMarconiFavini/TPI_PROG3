@@ -8,6 +8,8 @@ const Reservations = () => {
         Aquí podrás ver todas tus reservas realizadas.
       </p>
       {/* FALTA LÓGICA */}
+
+      ACA VA EL GET DE MIS RESERVAS, YA CREADO EL CONTROLADOR!
     </div>
   );
 }
