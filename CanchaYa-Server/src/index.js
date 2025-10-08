@@ -6,10 +6,13 @@ import cors from "cors";
 import canchasRoutes from "./routes/canchasRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import usersRoutes from "./routes/usersRoutes.js";
+import reservasRoutes from "./routes/reservasRoutes.js";
 
 //Models
 import "./Models/User.js";
 import "./Models/Cancha.js";
+import "./Models/Reservas.js";
+
 const PORT = process.env.PORT || 3000;
 const app = express();
 
@@ -19,6 +22,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/canchas", canchasRoutes);
+app.use("/api/reservas", reservasRoutes);
 
 (async () => {
   try {
