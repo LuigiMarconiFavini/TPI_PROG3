@@ -1,11 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import {
   showSuccessToast,
   showErrorToast,
   showWarningToast,
-} from '../../toast/toastNotifications.jsX';
-import { AuthenticationContext } from '../services/auth.context';
+} from "../../toast/toastNotifications.jsX";
+import { AuthenticationContext } from "../services/auth.context";
 
 const MyReservations = () => {
   const { id } = useParams();
@@ -41,18 +41,18 @@ const MyReservations = () => {
 
     try {
       const res = await fetch(
-        `http://localhost:3000/api/reservas?canchaId=${id}&fecha=${fechaSeleccionada}`
+        `http://localhost:3000/api/reservas/porFecha?canchaId=${id}&fecha=${fechaSeleccionada}`
       );
       const reservas = await res.json();
       const horariosReservados = reservas.map((r) => r.horaReserva);
 
-      const horariosDisponiblesFiltrados = cancha.horarios.filter(
+      const horariosDisponiblesFiltrados = (cancha.horarios || []).filter(
         (hora) => !horariosReservados.includes(hora)
       );
 
       setHorariosDisponibles(horariosDisponiblesFiltrados);
-      setHorarioSeleccionado(""); // Reset por si ya se eligió antes
-    // eslint-disable-next-line no-unused-vars
+      setHorarioSeleccionado(""); // resetear selección
+      // eslint-disable-next-line no-unused-vars
     } catch (err) {
       showErrorToast("Error al cargar horarios disponibles");
     }
@@ -84,15 +84,21 @@ const MyReservations = () => {
       }
 
       showSuccessToast("Reserva confirmada");
-      setHorarioSeleccionado("");
+      setHorarioSeleccionado(""); // solo resetear
       setFecha("");
+
+      // Opcional: actualizar horariosDisponibles inmediatamente
+      setHorariosDisponibles((prev) =>
+        prev.filter((h) => h !== horarioSeleccionado)
+      );
     } catch (err) {
       showErrorToast("Error al confirmar reserva: " + err.message);
     }
   };
 
   if (loading) return <p className="text-gray-300">Cargando cancha...</p>;
-  if (!cancha) return <p className="text-red-500">No se pudo cargar la cancha.</p>;
+  if (!cancha)
+    return <p className="text-red-500">No se pudo cargar la cancha.</p>;
 
   return (
     <div className="container mx-auto px-4 py-8 text-white">
@@ -102,11 +108,21 @@ const MyReservations = () => {
         {/* Detalles de la cancha */}
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
           <h3 className="text-xl font-semibold mb-4">Detalles de la Cancha</h3>
-          <p><strong>Deporte:</strong> {cancha.deporte}</p>
-          <p><strong>Tipo:</strong> {cancha.tipo}</p>
-          <p><strong>Dirección:</strong> {cancha.direccion}</p>
-          <p><strong>Precio:</strong> ${cancha.precio}</p>
-          <p><strong>Horarios disponibles:</strong> {cancha.horarios?.join(", ")}</p>
+          <p>
+            <strong>Deporte:</strong> {cancha.deporte}
+          </p>
+          <p>
+            <strong>Tipo:</strong> {cancha.tipo}
+          </p>
+          <p>
+            <strong>Dirección:</strong> {cancha.direccion}
+          </p>
+          <p>
+            <strong>Precio:</strong> ${cancha.precio}
+          </p>
+          <p>
+            <strong>Horarios disponibles:</strong> {cancha.horarios?.join(", ")}
+          </p>
         </div>
 
         {/* Calendario y select de horarios */}
@@ -119,17 +135,25 @@ const MyReservations = () => {
             className="bg-gray-800 text-white p-2 rounded mb-4 w-full"
           />
 
-          <h3 className="text-lg font-semibold mb-3">Elegí un horario</h3>
-          <select
-            value={horarioSeleccionado}
-            onChange={(e) => setHorarioSeleccionado(e.target.value)}
-            className="bg-gray-800 text-white p-2 rounded w-full"
-          >
-            <option value="">-- Seleccionar horario --</option>
-            {horariosDisponibles.map((hora, i) => (
-              <option key={i} value={hora}>{hora}</option>
-            ))}
-          </select>
+          {fecha && (
+            <>
+              <h3 className="text-lg font-semibold mb-3">
+                Horarios disponibles
+              </h3>
+              <select
+                value={horarioSeleccionado}
+                onChange={(e) => setHorarioSeleccionado(e.target.value)}
+                className="bg-gray-800 text-white p-2 rounded w-full"
+              >
+                <option value="">-- Seleccionar horario --</option>
+                {horariosDisponibles.map((hora, i) => (
+                  <option key={i} value={hora}>
+                    {hora}
+                  </option>
+                ))}
+              </select>
+            </>
+          )}
         </div>
       </div>
 
