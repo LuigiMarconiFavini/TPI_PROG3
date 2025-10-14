@@ -1,8 +1,14 @@
 import express from "express";
-import { getReservas } from "../controllers/reservasController.js";
+import {
+  crearReserva,
+  getReservas,
+  getReservasPorFecha,
+} from "../controllers/reservasController.js";
 
 const router = express.Router();
 
-router.get("/reservas", getReservas)
+router.get("/", getReservas);
+router.post("/", crearReserva);
+router.get("/porFecha", getReservasPorFecha);
 
 export default router;

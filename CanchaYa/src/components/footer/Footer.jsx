@@ -130,7 +130,7 @@ const Footer = () => {
                     href="tel:+244941540352"
                     className="text-white hover:text-blue-400 transition"
                   >
-                    +54 9 3482 63-7348
+                    +54 9 341-2324242
                   </a>
                 </div>
               </li>
@@ -139,18 +139,16 @@ const Footer = () => {
 
           {/* Newsletter */}
           <div>
-            <h3 className="text-lg font-semibold mb-6">Recibir promociones</h3>
-            <p className="text-gray-300 mb-4">
-              Ingresa tu mail para recibir promociones.
-            </p>
+            <h3 className="text-lg font-semibold mb-6">Redes Sociales</h3>
+
             <form className="mt-4">
               <div className="relative">
-                <input
+                {/* <input
                   type="email"
                   placeholder="Email"
                   className="w-full bg-gray-800 border border-gray-700 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-500 text-white"
-                />
-                <button
+                /> */}
+                {/* <button
                   type="submit"
                   className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg px-4 py-1 transition"
                 >
@@ -162,7 +160,7 @@ const Footer = () => {
                   >
                     <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                   </svg>
-                </button>
+                </button> */}
               </div>
             </form>
           </div>
@@ -194,4 +192,3 @@ const Footer = () => {
 };
 
 export default Footer;
-
