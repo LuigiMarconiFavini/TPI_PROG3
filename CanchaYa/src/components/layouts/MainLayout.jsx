@@ -21,5 +21,3 @@ const MainLayout = ({ children, loggedIn, onSignOut }) => {
 };
 
 export default MainLayout;
-
-

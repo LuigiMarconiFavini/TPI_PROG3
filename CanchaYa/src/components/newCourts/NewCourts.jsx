@@ -79,8 +79,7 @@ const NewCourts = ({ existingCourt = null, onSaved }) => {
   };
 
   return (
-  <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50 px-4">
-    <div className="w-full max-w-lg sm:max-w-xl md:max-w-2xl bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 overflow-y-auto max-h-[90vh]">
+    <div className="w-full">
       <h2 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800 dark:text-gray-100 text-center">
         {existingCourt ? "Editar Cancha" : "Nueva Cancha"}
       </h2>
@@ -195,10 +194,7 @@ const NewCourts = ({ existingCourt = null, onSaved }) => {
         </button>
       </form>
     </div>
-  </div>
-);
-
-
+  );
 };
 
 export default NewCourts;

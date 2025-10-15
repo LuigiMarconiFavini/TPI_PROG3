@@ -26,30 +26,38 @@ const Navbar = () => {
           <Link to="/" className="hover:underline hover:underline-offset-4">
             Inicio
           </Link>
-          
-          {(role === "user" ) && (
-            <Link to="/contact" className="hover:underline hover:underline-offset-4">
+
+          <Link
+            to="/contact"
+            className="hover:underline hover:underline-offset-4"
+          >
             Contactanos
           </Link>
-          )}
-          <Link to="/my-profile" className="hover:underline hover:underline-offset-4">
-            Mi Perfil
-          </Link>
 
-          {(role === "user" ) && (
+          {loggedIn && (
             <Link
+              to="/my-profile"
+              className="hover:underline hover:underline-offset-4"
+            >
+              Mi Perfil
+            </Link>
+          )}
+
+          <Link
             to={loggedIn ? "/promotions/private" : "/promotions"}
             className="hover:underline hover:underline-offset-4"
           >
             {loggedIn ? "Mis Promociones" : "Promociones"}
           </Link>
-          )}
-          {(role === "user" ) && (
-            <Link to="/reservations" className="hover:underline hover:underline-offset-4">
-            Mis Reservas
-          </Link>
-          )}
 
+          {loggedIn && role === "user" && (
+            <Link
+              to="/reservations"
+              className="hover:underline hover:underline-offset-4"
+            >
+              Mis Reservas
+            </Link>
+          )}
 
           {(role === "admin" || role === "sysadmin") && (
             <button
@@ -110,7 +118,7 @@ const Navbar = () => {
       {/* Modal Nueva Cancha */}
       {openNewCourt && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-lg max-w-lg w-full relative">
+          <div className="relative w-full max-w-2xl bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 overflow-y-auto max-h-[90vh]">
             <button
               onClick={() => setOpenNewCourt(false)}
               className="absolute top-3 right-4 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 text-2xl font-bold"
