@@ -70,16 +70,16 @@
 
 ```bash
 # Clonar repositorio
-git clone https://github.com/tu-usuario/CanchaYa.git
-cd CanchaYa
+git clone https://github.com/LuigiMarconiFavini/TPI_PROG3.git
+cd TPI_PROG3
 
 # Instalar frontend
-cd frontend
+cd CanchaYA
 npm install
-npm start
+npm run dev
 
 # Instalar backend
-cd ../backend
+cd ../CanchaYa-Server
 npm install
 npm run dev
 ```
@@ -88,4 +88,4 @@ npm run dev
 
 - ✉️ Email: [canchaya.soporte@gmail.com](mailto:canchaya.soporte@gmail.com)  
 - 📞 Tel: [+54 9 341-2324242](tel:+5493412324242)  
-- 🐱 GitHub: [https://github.com/tu-usuario](https://github.com/tu-usuario)
+  
