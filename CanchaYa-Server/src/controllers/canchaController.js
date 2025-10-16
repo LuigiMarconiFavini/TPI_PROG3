@@ -11,7 +11,7 @@ export const getCanchas = async (req, res) => {
 
     const canchas = await Cancha.findAll({ where });
 
-    // Filtrar por horario en JS, porque horarios es un JSON
+    // Filtrar por horario en JS si se pasó
     const filtradas = horario
       ? canchas.filter((c) => {
           try {
@@ -26,8 +26,8 @@ export const getCanchas = async (req, res) => {
       : canchas;
 
     res.json(filtradas);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error("Error al traer las canchas", error);
     res.status(500).json({ error: "Error al traer las canchas" });
   }
 };
@@ -106,15 +106,24 @@ export const deleteCancha = async (req, res) => {
   }
 };
 
-
-export const getAllCanchas = async(req, res) => {
+export const getAllCanchas = async (req, res) => {
   try {
     const canchas = await Cancha.findAll({
-      attributes: ['id', 'nombre', 'deporte', 'tipo', 'direccion', 'precio', 'horarios', 'createdAt', 'updatedAt' ]
+      attributes: [
+        "id",
+        "nombre",
+        "deporte",
+        "tipo",
+        "direccion",
+        "precio",
+        "horarios",
+        "createdAt",
+        "updatedAt",
+      ],
     });
     res.json(canchas);
   } catch {
     console.error("Error al obtener Canchas", error);
     res.status(500).json({ message: "error del server" });
   }
-}
+};

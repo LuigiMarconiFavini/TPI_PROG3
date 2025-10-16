@@ -23,12 +23,16 @@ const SearchForm = () => {
       setLoading(true);
       setError("");
 
+      let url = "http://localhost:3000/api/canchas";
+
       const query = new URLSearchParams();
       if (deporte) query.append("deporte", deporte);
       if (tipoCancha) query.append("tipo", tipoCancha);
       if (horarioSeleccionado) query.append("horario", horarioSeleccionado);
 
-      const res = await fetch(`http://localhost:3000/api/canchas?${query}`, {
+      if (query.toString()) url += "?" + query.toString();
+
+      const res = await fetch(url, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -36,6 +40,7 @@ const SearchForm = () => {
       });
 
       if (!res.ok) throw new Error("Error al traer las canchas");
+
       const data = await res.json();
       setResultados(data);
     } catch (err) {
@@ -46,9 +51,10 @@ const SearchForm = () => {
     }
   };
 
+  // Traer todas las canchas al montar
   useEffect(() => {
     fetchCanchas();
-  }, []); // Traer todas las canchas al montar el componente
+  }, []);
 
   const handleFilter = (e) => {
     e.preventDefault();
