@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AuthenticationContext } from "./auth.context";
 import { decodeToken, isTokenValid } from "./auth.helpers";
 import toast from "react-hot-toast";
@@ -40,6 +40,23 @@ export const AuthenticationContextProvider = ({ children }) => {
     if (!token) return null;
     if (!isTokenValid(token)) return null;
     return decodeToken(token); // devuelve el rol y email.
+  }, [token]);
+
+  useEffect(() => {
+    if (!token) return;
+
+    const interval = setInterval(() => {
+      if (!isTokenValid(token)) {
+        Swal.fire({
+          title: "Sesión expirada",
+          text: "Por favor, iniciá sesión nuevamente.",
+          icon: "info",
+          confirmButtonText: "Aceptar",
+          confirmButtonColor: "#2563eb",
+        }).then(() => handleUserLogout());
+      }
+    }, 1000 * 30);
+    return () => clearInterval(interval);
   }, [token]);
 
   return (

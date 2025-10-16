@@ -13,6 +13,8 @@ export const isTokenValid = (token) => {
   const decoded = decodeToken(token);
   if (!decoded) return false;
 
+  if (!decoded.exp) return true;
+
   const currenTime = Date.now() / 1000;
   return currenTime < decoded.exp;
 };
