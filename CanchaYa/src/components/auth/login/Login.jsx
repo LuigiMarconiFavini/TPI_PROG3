@@ -1,6 +1,7 @@
 import { useState, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthenticationContext } from "../../services/auth.context";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -40,6 +41,13 @@ const Login = () => {
       const data = await res.json();
 
       if (res.ok) {
+        toast.success(
+          "Iniciaste sesión exitosamente 🎉 ¡Bienvenido a CanchaYa!",
+          {
+            duration: 3000,
+            position: "top-center",
+          }
+        );
         // Guardamos token y usuario en el context
         handleUserLogin(data.token, data.user);
         navigate("/"); // Redirigimos al home

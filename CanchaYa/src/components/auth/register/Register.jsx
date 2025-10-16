@@ -1,15 +1,18 @@
 import { useState, useRef, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { AuthenticationContext } from "../../services/auth.context";
+import toast from "react-hot-toast"; // ✅ Importamos toast
 
 const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState();
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({
     username: false,
     email: false,
+    phone: false,
     password: false,
     confirmPassword: false,
   });
@@ -17,6 +20,7 @@ const Register = () => {
 
   const usernameRef = useRef(null);
   const emailRef = useRef(null);
+  const phoneRef = useRef(null);
   const passwordRef = useRef(null);
   const confirmPasswordRef = useRef(null);
   const navigate = useNavigate();
@@ -37,6 +41,11 @@ const Register = () => {
       emailRef.current?.focus();
       return;
     }
+    if (!phone.trim() || phone.length < 8) {
+      setErrors((s) => ({ ...s, phone: true }));
+      phoneRef.current?.focus();
+      return;
+    }
     if (password.length < 6) {
       setErrors((s) => ({ ...s, password: true }));
       passwordRef.current?.focus();
@@ -51,6 +60,7 @@ const Register = () => {
     setErrors({
       username: false,
       email: false,
+      phone: false,
       password: false,
       confirmPassword: false,
     });
@@ -60,12 +70,17 @@ const Register = () => {
       const res = await fetch("http://localhost:3000/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password }),
+        body: JSON.stringify({ username, email, phone, password }),
       });
 
       const data = await res.json();
 
       if (res.ok) {
+        toast.success("Registro exitoso 🎉 Bienvenido a CanchaYa", {
+          duration: 3000,
+          position: "top-center",
+        });
+
         // Login automático después de registrarse
         handleUserLogin(data.token, data.user);
         navigate("/"); // Redirigir al home
@@ -143,7 +158,27 @@ const Register = () => {
                 placeholder="tu@ejemplo.com"
               />
             </div>
-
+            <div>
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Número de teléfono
+              </label>
+              <input
+                id="phone"
+                type="tel"
+                ref={phoneRef}
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className={`mt-2 w-full rounded-md border px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 sm:text-sm ${
+                  errors.phone
+                    ? "border-red-500 ring-2 ring-red-500"
+                    : "border-gray-300 focus:ring-blue-600"
+                }`}
+                placeholder="Ej: 1123456789"
+              />
+            </div>
             {/* Password */}
             <div>
               <label

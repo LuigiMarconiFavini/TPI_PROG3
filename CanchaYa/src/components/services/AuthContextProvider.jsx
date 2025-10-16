@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
 import { AuthenticationContext } from "./auth.context";
 import { decodeToken, isTokenValid } from "./auth.helpers";
+import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 
 const tokenValue = localStorage.getItem("canchaYa-token");
 
@@ -12,9 +14,26 @@ export const AuthenticationContextProvider = ({ children }) => {
     setToken(token);
   };
 
-  const handleUserLogout = () => {
-    localStorage.removeItem("canchaYa-token");
-    setToken(null);
+  const handleUserLogout = async () => {
+    const result = await Swal.fire({
+      title: "¿Cerrar sesión?",
+      text: "Vas a salir de tu cuenta.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, cerrar sesión",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#2563eb",
+    });
+
+    if (result.isConfirmed) {
+      localStorage.removeItem("canchaYa-token");
+      setToken(null);
+
+      toast.success("Cerraste sesión correctamente 👋", {
+        duration: 3000,
+        position: "top-center",
+      });
+    }
   };
 
   const user = useMemo(() => {
