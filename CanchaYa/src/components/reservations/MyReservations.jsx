@@ -24,7 +24,7 @@ const MyReservations = () => {
         if (!response.ok) throw new Error("No se pudo obtener la cancha");
         const data = await response.json();
         setCancha(data);
-        showSuccessToast("Cancha cargada con éxito");
+        // showSuccessToast("Cancha cargada con éxito");
       } catch (err) {
         showErrorToast("Error al cargar la cancha: " + err.message);
       } finally {
