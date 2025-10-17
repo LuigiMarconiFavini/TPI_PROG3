@@ -18,6 +18,7 @@ import AllCanchas from "./components/allCanchas/AllCanchas";
 
 import { Toaster } from "react-hot-toast";
 import MyReservations from "./components/reservations/MyReservations";
+import ReservationSummary from "./components/reservationSummary/ReservationSummary";
 
 function App() {
   const { token, handleUserLogout } = useContext(AuthenticationContext);
@@ -69,13 +70,13 @@ function App() {
           />
 
           <Route
-          path="/all-canchas"
-          element={
-            <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
-              <AllCanchas />
-            </MainLayout>
-          }
-        />
+            path="/all-canchas"
+            element={
+              <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+                <AllCanchas />
+              </MainLayout>
+            }
+          />
 
           {/* Rutas privadas usando Protected + Outlet */}
           <Route element={<Protected />}>
@@ -105,6 +106,16 @@ function App() {
               </MainLayout>
             }
           />
+
+          <Route
+            path="/resumen-reserva"
+            element={
+              <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+                <ReservationSummary />
+              </MainLayout>
+            }
+          />
+
           <Route
             path="/my-reservations/:id"
             element={

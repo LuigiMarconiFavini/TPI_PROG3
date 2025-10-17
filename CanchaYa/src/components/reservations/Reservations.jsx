@@ -1,9 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthenticationContext } from "../services/auth.context";
-import {
-  showErrorToast,
-  showSuccessToast,
-} from "../../toast/toastNotifications.jsX";
+import { showErrorToast } from "../../toast/toastNotifications.jsX";
 
 const Reservations = () => {
   const { user, token } = useContext(AuthenticationContext);
@@ -29,7 +26,6 @@ const Reservations = () => {
         if (!res.ok) throw new Error("Error al cargar reservas");
         const data = await res.json();
         setReservas(data);
-        showSuccessToast("Reservas cargadas");
       } catch (err) {
         showErrorToast("Error: " + err.message);
       } finally {
@@ -50,8 +46,8 @@ const Reservations = () => {
       <p className="text-center text-gray-700 dark:text-gray-300 mb-8">
         Aquí puedes ver{" "}
         {user.role === "admin" || user.role === "sysadmin"
-          ? "todas las reservas"
-          : "tus reservas realizadas"}
+          ? "Todas las reservas"
+          : "Tus reservas realizadas"}
         .
       </p>
 

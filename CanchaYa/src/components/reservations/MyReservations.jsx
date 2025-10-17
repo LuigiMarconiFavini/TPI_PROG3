@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
-  showSuccessToast,
   showErrorToast,
   showWarningToast,
 } from "../../toast/toastNotifications.jsX";
@@ -9,6 +8,7 @@ import { AuthenticationContext } from "../services/auth.context";
 
 const MyReservations = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { user } = useContext(AuthenticationContext);
 
   const [cancha, setCancha] = useState(null);
@@ -58,42 +58,20 @@ const MyReservations = () => {
     }
   };
 
-  const handleReserva = async () => {
+  const handleSiguiente = () => {
     if (!fecha || !horarioSeleccionado) {
       showWarningToast("Selecciona una fecha y un horario");
       return;
     }
 
-    try {
-      const res = await fetch("http://localhost:3000/api/reservas", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          canchaId: cancha.id,
-          userId: user.id,
-          fechaReserva: fecha,
-          horaReserva: horarioSeleccionado,
-        }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Error al reservar");
-      }
-
-      showSuccessToast("Reserva confirmada");
-      setHorarioSeleccionado(""); // solo resetear
-      setFecha("");
-
-      // Opcional: actualizar horariosDisponibles inmediatamente
-      setHorariosDisponibles((prev) =>
-        prev.filter((h) => h !== horarioSeleccionado)
-      );
-    } catch (err) {
-      showErrorToast("Error al confirmar reserva: " + err.message);
-    }
+    navigate("/resumen-reserva", {
+      state: {
+        cancha,
+        fecha,
+        horarioSeleccionado,
+        userId: user.id,
+      },
+    });
   };
 
   if (loading) return <p className="text-gray-300">Cargando cancha...</p>;
@@ -157,13 +135,13 @@ const MyReservations = () => {
         </div>
       </div>
 
-      {/* Botón de reserva */}
+      {/* Botón de siguiente */}
       <div className="mt-8 flex justify-center">
         <button
-          onClick={handleReserva}
+          onClick={handleSiguiente}
           className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-lg"
         >
-          Confirmar Reserva
+          Siguiente
         </button>
       </div>
     </div>
