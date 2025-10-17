@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { showErrorToast, showConfirmToast, showSuccessToast } from '../../toast/toastNotifications.jsX';
+
 const AllCanchas = () => {
   const [canchas, setCanchas] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -11,7 +12,6 @@ const AllCanchas = () => {
     navigate("/");
   };
 
-  // Fetch de todas las canchas
   const fetchCanchas = async () => {
     setLoading(true);
     try {
@@ -36,7 +36,6 @@ const AllCanchas = () => {
     }
   };
 
-  // Eliminar cancha
   const handleDelete = async (id) => {
     showConfirmToast("¿Seguro que deseas eliminar esta cancha?", async () => {
       const token = localStorage.getItem("canchaYa-token");
@@ -66,54 +65,70 @@ const AllCanchas = () => {
   }, []);
 
   return (
-    <div className="container mx-auto p-4 sm:p-6 lg:p-8 bg-gray-50">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6 border-b pb-4">
+    <div className="container mx-auto p-4 sm:p-6 lg:p-8 
+                    bg-gray-50 dark:bg-gray-900 
+                    text-gray-800 dark:text-gray-100 
+                    min-h-screen transition-colors duration-300">
+      <h1 className="text-3xl font-bold mb-6 border-b pb-4 
+                     border-gray-300 dark:border-gray-700">
         Gestión de Canchas
       </h1>
 
       {loading && (
         <div className="text-center py-8">
-          <p className="text-lg text-gray-600">Cargando canchas...</p>
+          <p className="text-lg text-gray-600 dark:text-gray-400">
+            Cargando canchas...
+          </p>
         </div>
       )}
 
       {!loading && canchas.length === 0 && (
         <div className="text-center py-8">
-          <p className="text-lg text-gray-600">No hay canchas registradas.</p>
+          <p className="text-lg text-gray-600 dark:text-gray-400">
+            No hay canchas registradas.
+          </p>
         </div>
       )}
 
       {!loading && canchas.length > 0 && (
-        <div className="bg-white rounded-lg shadow-xl ring-1 ring-gray-100 overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-100">
+        <div className="bg-white dark:bg-gray-800 
+                        rounded-lg shadow-xl ring-1 ring-gray-100 dark:ring-gray-700 
+                        overflow-x-auto transition-colors duration-300">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead className="bg-gray-100 dark:bg-gray-700">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nombre</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Deporte</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tipo</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Dirección</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Precio</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Horarios</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Creada</th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Acciones</th>
+                {["ID", "Nombre", "Deporte", "Tipo", "Dirección", "Precio", "Horarios", "Creada", "Acciones"].map(header => (
+                  <th
+                    key={header}
+                    className="px-6 py-3 text-left text-xs font-medium 
+                               text-gray-500 dark:text-gray-300 uppercase"
+                  >
+                    {header}
+                  </th>
+                ))}
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
               {canchas.map((cancha) => (
-                <tr key={cancha.id} className="hover:bg-gray-50 transition duration-150">
-                  <td className="px-6 py-4 text-sm text-gray-500">{cancha.id}</td>
-                  <td className="px-6 py-4 text-sm font-medium text-gray-900">{cancha.nombre}</td>
-                  <td className="px-6 py-4 text-sm text-gray-500">{cancha.deporte}</td>
-                  <td className="px-6 py-4 text-sm text-gray-500">{cancha.tipo}</td>
-                  <td className="px-6 py-4 text-sm text-gray-500">{cancha.direccion}</td>
-                  <td className="px-6 py-4 text-sm text-gray-500">${cancha.precio}</td>
-                  <td className="px-6 py-4 text-sm text-gray-500">{cancha.horarios}</td>
-                  <td className="px-6 py-4 text-sm text-gray-500">{new Date(cancha.createdAt).toLocaleDateString()}</td>
+                <tr
+                  key={cancha.id}
+                  className="hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-150"
+                >
+                  <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{cancha.id}</td>
+                  <td className="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">{cancha.nombre}</td>
+                  <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{cancha.deporte}</td>
+                  <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{cancha.tipo}</td>
+                  <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{cancha.direccion}</td>
+                  <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">${cancha.precio}</td>
+                  <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{cancha.horarios}</td>
+                  <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
+                    {new Date(cancha.createdAt).toLocaleDateString()}
+                  </td>
                   <td className="px-6 py-4 text-center text-sm">
                     <button
                       onClick={() => handleDelete(cancha.id)}
-                      className="text-red-600 hover:text-red-800 px-3 py-1 bg-red-100 rounded-md"
+                      className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 
+                                 px-3 py-1 bg-red-100 dark:bg-red-900/40 rounded-md transition"
                     >
                       Eliminar
                     </button>
@@ -128,7 +143,8 @@ const AllCanchas = () => {
       <div className="flex justify-center mt-6">
         <button
           onClick={handleVolver}
-          className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700"
+          className="px-6 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 
+                      text-white font-semibold rounded-lg shadow-md transition"
         >
           Volver a inicio
         </button>
