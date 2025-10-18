@@ -1,6 +1,7 @@
-import { jwtDecode } from "jwt-decode";
+import jwtDecode from "jwt-decode";
 
 export const decodeToken = (token) => {
+  if (!token || typeof token !== "string") return null;
   try {
     return jwtDecode(token);
   } catch (error) {
@@ -10,11 +11,13 @@ export const decodeToken = (token) => {
 };
 
 export const isTokenValid = (token) => {
+  if (!token || typeof token !== "string") return false;
+
   const decoded = decodeToken(token);
   if (!decoded) return false;
 
   if (!decoded.exp) return true;
 
-  const currenTime = Date.now() / 1000;
-  return currenTime < decoded.exp;
+  const currentTime = Date.now() / 1000;
+  return currentTime < decoded.exp;
 };

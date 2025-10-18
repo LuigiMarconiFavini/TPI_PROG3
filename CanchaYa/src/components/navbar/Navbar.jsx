@@ -27,6 +27,25 @@ const Navbar = () => {
             Inicio
           </Link>
 
+          {/* Usuarios NO logueados */}
+          {!loggedIn && (
+            <>
+              <Link
+                to="/contact"
+                className="hover:underline hover:underline-offset-4"
+              >
+                Contactanos
+              </Link>
+
+              <Link
+                to="/promotions"
+                className="hover:underline hover:underline-offset-4"
+              >
+                Promociones
+              </Link>
+            </>
+          )}
+
           {/* Mi Perfil visible para todos los roles que estén logueados */}
           {loggedIn && (
             <Link
