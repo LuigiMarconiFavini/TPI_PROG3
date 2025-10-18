@@ -38,6 +38,14 @@ const AllReservas = () => {
   }, []);
 
   // Solo admin o sysadmin
+  if (!user) {
+    return (
+      <div className="text-center py-20 text-red-600">
+        No tenés permiso para ver esta página.
+      </div>
+    );
+  }
+
   if (user.role !== "admin" && user.role !== "sysadmin") {
     return (
       <div className="text-center py-20 text-red-600">

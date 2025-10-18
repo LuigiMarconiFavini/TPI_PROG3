@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   showErrorToast,
   showConfirmToast,
   showSuccessToast,
 } from "../../toast/toastNotifications.jsX";
+import { AuthenticationContext } from "../services/auth.context";
 
 const AllCanchas = () => {
+  const { user } = useContext(AuthenticationContext);
+
   const [canchas, setCanchas] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -79,6 +82,14 @@ const AllCanchas = () => {
   useEffect(() => {
     fetchCanchas();
   }, []);
+
+  if (!user || (user.role !== "admin" && user.role !== "sysadmin")) {
+    return (
+      <div className="text-center py-20 text-red-600">
+        No tenés permisos para ver las canchas.
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-4 sm:p-6 lg:p-8 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen transition-colors duration-300">

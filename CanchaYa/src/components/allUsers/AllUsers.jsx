@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   showErrorToast,
   showConfirmToast,
   showSuccessToast,
 } from "../../toast/toastNotifications.jsX";
+import { AuthenticationContext } from "../services/auth.context";
 
 const AllUsers = () => {
+  const { user } = useContext(AuthenticationContext);
+
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -101,6 +104,14 @@ const AllUsers = () => {
   useEffect(() => {
     fetchGetUsers();
   }, []);
+
+  if (!user || user.role !== "sysadmin") {
+    return (
+      <div className="text-center py-20 text-red-600">
+        No tenés permisos para ver los usuarios.
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-4 sm:p-6 lg:p-8 bg-gray-50 dark:bg-gray-800 min-h-[80vh] transition-colors duration-300">
@@ -249,4 +260,3 @@ const AllUsers = () => {
 };
 
 export default AllUsers;
-
