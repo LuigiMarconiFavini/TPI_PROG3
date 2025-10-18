@@ -1,0 +1,15 @@
+.searchform-container select {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: black;
+    border: none;
+    width: 100%;
+    height: 100%;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+html.dark .searchform-container select {
+    background-color: #374151;
+    color: white;
+}

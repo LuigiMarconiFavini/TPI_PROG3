@@ -24,12 +24,7 @@ const faqData = [
   {
     question: "¿Cuáles son los métodos de pago aceptados?",
     answer:
-      "Aceptamos tarjetas de crédito, débito y pagos mediante MercadoPago.",
-  },
-  {
-    question: "Olvidé mi contraseña, ¿cómo la recupero?",
-    answer:
-      "Hacé click en '¿Olvidaste tu contraseña?' en el login y seguí los pasos para recuperarla.",
+      "El método de pago será definido por el complejo deportivo.",
   },
   {
     question: "¿Cómo contacto al soporte si tengo un problema?",

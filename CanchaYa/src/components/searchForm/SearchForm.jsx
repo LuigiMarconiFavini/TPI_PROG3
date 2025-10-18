@@ -4,6 +4,8 @@ import { deportes, tiposPorDeporte, horarios } from "../../mocks/mock";
 import { AuthenticationContext } from "../services/auth.context";
 import toast from "react-hot-toast";
 import NewCourts from "../newCourts/NewCourts";
+import "./SearchForm.css"
+
 
 const SearchForm = () => {
   const { token } = useContext(AuthenticationContext);
@@ -123,7 +125,7 @@ const SearchForm = () => {
     setModalOpen(false);
   };
   return (
-  <div className="text-black dark:text-white transition-colors duration-300">
+  <div className="searchform-container text-black dark:text-white transition-colors duration-300">
     {/* 🔍 Formulario de filtros */}
     <form
       onSubmit={handleFilter}
