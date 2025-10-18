@@ -84,6 +84,15 @@ const Navbar = () => {
               Ver Canchas
             </Link>
           )}
+
+          {(role === "admin" || role === "sysadmin") && (
+            <Link
+              to="/all-reservas"
+              className="text-red-500 hover:underline hover:underline-offset-4"
+            >
+              Ver Reservas
+            </Link>
+          )}
         </div>
 
         {/* Botones derecha */}

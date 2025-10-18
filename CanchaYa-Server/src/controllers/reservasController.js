@@ -4,13 +4,15 @@ import { Cancha } from "../Models/Cancha.js";
 
 export const getReservas = async (req, res) => {
   try {
+    const where = {};
+    if (req.query.userId) {
+      where.userId = req.query.userId;
+    }
+
     const reservas = await Reservas.findAll({
+      where,
       include: [
-        {
-          model: User,
-          as: "usuario",
-          attributes: ["id", "username", "email"],
-        },
+        { model: User, as: "usuario", attributes: ["id", "username", "email"] },
         {
           model: Cancha,
           as: "cancha",
@@ -21,7 +23,6 @@ export const getReservas = async (req, res) => {
             "direccion",
             "precio",
             "imagen",
-            "horarios",
           ],
         },
       ],
@@ -30,7 +31,7 @@ export const getReservas = async (req, res) => {
     res.status(200).json(reservas);
   } catch (error) {
     console.error("Error al obtener reservas:", error);
-    res.status(500).json({ message: "Error del servidor" });
+    res.status(500).json({ message: "Error al cargar reservas" });
   }
 };
 
@@ -112,5 +113,25 @@ export const getReservasPorFecha = async (req, res) => {
   } catch (error) {
     console.error("Error al obtener reservas por fecha:", error);
     res.status(500).json({ message: "Error del servidor" });
+  }
+};
+
+export const eliminarReserva = async (req, res) => {
+  try {
+    const reserva = await Reservas.findByPk(req.params.id);
+    if (!reserva)
+      return res.status(404).json({ error: "Reserva no encontrada" });
+
+    const cancha = await Cancha.findByPk(reserva.canchaId);
+    if (cancha) {
+      const horariosActualizados = [...cancha.horarios, reserva.horaReserva];
+      await cancha.update({ horarios: horariosActualizados });
+    }
+
+    await reserva.destroy();
+    res.json({ message: "Reserva eliminada y horario liberado" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
   }
 };

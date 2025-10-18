@@ -19,6 +19,7 @@ import AllCanchas from "./components/allCanchas/AllCanchas";
 import { Toaster } from "react-hot-toast";
 import MyReservations from "./components/reservations/MyReservations";
 import ReservationSummary from "./components/reservationSummary/ReservationSummary";
+import AllReservas from "./components/allReservas/AllReservas";
 
 function App() {
   const { token, handleUserLogout } = useContext(AuthenticationContext);
@@ -74,6 +75,15 @@ function App() {
             element={
               <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
                 <AllCanchas />
+              </MainLayout>
+            }
+          />
+
+          <Route
+            path="/all-reservas"
+            element={
+              <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+                <AllReservas />
               </MainLayout>
             }
           />
