@@ -35,7 +35,7 @@ app.use("/api/contact", contactRoutes);
     console.log("Conectado a la base de datos");
 
     await sequelize.query("PRAGMA foreign_keys = OFF");
-    await sequelize.sync({ alter: true });
+    await sequelize.sync();
     await sequelize.query("PRAGMA foreign_keys = ON");
     console.log("Base de datos sincronizada");
 
