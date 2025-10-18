@@ -27,13 +27,7 @@ const Navbar = () => {
             Inicio
           </Link>
 
-          <Link
-            to="/contact"
-            className="hover:underline hover:underline-offset-4"
-          >
-            Contactanos
-          </Link>
-
+          {/* Mi Perfil visible para todos los roles que estén logueados */}
           {loggedIn && (
             <Link
               to="/my-profile"
@@ -43,55 +37,67 @@ const Navbar = () => {
             </Link>
           )}
 
-          <Link
-            to={loggedIn ? "/promotions/private" : "/promotions"}
-            className="hover:underline hover:underline-offset-4"
-          >
-            {loggedIn ? "Mis Promociones" : "Promociones"}
-          </Link>
+          {/* Solo users normales */}
+          {role === "user" && (
+            <>
+              <Link
+                to="/contact"
+                className="hover:underline hover:underline-offset-4"
+              >
+                Contactanos
+              </Link>
 
-          {loggedIn && role === "user" && (
-            <Link
-              to="/reservations"
-              className="hover:underline hover:underline-offset-4"
-            >
-              Mis Reservas
-            </Link>
+              <Link
+                to={loggedIn ? "/promotions/private" : "/promotions"}
+                className="hover:underline hover:underline-offset-4"
+              >
+                {loggedIn ? "Mis Promociones" : "Promociones"}
+              </Link>
+
+              <Link
+                to="/reservations"
+                className="hover:underline hover:underline-offset-4"
+              >
+                Mis Reservas
+              </Link>
+            </>
           )}
 
+          {/* Solo admins y sysadmins */}
           {(role === "admin" || role === "sysadmin") && (
-            <button
-              onClick={() => setOpenNewCourt(true)}
-              className="ml-2 rounded-md bg-green-500 text-white px-4 py-2 hover:bg-green-600 font-semibold transition duration-200"
-            >
-              Nueva Cancha
-            </button>
-          )}
+            <>
+              <button
+                onClick={() => setOpenNewCourt(true)}
+                className="ml-2 rounded-md bg-green-500 text-white px-4 py-2 hover:bg-green-600 font-semibold transition duration-200"
+              >
+                Nueva Cancha
+              </button>
 
-          {role === "sysadmin" && (
-            <Link
-              to="/all-users"
-              className="text-red-500 hover:underline hover:underline-offset-4"
-            >
-              Ver Usuarios
-            </Link>
-          )}
-          {role === "sysadmin" && (
-            <Link
-              to="/all-canchas"
-              className="text-red-500 hover:underline hover:underline-offset-4"
-            >
-              Ver Canchas
-            </Link>
-          )}
+              {role === "sysadmin" && (
+                <>
+                  <Link
+                    to="/all-users"
+                    className="text-red-500 hover:underline hover:underline-offset-4"
+                  >
+                    Ver Usuarios
+                  </Link>
 
-          {(role === "admin" || role === "sysadmin") && (
-            <Link
-              to="/all-reservas"
-              className="text-red-500 hover:underline hover:underline-offset-4"
-            >
-              Ver Reservas
-            </Link>
+                  <Link
+                    to="/all-canchas"
+                    className="text-red-500 hover:underline hover:underline-offset-4"
+                  >
+                    Ver Canchas
+                  </Link>
+                </>
+              )}
+
+              <Link
+                to="/all-reservas"
+                className="text-red-500 hover:underline hover:underline-offset-4"
+              >
+                Ver Reservas
+              </Link>
+            </>
           )}
         </div>
 
