@@ -8,10 +8,9 @@ const CardCourts = ({ cancha, onEdit, onDelete }) => {
 
   const handleReserva = () => {
     navigate(`/my-reservations/${cancha.id}`);
-  }
+  };
 
   const canEditOrDelete = user?.role === "admin" || user?.role === "sysadmin";
-
 
   return (
     <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden flex flex-col transition-colors">
@@ -37,18 +36,18 @@ const CardCourts = ({ cancha, onEdit, onDelete }) => {
           <p>
             <span className="font-semibold">Precio:</span> ${cancha.precio}
           </p>
-          <p>
+          {/* <p>
             <span className="font-semibold">Horarios:</span>{" "}
             {cancha.horarios.join(", ")}
-          </p>
+          </p> */}
         </div>
 
-          <button
-            className="mt-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition"
-            onClick={handleReserva}
-          >
-            Reservar
-          </button>
+        <button
+          className="mt-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition"
+          onClick={handleReserva}
+        >
+          Reservar
+        </button>
 
         {canEditOrDelete && (
           <div className="flex gap-2 mt-2">
