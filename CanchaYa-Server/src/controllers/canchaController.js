@@ -11,7 +11,7 @@ export const getCanchas = async (req, res) => {
 
     const canchas = await Cancha.findAll({ where });
 
-    // Filtrar por horario en JS si se pasó
+    // 🔹 Filtrar por horario si se pasó
     const filtradas = horario
       ? canchas.filter((c) => {
           try {
@@ -25,7 +25,31 @@ export const getCanchas = async (req, res) => {
         })
       : canchas;
 
-    res.json(filtradas);
+    // 🔹 Ordenar los horarios dentro de cada cancha
+    const conHorariosOrdenados = filtradas.map((c) => {
+      let horariosArray;
+
+      try {
+        horariosArray = Array.isArray(c.horarios)
+          ? c.horarios
+          : JSON.parse(c.horarios || "[]");
+
+        horariosArray.sort((a, b) => {
+          const [ha, ma] = a.split(":").map(Number);
+          const [hb, mb] = b.split(":").map(Number);
+          return ha * 60 + ma - (hb * 60 + mb); // compara en minutos
+        });
+      } catch {
+        horariosArray = [];
+      }
+
+      return {
+        ...c.toJSON(),
+        horarios: horariosArray,
+      };
+    });
+
+    res.json(conHorariosOrdenados);
   } catch (error) {
     console.error("Error al traer las canchas", error);
     res.status(500).json({ error: "Error al traer las canchas" });
@@ -37,7 +61,23 @@ export const getCanchaById = async (req, res) => {
   try {
     const cancha = await Cancha.findByPk(req.params.id);
     if (!cancha) return res.status(404).json({ error: "Cancha no encontrada" });
-    res.json(cancha);
+
+    // ordenar horarios
+    let horariosArray = [];
+    try {
+      horariosArray = Array.isArray(cancha.horarios)
+        ? cancha.horarios
+        : JSON.parse(cancha.horarios || "[]");
+      horariosArray.sort((a, b) => {
+        const [ha, ma] = a.split(":").map(Number);
+        const [hb, mb] = b.split(":").map(Number);
+        return ha * 60 + ma - (hb * 60 + mb);
+      });
+    } catch {
+      horariosArray = [];
+    }
+
+    res.json({ ...cancha.toJSON(), horarios: horariosArray });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -122,6 +162,25 @@ export const getAllCanchas = async (req, res) => {
       ],
     });
     res.json(canchas);
+
+    const conHorariosOrdenados = canchas.map((c) => {
+      let horariosArray;
+      try {
+        horariosArray = Array.isArray(c.horarios)
+          ? c.horarios
+          : JSON.parse(c.horarios || "[]");
+        horariosArray.sort((a, b) => {
+          const [ha, ma] = a.split(":").map(Number);
+          const [hb, mb] = b.split(":").map(Number);
+          return ha * 60 + ma - (hb * 60 + mb);
+        });
+      } catch {
+        horariosArray = [];
+      }
+      return { ...c.toJSON(), horarios: horariosArray };
+    });
+
+    res.json(conHorariosOrdenados);
   } catch {
     console.error("Error al obtener Canchas", error);
     res.status(500).json({ message: "error del server" });

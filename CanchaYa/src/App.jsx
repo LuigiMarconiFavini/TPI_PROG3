@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./components/dashboard/Dashboard";
 import NotFound from "./components/notFound/NotFound";
@@ -15,32 +15,32 @@ import { AuthenticationContext } from "./components/services/auth.context";
 import { ThemeProvider } from "./components/context/ThemeProvider";
 import AllUsers from "./components/allUsers/allUsers";
 import AllCanchas from "./components/allCanchas/AllCanchas";
-
-import { Toaster } from "react-hot-toast";
+import AllReservas from "./components/allReservas/AllReservas";
 import MyReservations from "./components/reservations/MyReservations";
 import ReservationSummary from "./components/reservationSummary/ReservationSummary";
-import AllReservas from "./components/allReservas/AllReservas";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const { token, handleUserLogout } = useContext(AuthenticationContext);
+  const loggedIn = !!token;
 
   return (
     <ThemeProvider>
       <BrowserRouter>
         <Routes>
-          {/* Páginas públicas */}
+          {/* Rutas públicas */}
           <Route
             path="/login"
-            element={token ? <Navigate to="/" /> : <Login />}
+            element={loggedIn ? <Navigate to="/" /> : <Login />}
           />
           <Route
             path="/register"
-            element={token ? <Navigate to="/" /> : <Register />}
+            element={loggedIn ? <Navigate to="/" /> : <Register />}
           />
           <Route
             path="/promotions"
             element={
-              <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+              <MainLayout loggedIn={loggedIn} onSignOut={handleUserLogout}>
                 <PublicPromotions />
               </MainLayout>
             }
@@ -48,7 +48,7 @@ function App() {
           <Route
             path="/"
             element={
-              <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+              <MainLayout loggedIn={loggedIn} onSignOut={handleUserLogout}>
                 <Dashboard />
               </MainLayout>
             }
@@ -56,44 +56,20 @@ function App() {
           <Route
             path="/contact"
             element={
-              <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+              <MainLayout loggedIn={loggedIn} onSignOut={handleUserLogout}>
                 <Contact />
               </MainLayout>
             }
           />
-          <Route
-            path="/all-users"
-            element={
-              <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
-                <AllUsers />
-              </MainLayout>
-            }
-          />
 
+          {/* Rutas privadas para cualquier user logueado */}
           <Route
-            path="/all-canchas"
-            element={
-              <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
-                <AllCanchas />
-              </MainLayout>
-            }
-          />
-
-          <Route
-            path="/all-reservas"
-            element={
-              <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
-                <AllReservas />
-              </MainLayout>
-            }
-          />
-
-          {/* Rutas privadas usando Protected + Outlet */}
-          <Route element={<Protected />}>
+            element={<Protected allowedRoles={["user", "admin", "sysadmin"]} />}
+          >
             <Route
               path="/promotions/private"
               element={
-                <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+                <MainLayout loggedIn={loggedIn} onSignOut={handleUserLogout}>
                   <Promotions />
                 </MainLayout>
               }
@@ -101,43 +77,70 @@ function App() {
             <Route
               path="/my-profile"
               element={
-                <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
+                <MainLayout loggedIn={loggedIn} onSignOut={handleUserLogout}>
                   <MyProfile />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/reservations"
+              element={
+                <MainLayout loggedIn={loggedIn} onSignOut={handleUserLogout}>
+                  <Reservations />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/resumen-reserva"
+              element={
+                <MainLayout loggedIn={loggedIn} onSignOut={handleUserLogout}>
+                  <ReservationSummary />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/my-reservations/:id"
+              element={
+                <MainLayout loggedIn={loggedIn} onSignOut={handleUserLogout}>
+                  <MyReservations />
                 </MainLayout>
               }
             />
           </Route>
 
-          <Route
-            path="/reservations"
-            element={
-              <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
-                <Reservations />
-              </MainLayout>
-            }
-          />
-
-          <Route
-            path="/resumen-reserva"
-            element={
-              <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
-                <ReservationSummary />
-              </MainLayout>
-            }
-          />
-
-          <Route
-            path="/my-reservations/:id"
-            element={
-              <MainLayout loggedIn={!!token} onSignOut={handleUserLogout}>
-                <MyReservations />
-              </MainLayout>
-            }
-          />
+          {/* Rutas solo para admin y sysadmin */}
+          <Route element={<Protected allowedRoles={["admin", "sysadmin"]} />}>
+            <Route
+              path="/all-users"
+              element={
+                <MainLayout loggedIn={loggedIn} onSignOut={handleUserLogout}>
+                  <AllUsers />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/all-canchas"
+              element={
+                <MainLayout loggedIn={loggedIn} onSignOut={handleUserLogout}>
+                  <AllCanchas />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/all-reservas"
+              element={
+                <MainLayout loggedIn={loggedIn} onSignOut={handleUserLogout}>
+                  <AllReservas />
+                </MainLayout>
+              }
+            />
+          </Route>
 
           {/* NotFound */}
           <Route path="/*" element={<NotFound />} />
         </Routes>
+
+        {/* Toaster sin props problemáticas */}
         <Toaster position="top-right" reverseOrder={false} />
       </BrowserRouter>
     </ThemeProvider>
