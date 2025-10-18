@@ -1,3 +1,4 @@
+// En tu componente Navbar.jsx
 import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import ThemeToggle from "../themeToggle/ThemeToggle";
@@ -12,7 +13,10 @@ const Navbar = () => {
   const [openNewCourt, setOpenNewCourt] = useState(false);
 
   return (
-    <div className="w-full sticky top-0 py-3 bg-gray-100 dark:bg-gray-900 shadow-md z-50 transition-colors duration-300">
+    // CAMBIO AQUI: Reducir el z-index de la Navbar a z-40 o z-30
+    <div className="w-full sticky top-0 py-3 bg-gray-100 dark:bg-gray-900 shadow-md z-40 transition-colors duration-300">
+      {" "}
+      {/* CAMBIADO de z-50 a z-40 */}
       <nav className="max-w-7xl mx-auto px-6 flex flex-wrap items-center justify-between gap-y-4">
         {/* Logo */}
         <Link to="/" className="flex items-center">
@@ -148,8 +152,7 @@ const Navbar = () => {
           )}
         </div>
       </nav>
-
-      {/* Modal Nueva Cancha */}
+      {/* Modal Nueva Cancha (YA ESTÁ BIEN IMPLEMENTADO EN NAVBAR) */}
       {openNewCourt && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="relative w-full max-w-2xl bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 overflow-y-auto max-h-[90vh]">

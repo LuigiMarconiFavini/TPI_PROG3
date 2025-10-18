@@ -1,6 +1,7 @@
 import { Cancha } from "../Models/Cancha.js";
 
 // get
+// get
 export const getCanchas = async (req, res) => {
   try {
     const { deporte, tipo, horario } = req.query;
@@ -19,7 +20,11 @@ export const getCanchas = async (req, res) => {
               ? c.horarios
               : JSON.parse(c.horarios || "[]");
             return horariosArray.includes(horario);
-          } catch {
+          } catch (err) {
+            console.error(
+              `Error parseando horarios de la cancha ${c.id}:`,
+              err
+            );
             return false;
           }
         })
@@ -39,7 +44,8 @@ export const getCanchas = async (req, res) => {
           const [hb, mb] = b.split(":").map(Number);
           return ha * 60 + ma - (hb * 60 + mb); // compara en minutos
         });
-      } catch {
+      } catch (err) {
+        console.error(`Error ordenando horarios de la cancha ${c.id}:`, err);
         horariosArray = [];
       }
 
@@ -51,7 +57,7 @@ export const getCanchas = async (req, res) => {
 
     res.json(conHorariosOrdenados);
   } catch (error) {
-    console.error("Error al traer las canchas", error);
+    console.error("Error al traer las canchas:", error);
     res.status(500).json({ error: "Error al traer las canchas" });
   }
 };
