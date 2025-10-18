@@ -4,8 +4,7 @@ import { deportes, tiposPorDeporte, horarios } from "../../mocks/mock";
 import { AuthenticationContext } from "../services/auth.context";
 import toast from "react-hot-toast";
 import NewCourts from "../newCourts/NewCourts";
-import "./SearchForm.css"
-
+import "./SearchForm.css";
 
 const SearchForm = () => {
   const { token } = useContext(AuthenticationContext);
@@ -118,134 +117,146 @@ const SearchForm = () => {
     setModalOpen(true);
   };
 
-  const handleSaved = (updateCourt) => {
-    setResultados((prev) =>
-      prev.map((c) => (c.id === updateCourt.id ? updateCourt : c))
-    );
-    setModalOpen(false);
-  };
-  return (
-  <div className="searchform-container text-black dark:text-white transition-colors duration-300">
-    {/* 🔍 Formulario de filtros */}
-    <form
-      onSubmit={handleFilter}
-      className="flex flex-wrap gap-6 items-end justify-center bg-gray-900/40 dark:bg-gray-800/50 text-white backdrop-blur-md p-6 rounded-2xl shadow-lg max-w-5xl mx-auto mt-10"
-    >
-      {/* Select de deporte */}
-      <div className="flex flex-col w-48">
-        <div className="flex items-center gap-2 border border-gray-400 rounded-lg px-3 h-12 shadow-sm bg-white/90 dark:bg-gray-700 text-black dark:text-white focus-within:ring-2 focus-within:ring-blue-400 transition">
-          <span className="text-lg">⚽</span>
-          <select
-            value={deporte}
-            onChange={(e) => {
-              setDeporte(e.target.value);
-              setTipoCancha("");
-            }}
-            className="flex-1 bg-transparent focus:outline-none text-black dark:text-white h-full"
-          >
-            <option value="">Elige Deporte</option>
-            {deportes.map((d) => (
-              <option key={d.value} value={d.value}>
-                {d.label}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
+  const handleSaved = (court) => {
+    setResultados((prev) => {
+      // Si la cancha ya existe (edit), reemplazo
+      const exists = prev.some((c) => c.id === court.id);
+      if (exists) {
+        return prev.map((c) => (c.id === court.id ? court : c));
+      }
+      // Si es nueva, la agrego al final
+      return [...prev, court];
+    });
 
-      {/* Select de tipo de cancha */}
-      {deporte && (
+    setModalOpen(false); // cerrar modal
+  };
+
+  return (
+    <div className="searchform-container text-black dark:text-white transition-colors duration-300">
+      {/* 🔍 Formulario de filtros */}
+      <form
+        onSubmit={handleFilter}
+        className="flex flex-wrap gap-6 items-end justify-center bg-gray-900/40 dark:bg-gray-800/50 text-white backdrop-blur-md p-6 rounded-2xl shadow-lg max-w-5xl mx-auto mt-10"
+      >
+        {/* Select de deporte */}
         <div className="flex flex-col w-48">
           <div className="flex items-center gap-2 border border-gray-400 rounded-lg px-3 h-12 shadow-sm bg-white/90 dark:bg-gray-700 text-black dark:text-white focus-within:ring-2 focus-within:ring-blue-400 transition">
-            <span className="text-lg">🏟️</span>
+            <span className="text-lg">⚽</span>
             <select
-              value={tipoCancha}
-              onChange={(e) => setTipoCancha(e.target.value)}
+              value={deporte}
+              onChange={(e) => {
+                setDeporte(e.target.value);
+                setTipoCancha("");
+              }}
               className="flex-1 bg-transparent focus:outline-none text-black dark:text-white h-full"
             >
-              <option value="">Selecciona Tipo</option>
-              {tiposPorDeporte[deporte].map((t) => (
-                <option key={t.value} value={t.value}>
-                  {t.label}
+              <option value="">Elige Deporte</option>
+              {deportes.map((d) => (
+                <option key={d.value} value={d.value}>
+                  {d.label}
                 </option>
               ))}
             </select>
           </div>
         </div>
-      )}
 
-      {/* Select de horario */}
-      <div className="flex flex-col w-48">
-        <div className="flex items-center gap-2 border border-gray-400 rounded-lg px-3 h-12 shadow-sm bg-white/90 dark:bg-gray-700 text-black dark:text-white focus-within:ring-2 focus-within:ring-blue-400 transition">
-          <span className="text-lg">🕒</span>
-          <select
-            value={horarioSeleccionado}
-            onChange={(e) => setHorarioSeleccionado(e.target.value)}
-            className="flex-1 bg-transparent focus:outline-none text-black dark:text-white h-full"
-          >
-            <option value="">Elige Horario</option>
-            {horarios.map((h) => (
-              <option key={h} value={h}>
-                {h}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      {/* Botón */}
-      <div className="flex flex-col w-48">
-        <button
-          type="submit"
-          className="bg-blue-600 text-white font-semibold h-12 rounded-lg hover:bg-blue-700 shadow-md transition flex items-center justify-center gap-2"
-        >
-          🔎 Buscar Canchas
-        </button>
-      </div>
-    </form>
-
-    {/* 📋 Resultados */}
-    {loading ? (
-      <p className="text-center mt-10 text-gray-200">Cargando...</p>
-    ) : error ? (
-      <p className="text-center mt-10 text-red-400">{error}</p>
-    ) : (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-16 px-6">
-        {resultados.length > 0 ? (
-          resultados.map((c) => (
-            <CardCourts
-              key={c.id}
-              cancha={c}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
-          ))
-        ) : (
-          <div className="col-span-full flex justify-center items-center h-32">
-            {/* <p className="text-gray-300 text-lg font-medium">
-              No se encontraron canchas 😢
-            </p> */}
+        {/* Select de tipo de cancha */}
+        {deporte && (
+          <div className="flex flex-col w-48">
+            <div className="flex items-center gap-2 border border-gray-400 rounded-lg px-3 h-12 shadow-sm bg-white/90 dark:bg-gray-700 text-black dark:text-white focus-within:ring-2 focus-within:ring-blue-400 transition">
+              <span className="text-lg">🏟️</span>
+              <select
+                value={tipoCancha}
+                onChange={(e) => setTipoCancha(e.target.value)}
+                className="flex-1 bg-transparent focus:outline-none text-black dark:text-white h-full"
+              >
+                <option value="">Selecciona Tipo</option>
+                {tiposPorDeporte[deporte].map((t) => (
+                  <option key={t.value} value={t.value}>
+                    {t.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         )}
-      </div>
-    )}
 
-    {/* Modal */}
-    {modalOpen && (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-lg max-w-md w-full">
-          <button
-            className="text-gray-500 dark:text-gray-300 float-right"
-            onClick={() => setModalOpen(false)}
-          >
-            ✖
-          </button>
-          <NewCourts existingCourt={editingCourt} onSaved={handleSaved} />
+        {/* Select de horario */}
+        <div className="flex flex-col w-48">
+          <div className="flex items-center gap-2 border border-gray-400 rounded-lg px-3 h-12 shadow-sm bg-white/90 dark:bg-gray-700 text-black dark:text-white focus-within:ring-2 focus-within:ring-blue-400 transition">
+            <span className="text-lg">🕒</span>
+            <select
+              value={horarioSeleccionado}
+              onChange={(e) => setHorarioSeleccionado(e.target.value)}
+              className="flex-1 bg-transparent focus:outline-none text-black dark:text-white h-full"
+            >
+              <option value="">Elige Horario</option>
+              {horarios.map((h) => (
+                <option key={h} value={h}>
+                  {h}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
-      </div>
-    )}
-  </div>
-);
+
+        {/* Botón */}
+        <div className="flex flex-col w-48">
+          <button
+            type="submit"
+            className="bg-blue-600 text-white font-semibold h-12 rounded-lg hover:bg-blue-700 shadow-md transition flex items-center justify-center gap-2"
+          >
+            🔎 Buscar Canchas
+          </button>
+        </div>
+      </form>
+
+      {/* 📋 Resultados */}
+      {loading ? (
+        <p className="text-center mt-10 text-gray-200">Cargando...</p>
+      ) : error ? (
+        <p className="text-center mt-10 text-red-400">{error}</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-16 px-6">
+          {resultados.length > 0 ? (
+            resultados.map((c) => (
+              <CardCourts
+                key={c.id}
+                cancha={c}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+              />
+            ))
+          ) : (
+            <div className="col-span-full flex justify-center items-center h-32">
+              {/* <p className="text-gray-300 text-lg font-medium">
+              No se encontraron canchas 😢
+            </p> */}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Modal */}
+      {modalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="relative w-full max-w-2xl bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 overflow-y-auto max-h-[90vh]">
+            <button
+              className="absolute top-3 right-4 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 text-2xl font-bold" // Clases del botón unificadas también
+              onClick={() => {
+                setModalOpen(false);
+                setEditingCourt(null);
+              }}
+            >
+              ×
+            </button>
+
+            <NewCourts existingCourt={editingCourt} onSaved={handleSaved} />
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default SearchForm;
