@@ -123,26 +123,25 @@ const SearchForm = () => {
     setModalOpen(false);
   };
   return (
-    <div className="p-6 min-h-screen bg-white text-black dark:bg-gray-900 dark:text-white transition-colors duration-300">
-      {/* Formulario de filtros */}
-      <form
-        onSubmit={handleFilter}
-        className="flex flex-wrap gap-6 items-end bg-white dark:bg-gray-800 text-black dark:text-white p-6 rounded-2xl shadow-md justify-center transition-colors duration-300"
-      >
-        {/* Select de deporte */}
-        <div className="flex flex-col w-48">
-          <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            Deporte
-          </label>
+  <div className="text-black dark:text-white transition-colors duration-300">
+    {/* 🔍 Formulario de filtros */}
+    <form
+      onSubmit={handleFilter}
+      className="flex flex-wrap gap-6 items-end justify-center bg-gray-900/40 dark:bg-gray-800/50 text-white backdrop-blur-md p-6 rounded-2xl shadow-lg max-w-5xl mx-auto mt-10"
+    >
+      {/* Select de deporte */}
+      <div className="flex flex-col w-48">
+        <div className="flex items-center gap-2 border border-gray-400 rounded-lg px-3 h-12 shadow-sm bg-white/90 dark:bg-gray-700 text-black dark:text-white focus-within:ring-2 focus-within:ring-blue-400 transition">
+          <span className="text-lg">⚽</span>
           <select
             value={deporte}
             onChange={(e) => {
               setDeporte(e.target.value);
               setTipoCancha("");
             }}
-            className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 shadow-sm bg-white dark:bg-gray-700 text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors"
+            className="flex-1 bg-transparent focus:outline-none text-black dark:text-white h-full"
           >
-            <option value="">Elegir Deporte</option>
+            <option value="">Elige Deporte</option>
             {deportes.map((d) => (
               <option key={d.value} value={d.value}>
                 {d.label}
@@ -150,17 +149,17 @@ const SearchForm = () => {
             ))}
           </select>
         </div>
+      </div>
 
-        {/* Select de tipo de cancha */}
-        {deporte && (
-          <div className="flex flex-col w-48">
-            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-              Tipo de Cancha
-            </label>
+      {/* Select de tipo de cancha */}
+      {deporte && (
+        <div className="flex flex-col w-48">
+          <div className="flex items-center gap-2 border border-gray-400 rounded-lg px-3 h-12 shadow-sm bg-white/90 dark:bg-gray-700 text-black dark:text-white focus-within:ring-2 focus-within:ring-blue-400 transition">
+            <span className="text-lg">🏟️</span>
             <select
               value={tipoCancha}
               onChange={(e) => setTipoCancha(e.target.value)}
-              className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 shadow-sm bg-white dark:bg-gray-700 text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors"
+              className="flex-1 bg-transparent focus:outline-none text-black dark:text-white h-full"
             >
               <option value="">Selecciona Tipo</option>
               {tiposPorDeporte[deporte].map((t) => (
@@ -170,17 +169,17 @@ const SearchForm = () => {
               ))}
             </select>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* Select de horario */}
-        <div className="flex flex-col w-48">
-          <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            Horario
-          </label>
+      {/* Select de horario */}
+      <div className="flex flex-col w-48">
+        <div className="flex items-center gap-2 border border-gray-400 rounded-lg px-3 h-12 shadow-sm bg-white/90 dark:bg-gray-700 text-black dark:text-white focus-within:ring-2 focus-within:ring-blue-400 transition">
+          <span className="text-lg">🕒</span>
           <select
             value={horarioSeleccionado}
             onChange={(e) => setHorarioSeleccionado(e.target.value)}
-            className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 shadow-sm bg-white dark:bg-gray-700 text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors"
+            className="flex-1 bg-transparent focus:outline-none text-black dark:text-white h-full"
           >
             <option value="">Elige Horario</option>
             {horarios.map((h) => (
@@ -190,62 +189,61 @@ const SearchForm = () => {
             ))}
           </select>
         </div>
+      </div>
 
-        {/* Botón */}
-        <div className="flex flex-col w-48">
-          <label className="invisible mb-2">Buscar</label>
-          <button
-            type="submit"
-            className="border border-gray-300 dark:border-gray-600 bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Buscar Canchas
-          </button>
-        </div>
-      </form>
+      {/* Botón */}
+      <div className="flex flex-col w-48">
+        <button
+          type="submit"
+          className="bg-blue-600 text-white font-semibold h-12 rounded-lg hover:bg-blue-700 shadow-md transition flex items-center justify-center gap-2"
+        >
+          🔎 Buscar Canchas
+        </button>
+      </div>
+    </form>
 
-      {/* Resultados */}
-      {loading ? (
-        <p className="text-center mt-10 text-gray-500 dark:text-gray-400">
-          Cargando...
-        </p>
-      ) : error ? (
-        <p className="text-center mt-10 text-red-500">{error}</p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-10">
-          {resultados.length > 0 ? (
-            resultados.map((c) => (
-              <CardCourts
-                key={c.id}
-                cancha={c}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-              />
-            ))
-          ) : (
-            <div className="col-span-full flex justify-center items-center h-32">
-              <p className="text-gray-500 text-lg font-medium dark:text-gray-400">
-                No se encontraron canchas 😢
-              </p>
-            </div>
-          )}
-        </div>
-      )}
-
-      {modalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-lg max-w-md w-full">
-            <button
-              className="text-gray-500 dark:text-gray-300 float-right"
-              onClick={() => setModalOpen(false)}
-            >
-              ✖
-            </button>
-            <NewCourts existingCourt={editingCourt} onSaved={handleSaved} />
+    {/* 📋 Resultados */}
+    {loading ? (
+      <p className="text-center mt-10 text-gray-200">Cargando...</p>
+    ) : error ? (
+      <p className="text-center mt-10 text-red-400">{error}</p>
+    ) : (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-16 px-6">
+        {resultados.length > 0 ? (
+          resultados.map((c) => (
+            <CardCourts
+              key={c.id}
+              cancha={c}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          ))
+        ) : (
+          <div className="col-span-full flex justify-center items-center h-32">
+            {/* <p className="text-gray-300 text-lg font-medium">
+              No se encontraron canchas 😢
+            </p> */}
           </div>
+        )}
+      </div>
+    )}
+
+    {/* Modal */}
+    {modalOpen && (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-lg max-w-md w-full">
+          <button
+            className="text-gray-500 dark:text-gray-300 float-right"
+            onClick={() => setModalOpen(false)}
+          >
+            ✖
+          </button>
+          <NewCourts existingCourt={editingCourt} onSaved={handleSaved} />
         </div>
-      )}
-    </div>
-  );
+      </div>
+    )}
+  </div>
+);
 };
 
 export default SearchForm;
