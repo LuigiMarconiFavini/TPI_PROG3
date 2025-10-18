@@ -17,14 +17,14 @@ const MyReservations = () => {
   const [horariosDisponibles, setHorariosDisponibles] = useState([]);
   const [horarioSeleccionado, setHorarioSeleccionado] = useState("");
 
+  // Cargar cancha
   useEffect(() => {
     const fetchCancha = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/canchas/${id}`);
-        if (!response.ok) throw new Error("No se pudo obtener la cancha");
-        const data = await response.json();
-        setCancha(data);
-        // showSuccessToast("Cancha cargada con éxito");
+        const res = await fetch(`http://localhost:3000/api/canchas/${id}`);
+        if (!res.ok) throw new Error("No se pudo obtener la cancha");
+        const data = await res.json();
+        setCancha(data); // los horarios ya vienen ordenados del backend
       } catch (err) {
         showErrorToast("Error al cargar la cancha: " + err.message);
       } finally {
@@ -35,6 +35,7 @@ const MyReservations = () => {
     fetchCancha();
   }, [id]);
 
+  // Cambiar fecha y obtener horarios disponibles
   const handleFechaChange = async (e) => {
     const fechaSeleccionada = e.target.value;
     setFecha(fechaSeleccionada);
@@ -46,31 +47,31 @@ const MyReservations = () => {
       const reservas = await res.json();
       const horariosReservados = reservas.map((r) => r.horaReserva);
 
-      const horariosDisponiblesFiltrados = (cancha.horarios || []).filter(
+      const disponibles = (cancha.horarios || []).filter(
         (hora) => !horariosReservados.includes(hora)
       );
 
-      setHorariosDisponibles(horariosDisponiblesFiltrados);
-      setHorarioSeleccionado(""); // resetear selección
+      setHorariosDisponibles(disponibles);
+      setHorarioSeleccionado("");
       // eslint-disable-next-line no-unused-vars
     } catch (err) {
       showErrorToast("Error al cargar horarios disponibles");
     }
   };
 
+  // Continuar a resumen
   const handleSiguiente = () => {
+    if (!user || !user.id) {
+      showWarningToast("Debes iniciar sesión o registrarte para reservar");
+      return;
+    }
     if (!fecha || !horarioSeleccionado) {
       showWarningToast("Selecciona una fecha y un horario");
       return;
     }
 
     navigate("/resumen-reserva", {
-      state: {
-        cancha,
-        fecha,
-        horarioSeleccionado,
-        userId: user.id,
-      },
+      state: { cancha, fecha, horarioSeleccionado, userId: user.id },
     });
   };
 
