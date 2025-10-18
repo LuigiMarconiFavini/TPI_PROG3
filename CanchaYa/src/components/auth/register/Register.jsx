@@ -34,26 +34,31 @@ const Register = () => {
     if (!username.trim()) {
       setErrors((s) => ({ ...s, username: true }));
       usernameRef.current?.focus();
+      toast.error("❌ El nombre de usuario es obligatorio");
       return;
     }
     if (!email.trim()) {
       setErrors((s) => ({ ...s, email: true }));
       emailRef.current?.focus();
+      toast.error("❌ El email es obligatorio");
       return;
     }
     if (!phone.trim() || phone.length < 8) {
       setErrors((s) => ({ ...s, phone: true }));
       phoneRef.current?.focus();
+      toast.error("❌ El teléfono debe tener al menos 8 dígitos");
       return;
     }
     if (password.length < 6) {
       setErrors((s) => ({ ...s, password: true }));
       passwordRef.current?.focus();
+      toast.error("❌ La contraseña debe tener al menos 6 caracteres");
       return;
     }
     if (password !== confirmPassword) {
       setErrors((s) => ({ ...s, confirmPassword: true }));
       confirmPasswordRef.current?.focus();
+      toast.error("❌ Las contraseñas no coinciden");
       return;
     }
 
@@ -76,20 +81,25 @@ const Register = () => {
       const data = await res.json();
 
       if (res.ok) {
-        toast.success("Registro exitoso 🎉 Bienvenido a CanchaYa", {
+        toast.success("🎉 Registro exitoso. ¡Bienvenido a CanchaYa!", {
           duration: 3000,
           position: "top-center",
         });
 
-        // Login automático después de registrarse
         handleUserLogin(data.token, data.user);
         navigate("/"); // Redirigir al home
       } else {
-        alert(data?.msg || data?.message || "No se pudo realizar el registro");
+        toast.error(data?.msg || data?.message || "❌ No se pudo registrar", {
+          duration: 4000,
+          position: "top-center",
+        });
       }
       // eslint-disable-next-line no-unused-vars
     } catch (err) {
-      alert("Error al conectar con el servidor");
+      toast.error("⚠️ Error al conectar con el servidor", {
+        duration: 4000,
+        position: "top-center",
+      });
     } finally {
       setSubmitting(false);
     }

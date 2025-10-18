@@ -20,12 +20,16 @@ const Login = () => {
     if (!email.trim()) {
       setErrors({ ...errors, email: true });
       emailRef.current.focus();
+      toast.error("❌ El email es obligatorio");
+
       return;
     }
 
     if (!password.trim() || password.length < 6) {
       setErrors({ ...errors, password: true });
       passwordRef.current.focus();
+      toast.error("❌ La contraseña debe tener al menos 6 caracteres");
+
       return;
     }
 
@@ -52,11 +56,17 @@ const Login = () => {
         handleUserLogin(data.token, data.user);
         navigate("/"); // Redirigimos al home
       } else {
-        alert(data?.msg || "❌ Credenciales inválidas");
+        toast.error(data?.msg || "❌ Credenciales inválidas", {
+          duration: 4000,
+          position: "top-center",
+        });
       }
       // eslint-disable-next-line no-unused-vars
     } catch (err) {
-      alert("⚠️ Error al conectar con el servidor");
+      toast.error("⚠️ Error al conectar con el servidor", {
+        duration: 4000,
+        position: "top-center",
+      });
     }
   };
 
