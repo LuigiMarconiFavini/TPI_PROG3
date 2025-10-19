@@ -80,51 +80,69 @@ const MyReservations = () => {
     return <p className="text-red-500">No se pudo cargar la cancha.</p>;
 
   return (
-    <div className="container mx-auto px-4 py-8 text-white">
-      <h2 className="text-3xl font-bold mb-6 text-black dark:text-white">
-        Reservar: {cancha.nombre}
-      </h2>
+    <div
+      className="min-h-screen bg-gray-50 dark:bg-gray-900 py-0 px-0 relative"
+      style={{
+        backgroundImage: `url("/images/img-fondo-reservas3.jpg")`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      {/* Banner full width verde */}
+      <div className="w-full bg-green-600 flex flex-col items-center justify-center py-12 px-6">
+        <h1 className="text-3xl md:text-4xl font-extrabold text-white mb-2 text-center">
+          Estás cerca de confirmar tu reserva en {cancha.nombre}!
+        </h1>
+        <p className="text-lg md:text-xl text-white max-w-2xl text-center">
+          Elegí el día y el horario disponible que mejor te convenga para tu próxima cancha.
+        </p>
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Contenido principal */}
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 px-4 lg:px-12 mt-8">
         {/* Detalles de la cancha */}
-        <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
-          <h3 className="text-xl font-semibold mb-4">Detalles de la Cancha</h3>
-          <p>
-            <strong>Deporte:</strong> {cancha.deporte}
-          </p>
-          <p>
-            <strong>Tipo:</strong> {cancha.tipo}
-          </p>
-          <p>
-            <strong>Dirección:</strong> {cancha.direccion}
-          </p>
-          <p>
-            <strong>Precio:</strong> ${cancha.precio}
-          </p>
-          <p>
-            <strong>Horarios disponibles:</strong> {cancha.horarios?.join(", ")}
-          </p>
+        <div className="bg-white/90 dark:bg-gray-800/90 rounded-2xl shadow-lg overflow-hidden transition hover:shadow-2xl">
+          <div className="p-6">
+            {/* Título y línea divisoria */}
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
+              Detalles de tu reserva
+            </h3>
+            <hr className="border-gray-300 dark:border-gray-600 mb-4" />
+
+            {/* Nombre de la cancha */}
+            <p className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+              Nombre del Complejo: {cancha.nombre}
+            </p>
+
+            {/* Detalles */}
+            <p><span className="font-semibold">Deporte:</span> {cancha.deporte}</p>
+            <p><span className="font-semibold">Tipo:</span> {cancha.tipo}</p>
+            <p><span className="font-semibold">Dirección:</span> {cancha.direccion}</p>
+            <p><span className="font-semibold">Precio:</span> ${cancha.precio}</p>
+            <p><span className="font-semibold">Horarios disponibles:</span> {cancha.horarios?.join(", ")}</p>
+          </div>
         </div>
 
         {/* Calendario y select de horarios */}
-        <div className="bg-gray-700 p-6 rounded-lg shadow-lg">
-          <h3 className="text-lg font-semibold mb-3">Elegí una fecha</h3>
+        <div className="bg-white/90 dark:bg-gray-800/90 rounded-2xl shadow-lg overflow-hidden transition hover:shadow-2xl p-6 flex flex-col">
+          <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+            Elegí tu horario
+          </h3>
           <input
             type="date"
             value={fecha}
             onChange={handleFechaChange}
-            className="bg-gray-800 text-white p-2 rounded mb-4 w-full"
+            className="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white p-3 rounded-lg mb-4 w-full shadow-inner"
           />
-
           {fecha && (
             <>
-              <h3 className="text-lg font-semibold mb-3">
+              <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">
                 Horarios disponibles
               </h3>
               <select
                 value={horarioSeleccionado}
                 onChange={(e) => setHorarioSeleccionado(e.target.value)}
-                className="bg-gray-800 text-white p-2 rounded w-full"
+                className="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white p-3 rounded-lg w-full shadow-inner"
               >
                 <option value="">-- Seleccionar horario --</option>
                 {horariosDisponibles.map((hora, i) => (
@@ -135,17 +153,16 @@ const MyReservations = () => {
               </select>
             </>
           )}
-        </div>
-      </div>
 
-      {/* Botón de siguiente */}
-      <div className="mt-8 flex justify-center">
-        <button
-          onClick={handleSiguiente}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-lg"
-        >
-          Siguiente
-        </button>
+          <div className="mt-6 flex justify-center">
+            <button
+              onClick={handleSiguiente}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition transform hover:scale-105"
+            >
+              Siguiente
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
