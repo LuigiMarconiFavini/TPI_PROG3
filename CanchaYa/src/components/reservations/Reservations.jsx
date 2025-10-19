@@ -80,7 +80,7 @@ const Reservations = () => {
                 }
               }}
             >
-              Sí, eliminar
+              Sí, cancelar
             </button>
           </div>
         </div>
@@ -117,52 +117,78 @@ const Reservations = () => {
     );
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 py-12 px-4 lg:px-12">
-      <h1 className="text-center text-3xl font-bold mb-2 text-gray-900 dark:text-white">
-        Mis Reservas
-      </h1>
-      <p className="text-center text-gray-600 dark:text-gray-300 mb-8">
-        {user.role === "admin" || user.role === "sysadmin"
-          ? "Aquí puedes ver todas las reservas"
-          : "Aquí puedes ver tus reservas realizadas"}
-      </p>
+    <div
+      className="min-h-screen bg-gray-50 dark:bg-gray-900 py-0 px-0 relative"
+      style={{
+        backgroundImage: `url("/images/img-fondo-misreservas2.jpg")`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      {/* Banner full width */}
+      <div className="w-full bg-green-600 flex flex-col items-center justify-center py-12 px-6">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-2 text-center">
+          Mis Reservas
+        </h1>
+        <p className="text-lg md:text-xl text-white max-w-2xl text-center">
+          Aquí podrás ver todas tus reservas activas y gestionar tus horarios fácilmente.
+        </p>
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {reservas.map((r) => (
-          <div
-            key={r.idReserva || r.id}
-            className="relative bg-gray-100 dark:bg-gray-800 p-6 rounded-xl shadow-lg hover:shadow-2xl transition"
-          >
-            <h2 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">
-              {r.cancha?.nombre}
-            </h2>
-            <div className="text-gray-700 dark:text-gray-300 space-y-1">
-              <p>
-                <strong>Deporte:</strong> {r.cancha?.deporte}
-              </p>
-              <p>
-                <strong>Fecha:</strong> {r.fechaReserva}
-              </p>
-              <p>
-                <strong>Horario:</strong> {r.horaReserva}
-              </p>
-              {user.role === "admin" || user.role === "sysadmin" ? (
-                <p>
-                  <strong>Usuario:</strong> {r.usuario?.username} (
-                  {r.usuario?.email})
-                </p>
-              ) : null}
-            </div>
+      {/* Contenido principal */}
+      <div className="max-w-7xl mx-auto px-4 lg:px-12 py-12">
 
-            {/* Botón eliminar */}
-            <button
-              onClick={() => handleEliminar(r.idReserva || r.id)}
-              className="absolute top-4 right-4 bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-full text-sm transition"
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {reservas.map((r) => (
+            <div
+              key={r.idReserva || r.id}
+              className="relative bg-white/90 dark:bg-gray-800/90 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden backdrop-blur-sm flex flex-col"
             >
-              Eliminar
-            </button>
-          </div>
-        ))}
+              {/* Imagen de la cancha */}
+              {r.cancha?.imagen && (
+                <img
+                  src={r.cancha.imagen}
+                  alt={r.cancha.nombre}
+                  className="w-full h-40 object-cover rounded-t-2xl"
+                />
+              )}
+
+              <div className="p-6 space-y-3 flex-1 flex flex-col">
+                {/* Nombre y botón cancelar */}
+                <div className="flex justify-between items-center">
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                    {r.cancha?.nombre}
+                  </h2>
+                  <button
+                    onClick={() => handleEliminar(r.idReserva || r.id)}
+                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full text-sm transition shadow-md hover:shadow-lg"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+
+                {/* Detalles */}
+                <div className="text-gray-700 dark:text-gray-300 text-sm space-y-1 mt-2 flex-1">
+                  <p>
+                    <span className="font-semibold">Deporte:</span> {r.cancha?.deporte}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Fecha:</span> {r.fechaReserva}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Horario:</span> {r.horaReserva}
+                  </p>
+                  {user.role === "admin" || user.role === "sysadmin" ? (
+                    <p>
+                      <span className="font-semibold">Usuario:</span> {r.usuario?.username} (
+                      {r.usuario?.email})
+                    </p>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
