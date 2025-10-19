@@ -5,12 +5,15 @@ import {
   showConfirmToast,
 } from "../../toast/toastNotifications.jsX";
 import { AuthenticationContext } from "../services/auth.context";
+import { useNavigate } from "react-router-dom";
 
 const AllReservas = () => {
   const { user, token } = useContext(AuthenticationContext);
   const [reservas, setReservas] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const navigate = useNavigate();
 
   const fetchReservas = async () => {
     setLoading(true);
@@ -77,6 +80,10 @@ const AllReservas = () => {
         showErrorToast("Error al eliminar: " + err.message);
       }
     });
+  };
+
+  const handleVolver = () => {
+    navigate("/");
   };
 
   return (
@@ -163,6 +170,16 @@ const AllReservas = () => {
           </table>
         </div>
       )}
+
+      {/* Botón de volver a inicio */}
+      <div className="flex justify-center mt-6">
+        <button
+          onClick={handleVolver}
+          className="px-6 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white font-semibold rounded-lg shadow-md transition"
+        >
+          Volver a inicio
+        </button>
+      </div>
     </div>
   );
 };

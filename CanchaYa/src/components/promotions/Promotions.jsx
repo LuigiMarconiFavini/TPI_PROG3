@@ -27,8 +27,11 @@ export default function Promotions() {
   const offset = circleCircumference - (progress / promotions.rewardsCycle) * circleCircumference;
 
   return (
-    <div className="space-y-6 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen">
-      {/* Banner full width */}
+    <div
+      className="bg-cover bg-center bg-no-repeat min-h-screen transition-colors duration-300"
+      style={{ backgroundImage: `url(/images/img-fondo-promotions.webp)` }}
+    >
+      {/* Banner full width sólido */}
       <div className="w-full bg-gradient-to-r from-purple-500 to-pink-500 shadow-xl">
         <div className="max-w-7xl mx-auto p-12 text-center text-white rounded-b-3xl">
           <h2 className="text-4xl md:text-5xl font-extrabold mb-2">🎁 Programa de Recompensas</h2>
@@ -58,7 +61,7 @@ export default function Promotions() {
         </div>
 
         {/* Contenedor de promociones */}
-        <div className="bg-gray-100 dark:bg-gray-800 rounded-xl shadow-lg p-6 md:flex md:space-x-6">
+        <div className="bg-white/90 dark:bg-gray-900/90 rounded-xl shadow-lg p-6 md:flex md:space-x-6 backdrop-blur-sm">
           {/* Progreso circular */}
           <div className="md:w-1/2 mb-6 md:mb-0 flex flex-col items-center justify-center">
             <svg width={120} height={120} className="mb-4">
@@ -113,7 +116,7 @@ export default function Promotions() {
           </div>
 
           {/* Historial de recompensas */}
-          <div className="md:w-1/2 bg-gray-200 dark:bg-gray-700 rounded-lg p-4">
+          <div className="md:w-1/2 bg-white/80 dark:bg-gray-800/80 rounded-lg p-4 backdrop-blur-sm">
             <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Historial de Recompensas</h3>
             {promotions.redeemedRewards.length > 0 ? (
               <ul className="list-disc list-inside text-gray-800 dark:text-gray-200">

@@ -72,13 +72,6 @@ const ReservationSummary = () => {
   return (
     <div className="bg-white min-h-screen py-10 flex flex-col bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100">
       <div className="max-w-8xl mx-auto px-8 flex-1">
-        {/* Botón CanchaYa */}
-        <button
-          onClick={() => navigate("/")}
-          className="text-4xl font-bold text-blue-600 hover:text-blue-800 mb-4 dark:text-blue-400 dark:hover:text-blue-500"
-        >
-          CanchaYa
-        </button>
 
         {/* Título */}
         <h1 className="text-5xl font-bold text-gray-800 dark:text-gray-100 mb-8">
