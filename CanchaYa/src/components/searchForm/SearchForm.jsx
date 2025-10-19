@@ -217,23 +217,25 @@ const SearchForm = () => {
       ) : error ? (
         <p className="text-center mt-10 text-red-400">{error}</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-16 px-6">
-          {resultados.length > 0 ? (
-            resultados.map((c) => (
-              <CardCourts
-                key={c.id}
-                cancha={c}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-              />
-            ))
-          ) : (
-            <div className="col-span-full flex justify-center items-center h-32">
-              {/* <p className="text-gray-300 text-lg font-medium">
-              No se encontraron canchas 😢
-            </p> */}
-            </div>
-          )}
+        <div className="w-full mt-16 px-6">
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-7">
+            {resultados.length > 0 ? (
+              resultados.map((c) => (
+                <CardCourts
+                  key={c.id}
+                  cancha={c}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                />
+              ))
+            ) : (
+              <div className="col-span-full flex justify-center items-center h-32">
+                <p className="text-gray-300 text-lg font-medium">
+                  No se encontraron canchas 😢
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       )}
 
