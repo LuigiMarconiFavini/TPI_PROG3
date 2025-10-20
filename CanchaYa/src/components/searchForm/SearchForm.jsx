@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import CardCourts from "../cardCourts/CardCourts";
 import { deportes, tiposPorDeporte, horarios } from "../../mocks/mock";
 import { AuthenticationContext } from "../services/auth.context";
@@ -15,6 +15,7 @@ const SearchForm = () => {
   const [resultados, setResultados] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [searched, setSearched] = useState(false);
 
   const [editingCourt, setEditingCourt] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -52,20 +53,15 @@ const SearchForm = () => {
     }
   };
 
-  // Traer todas las canchas al montar
-  useEffect(() => {
-    fetchCanchas();
-  }, []);
-
-  const handleFilter = (e) => {
+  const handleFilter = async (e) => {
     e.preventDefault();
-    fetchCanchas(); // Volvemos a traer del backend con los filtros
+    setSearched(true);
+    await fetchCanchas();
   };
 
   const handleDelete = async (cancha) => {
     if (!token) return toast.error("No estás autenticado");
 
-    // Confirmación usando toast
     toast(
       (t) => (
         <div className="flex flex-col gap-2">
@@ -73,7 +69,7 @@ const SearchForm = () => {
           <div className="flex gap-2 justify-end mt-2">
             <button
               onClick={async () => {
-                toast.dismiss(t.id); // cerrar el toast
+                toast.dismiss(t.id);
                 try {
                   const res = await fetch(
                     `http://localhost:3000/api/canchas/${cancha.id}`,
@@ -119,16 +115,14 @@ const SearchForm = () => {
 
   const handleSaved = (court) => {
     setResultados((prev) => {
-      // Si la cancha ya existe (edit), reemplazo
       const exists = prev.some((c) => c.id === court.id);
       if (exists) {
         return prev.map((c) => (c.id === court.id ? court : c));
       }
-      // Si es nueva, la agrego al final
       return [...prev, court];
     });
 
-    setModalOpen(false); // cerrar modal
+    setModalOpen(false);
   };
 
   return (
@@ -216,35 +210,39 @@ const SearchForm = () => {
         <p className="text-center mt-10 text-gray-200">Cargando...</p>
       ) : error ? (
         <p className="text-center mt-10 text-red-400">{error}</p>
-      ) : (
+      ) : searched ? ( // 👈 solo mostramos resultados si ya buscó
         <div className="w-full mt-16 px-6">
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-7">
-            {resultados.length > 0 ? (
-              resultados.map((c) => (
+          {resultados.length > 0 ? (
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-7">
+              {resultados.map((c) => (
                 <CardCourts
                   key={c.id}
                   cancha={c}
                   onEdit={handleEdit}
                   onDelete={handleDelete}
                 />
-              ))
-            ) : (
-              <div className="col-span-full flex justify-center items-center h-32">
-                <p className="text-gray-300 text-lg font-medium">
-                  No se encontraron canchas 😢
-                </p>
-              </div>
-            )}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="col-span-full flex flex-col justify-center items-center h-40 text-center text-gray-400">
+              <span className="text-4xl mb-2">🧐</span>
+              <p className="text-lg font-medium">
+                No se encontraron canchas con esos filtros
+              </p>
+              <p className="text-sm text-gray-500 mt-1">
+                Probá cambiar el deporte, tipo o horario
+              </p>
+            </div>
+          )}
         </div>
-      )}
+      ) : null}
 
       {/* Modal */}
       {modalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="relative w-full max-w-2xl bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 overflow-y-auto max-h-[90vh]">
             <button
-              className="absolute top-3 right-4 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 text-2xl font-bold" // Clases del botón unificadas también
+              className="absolute top-3 right-4 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 text-2xl font-bold"
               onClick={() => {
                 setModalOpen(false);
                 setEditingCourt(null);

@@ -94,14 +94,15 @@ const MyReservations = () => {
           Estás cerca de confirmar tu reserva en {cancha.nombre}!
         </h1>
         <p className="text-lg md:text-xl text-white max-w-2xl text-center">
-          Elegí el día y el horario disponible que mejor te convenga para tu próxima cancha.
+          Elegí el día y el horario disponible que mejor te convenga para tu
+          próxima cancha.
         </p>
       </div>
 
       {/* Contenido principal */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 px-4 lg:px-12 mt-8">
         {/* Detalles de la cancha */}
-        <div className="bg-white/90 dark:bg-gray-800/90 rounded-2xl shadow-lg overflow-hidden transition hover:shadow-2xl">
+        <div className="bg-white/90 dark:bg-gray-800/90 dark:text-white rounded-2xl shadow-lg overflow-hidden transition hover:shadow-2xl">
           <div className="p-6">
             {/* Título y línea divisoria */}
             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
@@ -110,16 +111,29 @@ const MyReservations = () => {
             <hr className="border-gray-300 dark:border-gray-600 mb-4" />
 
             {/* Nombre de la cancha */}
-            <p className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+            <p className="text-lg font-semibold mb-4  text-gray-900 dark:text-white">
               Nombre del Complejo: {cancha.nombre}
             </p>
 
             {/* Detalles */}
-            <p><span className="font-semibold">Deporte:</span> {cancha.deporte}</p>
-            <p><span className="font-semibold">Tipo:</span> {cancha.tipo}</p>
-            <p><span className="font-semibold">Dirección:</span> {cancha.direccion}</p>
-            <p><span className="font-semibold">Precio:</span> ${cancha.precio}</p>
-            <p><span className="font-semibold">Horarios disponibles:</span> {cancha.horarios?.join(", ")}</p>
+
+            <p>
+              <span className="font-semibold">Deporte:</span> {cancha.deporte}
+            </p>
+            <p>
+              <span className="font-semibold">Tipo:</span> {cancha.tipo}
+            </p>
+            <p>
+              <span className="font-semibold">Dirección:</span>{" "}
+              {cancha.direccion}
+            </p>
+            <p>
+              <span className="font-semibold">Precio:</span> ${cancha.precio}
+            </p>
+            <p>
+              <span className="font-semibold">Horarios disponibles:</span>{" "}
+              {cancha.horarios?.join(", ")}
+            </p>
           </div>
         </div>
 
