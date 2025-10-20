@@ -72,7 +72,6 @@ const ReservationSummary = () => {
   return (
     <div className="bg-white min-h-screen py-10 flex flex-col bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100">
       <div className="max-w-8xl mx-auto px-8 flex-1">
-
         {/* Título */}
         <h1 className="text-5xl font-bold text-gray-800 dark:text-gray-100 mb-8">
           ¡Ya casi terminamos!
@@ -93,7 +92,9 @@ const ReservationSummary = () => {
               <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-3">
                 {cancha?.nombre}
               </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-300">📍 {cancha?.direccion}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">
+                📍 {cancha?.direccion}
+              </p>
 
               <div className="space-y-4">
                 <div>
@@ -119,7 +120,7 @@ const ReservationSummary = () => {
                   <hr className="mt-2 border-gray-300 dark:border-gray-700" />
                 </div>
 
-                {/* Promoción */}
+                {/* Promoción
                 <div className="bg-yellow-50 dark:bg-yellow-900/30 border-l-4 border-yellow-400 p-4 rounded-xl shadow-sm flex justify-between items-center mt-2">
                   <div>
                     <p className="text-yellow-800 dark:text-yellow-300 font-semibold">
@@ -135,7 +136,7 @@ const ReservationSummary = () => {
                   >
                     Aplicar
                   </button>
-                </div>
+                </div> */}
 
                 {/* Precio final */}
                 <p className="flex justify-between font-semibold text-gray-800 dark:text-gray-100 mt-4">
@@ -148,17 +149,21 @@ const ReservationSummary = () => {
           {/* Columna derecha */}
           <div className="space-y-6">
             {/* Información personal */}
-            <div className="border border-gray-300 dark:border-gray-700 
-                          rounded-xl p-5 shadow-sm bg-white dark:bg-gray-800 transition-colors">
+            <div
+              className="border border-gray-300 dark:border-gray-700 
+                          rounded-xl p-5 shadow-sm bg-white dark:bg-gray-800 transition-colors"
+            >
               <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-3">
                 👤 Información personal
               </h2>
               <hr className="mb-3 border-gray-300 dark:border-gray-700" />
               <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex items-center gap-2 
+                <div
+                  className="flex items-center gap-2 
                               border border-gray-300 dark:border-gray-700 
                               rounded-lg p-2 bg-white dark:bg-gray-700 
-                              hover:bg-gray-50 dark:hover:bg-gray-600 transition">
+                              hover:bg-gray-50 dark:hover:bg-gray-600 transition"
+                >
                   👤
                   <input
                     type="text"
@@ -168,10 +173,12 @@ const ReservationSummary = () => {
                     readOnly
                   />
                 </div>
-                <div className="flex items-center gap-2 
+                <div
+                  className="flex items-center gap-2 
                               border border-gray-300 dark:border-gray-700 
                               rounded-lg p-2 bg-white dark:bg-gray-700 
-                              hover:bg-gray-50 dark:hover:bg-gray-600 transition">
+                              hover:bg-gray-50 dark:hover:bg-gray-600 transition"
+                >
                   📞
                   <input
                     type="text"
@@ -181,11 +188,13 @@ const ReservationSummary = () => {
                     readOnly
                   />
                 </div>
-                <div className="flex items-center gap-2 
+                <div
+                  className="flex items-center gap-2 
                               border border-gray-300 dark:border-gray-700 
                               rounded-lg p-2 bg-white dark:bg-gray-700 
                               hover:bg-gray-50 dark:hover:bg-gray-600 
-                              transition md:col-span-2">
+                              transition md:col-span-2"
+                >
                   ✉️
                   <input
                     type="email"
@@ -199,14 +208,18 @@ const ReservationSummary = () => {
             </div>
 
             {/* Contenedor de pago */}
-            <div className="border border-gray-300 dark:border-gray-700 
-                          rounded-xl p-5 shadow-sm bg-white dark:bg-gray-800 transition-colors">
+            <div
+              className="border border-gray-300 dark:border-gray-700 
+                          rounded-xl p-5 shadow-sm bg-white dark:bg-gray-800 transition-colors"
+            >
               <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-3">
                 💳 Sobre el pago
               </h2>
               <hr className="mb-3 border-gray-300 dark:border-gray-700" />
-              <div className="bg-blue-50 dark:bg-blue-900/30 
-                            p-5 rounded-xl border border-blue-200 dark:border-blue-700 shadow-sm">
+              <div
+                className="bg-blue-50 dark:bg-blue-900/30 
+                            p-5 rounded-xl border border-blue-200 dark:border-blue-700 shadow-sm"
+              >
                 <p className="text-blue-900 dark:text-blue-300 font-medium flex items-center gap-2">
                   El método de pago será definido por el complejo deportivo.
                 </p>

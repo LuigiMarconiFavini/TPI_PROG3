@@ -41,12 +41,12 @@ const Navbar = () => {
                 Contactanos
               </Link>
 
-              <Link
+              {/* <Link
                 to="/promotions"
                 className="hover:underline hover:underline-offset-4"
               >
                 Promociones
-              </Link>
+              </Link> */}
             </>
           )}
 
@@ -70,12 +70,12 @@ const Navbar = () => {
                 Contactanos
               </Link>
 
-              <Link
+              {/* <Link
                 to={loggedIn ? "/promotions/private" : "/promotions"}
                 className="hover:underline hover:underline-offset-4"
               >
                 {loggedIn ? "Mis Promociones" : "Promociones"}
-              </Link>
+              </Link> */}
 
               <Link
                 to="/reservations"
