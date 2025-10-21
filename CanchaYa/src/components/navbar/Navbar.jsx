@@ -40,13 +40,7 @@ const Navbar = () => {
               >
                 Contactanos
               </Link>
-
-              {/* <Link
-                to="/promotions"
-                className="hover:underline hover:underline-offset-4"
-              >
-                Promociones
-              </Link> */}
+              
             </>
           )}
 
