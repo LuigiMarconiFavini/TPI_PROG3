@@ -11,7 +11,7 @@ const Reservations = () => {
   const [reservas, setReservas] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Para edición lateral
+  // Estado para edición (modal)
   const [reservaAEditar, setReservaAEditar] = useState(null);
   const [fechaEditar, setFechaEditar] = useState("");
   const [horariosDisponibles, setHorariosDisponibles] = useState([]);
@@ -257,84 +257,92 @@ const Reservations = () => {
         </div>
       </div>
 
-      {/* Panel lateral de edición */}
+      {/*MODAL centrado para editar */}
       {reservaAEditar && (
-        <div className="w-96 bg-white dark:bg-gray-800 shadow-2xl p-6 flex flex-col fixed top-0 right-0 h-full z-50 overflow-auto">
-          <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
-            Editar reserva
-          </h2>
-
-          <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-300">
-            Fecha
-          </label>
-          <input
-            type="date"
-            value={fechaEditar}
-            onChange={(e) => {
-              setFechaEditar(e.target.value);
-              if (reservaAEditar.cancha?.id) {
-                fetch(
-                  `http://localhost:3000/api/reservas/porFecha?canchaId=${reservaAEditar.cancha.id}&fecha=${e.target.value}`,
-                  {
-                    headers: { Authorization: `Bearer ${token}` },
-                  }
-                )
-                  .then(async (res) => {
-                    if (!res.ok)
-                      throw new Error("Error al cargar horarios disponibles");
-                    const reservasDelDia = await res.json();
-                    const horariosReservados = reservasDelDia
-                      .filter((r) => r.id !== reservaAEditar.id)
-                      .map((r) => r.horaReserva);
-
-                    const todosHorarios = reservaAEditar.cancha.horarios || [];
-                    const disponibles = todosHorarios.filter(
-                      (h) =>
-                        !horariosReservados.includes(h) ||
-                        h === reservaAEditar.horaReserva
-                    );
-
-                    setHorariosDisponibles(disponibles);
-                    setHorarioEditar("");
-                  })
-                  .catch(() => {
-                    showErrorToast("Error al cargar horarios disponibles");
-                    setHorariosDisponibles([]);
-                  });
-              }
-            }}
-            className="w-full p-3 mb-4 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
-          />
-
-          <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-300">
-            Horario
-          </label>
-          <select
-            value={horarioEditar}
-            onChange={(e) => setHorarioEditar(e.target.value)}
-            className="w-full p-3 mb-6 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
+        <div
+          className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm"
+          onClick={() => setReservaAEditar(null)}
+        >
+          <div
+            className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 w-full max-w-md relative"
+            onClick={(e) => e.stopPropagation()}
           >
-            <option value="">-- Seleccioná un horario --</option>
-            {horariosDisponibles.map((h, i) => (
-              <option key={i} value={h}>
-                {h}
-              </option>
-            ))}
-          </select>
+            <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white text-center">
+              Editar reserva
+            </h2>
 
-          <div className="flex gap-4 mt-auto">
-            <button
-              onClick={() => setReservaAEditar(null)}
-              className="flex-1 py-3 bg-gray-400 hover:bg-gray-500 rounded-md text-white font-semibold transition"
+            <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-300">
+              Fecha
+            </label>
+            <input
+              type="date"
+              value={fechaEditar}
+              onChange={(e) => {
+                setFechaEditar(e.target.value);
+                if (reservaAEditar.cancha?.id) {
+                  fetch(
+                    `http://localhost:3000/api/reservas/porFecha?canchaId=${reservaAEditar.cancha.id}&fecha=${e.target.value}`,
+                    {
+                      headers: { Authorization: `Bearer ${token}` },
+                    }
+                  )
+                    .then(async (res) => {
+                      if (!res.ok)
+                        throw new Error("Error al cargar horarios disponibles");
+                      const reservasDelDia = await res.json();
+                      const horariosReservados = reservasDelDia
+                        .filter((r) => r.id !== reservaAEditar.id)
+                        .map((r) => r.horaReserva);
+
+                      const todosHorarios = reservaAEditar.cancha.horarios || [];
+                      const disponibles = todosHorarios.filter(
+                        (h) =>
+                          !horariosReservados.includes(h) ||
+                          h === reservaAEditar.horaReserva
+                      );
+
+                      setHorariosDisponibles(disponibles);
+                      setHorarioEditar("");
+                    })
+                    .catch(() => {
+                      showErrorToast("Error al cargar horarios disponibles");
+                      setHorariosDisponibles([]);
+                    });
+                }
+              }}
+              className="w-full p-3 mb-4 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
+            />
+
+            <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-300">
+              Horario
+            </label>
+            <select
+              value={horarioEditar}
+              onChange={(e) => setHorarioEditar(e.target.value)}
+              className="w-full p-3 mb-6 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
             >
-              Cancelar
-            </button>
-            <button
-              onClick={handleGuardarCambios}
-              className="flex-1 py-3 bg-green-600 hover:bg-green-700 rounded-md text-white font-semibold transition"
-            >
-              Guardar cambios
-            </button>
+              <option value="">-- Seleccioná un horario --</option>
+              {horariosDisponibles.map((h, i) => (
+                <option key={i} value={h}>
+                  {h}
+                </option>
+              ))}
+            </select>
+
+            <div className="flex gap-4 mt-6">
+              <button
+                onClick={() => setReservaAEditar(null)}
+                className="flex-1 py-3 bg-gray-400 hover:bg-gray-500 rounded-md text-white font-semibold transition"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleGuardarCambios}
+                className="flex-1 py-3 bg-green-600 hover:bg-green-700 rounded-md text-white font-semibold transition"
+              >
+                Guardar cambios
+              </button>
+            </div>
           </div>
         </div>
       )}
