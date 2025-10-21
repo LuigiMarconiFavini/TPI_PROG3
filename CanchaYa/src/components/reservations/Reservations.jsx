@@ -11,6 +11,12 @@ const Reservations = () => {
   const [reservas, setReservas] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Para edición lateral
+  const [reservaAEditar, setReservaAEditar] = useState(null);
+  const [fechaEditar, setFechaEditar] = useState("");
+  const [horariosDisponibles, setHorariosDisponibles] = useState([]);
+  const [horarioEditar, setHorarioEditar] = useState("");
+
   const fetchReservas = async () => {
     try {
       const url = `http://localhost:3000/api/reservas?userId=${user.id}`;
@@ -29,7 +35,9 @@ const Reservations = () => {
   };
 
   useEffect(() => {
-    fetchReservas();
+    if (user && token) {
+      fetchReservas();
+    }
   }, [user, token]);
 
   const handleEliminar = (reservaId) => {
@@ -85,8 +93,81 @@ const Reservations = () => {
           </div>
         </div>
       ),
-      { duration: Infinity } // dura hasta que el usuario haga click
+      { duration: Infinity }
     );
+  };
+
+  const abrirPanelEditar = async (reserva) => {
+    setReservaAEditar(reserva);
+    setFechaEditar(reserva.fechaReserva);
+    setHorarioEditar(reserva.horaReserva);
+
+    try {
+      const res = await fetch(
+        `http://localhost:3000/api/reservas/porFecha?canchaId=${reserva.cancha.id}&fecha=${reserva.fechaReserva}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (!res.ok) throw new Error("Error al cargar horarios disponibles");
+      const reservasDelDia = await res.json();
+      const horariosReservados = reservasDelDia
+        .filter((r) => r.id !== reserva.id)
+        .map((r) => r.horaReserva);
+
+      const todosHorarios = reserva.cancha.horarios || [];
+      const disponibles = todosHorarios.filter(
+        (h) => !horariosReservados.includes(h) || h === reserva.horaReserva
+      );
+
+      setHorariosDisponibles(disponibles);
+    } catch (err) {
+      showErrorToast(err.message);
+      setHorariosDisponibles([]);
+    }
+  };
+
+  const handleGuardarCambios = async () => {
+    if (!fechaEditar || !horarioEditar) {
+      showErrorToast("Fecha y horario son obligatorios");
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `http://localhost:3000/api/reservas/${reservaAEditar.idReserva}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            fechaReserva: fechaEditar,
+            horaReserva: horarioEditar,
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "No se pudo actualizar la reserva");
+      }
+
+      const dataActualizada = data.reserva;
+
+      setReservas((prev) =>
+        prev.map((r) =>
+          r.idReserva === dataActualizada.idReserva ? { ...r, ...dataActualizada } : r
+        )
+      );
+
+      showSuccessToast("Reserva actualizada ✅");
+      setReservaAEditar(null);
+    } catch (err) {
+      showErrorToast("Error al actualizar: " + err.message);
+    }
   };
 
   if (loading) return <p className="text-center">Cargando reservas...</p>;
@@ -118,33 +199,21 @@ const Reservations = () => {
 
   return (
     <div
-      className="min-h-screen bg-gray-50 dark:bg-gray-900 py-0 px-0 relative"
+      className="flex min-h-screen bg-gray-50 dark:bg-gray-900 relative"
       style={{
         backgroundImage: `url("/images/img-fondo-misreservas2.jpg")`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
-      {/* Banner full width */}
-      <div className="w-full bg-green-600 flex flex-col items-center justify-center py-12 px-6">
-        <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-2 text-center">
-          Mis Reservas
-        </h1>
-        <p className="text-lg md:text-xl text-white max-w-2xl text-center">
-          Aquí podrás ver todas tus reservas activas y gestionar tus horarios fácilmente.
-        </p>
-      </div>
-
-      {/* Contenido principal */}
-      <div className="max-w-7xl mx-auto px-4 lg:px-12 py-12">
-
+      {/* Lista de reservas */}
+      <div className="flex-1 p-8 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {reservas.map((r) => (
             <div
-              key={r.idReserva || r.id}
+              key={`${r.idReserva}-${r.updatedAt}`}
               className="relative bg-white/90 dark:bg-gray-800/90 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden backdrop-blur-sm flex flex-col"
             >
-              {/* Imagen de la cancha */}
               {r.cancha?.imagen && (
                 <img
                   src={r.cancha.imagen}
@@ -154,42 +223,121 @@ const Reservations = () => {
               )}
 
               <div className="p-6 space-y-3 flex-1 flex flex-col">
-                {/* Nombre y botón cancelar */}
                 <div className="flex justify-between items-center">
                   <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                     {r.cancha?.nombre}
                   </h2>
-                  <button
-                    onClick={() => handleEliminar(r.idReserva || r.id)}
-                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full text-sm transition shadow-md hover:shadow-lg"
-                  >
-                    Cancelar
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => abrirPanelEditar(r)}
+                      className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-full text-sm transition shadow-md hover:shadow-lg"
+                    >
+                      Editar
+                    </button>
+                    <button
+                      onClick={() => handleEliminar(r.idReserva || r.id)}
+                      className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full text-sm transition shadow-md hover:shadow-lg"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
                 </div>
 
-                {/* Detalles */}
                 <div className="text-gray-700 dark:text-gray-300 text-sm space-y-1 mt-2 flex-1">
-                  <p>
-                    <span className="font-semibold">Deporte:</span> {r.cancha?.deporte}
-                  </p>
-                  <p>
-                    <span className="font-semibold">Fecha:</span> {r.fechaReserva}
-                  </p>
-                  <p>
-                    <span className="font-semibold">Horario:</span> {r.horaReserva}
-                  </p>
-                  {user.role === "admin" || user.role === "sysadmin" ? (
-                    <p>
-                      <span className="font-semibold">Usuario:</span> {r.usuario?.username} (
-                      {r.usuario?.email})
-                    </p>
-                  ) : null}
+                  <p><span className="font-semibold">Deporte:</span> {r.cancha?.deporte}</p>
+                  <p><span className="font-semibold">Tipo:</span> {r.cancha?.tipo}</p>
+                  <p><span className="font-semibold">Dirección:</span> {r.cancha?.direccion}</p>
+                  <p><span className="font-semibold">Fecha:</span> {r.fechaReserva}</p>
+                  <p><span className="font-semibold">Horario:</span> {r.horaReserva}</p>
+                  <p><span className="font-semibold">Precio:</span> ${r.cancha?.precio}</p>
                 </div>
               </div>
             </div>
           ))}
         </div>
       </div>
+
+      {/* Panel lateral de edición */}
+      {reservaAEditar && (
+        <div className="w-96 bg-white dark:bg-gray-800 shadow-2xl p-6 flex flex-col fixed top-0 right-0 h-full z-50 overflow-auto">
+          <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
+            Editar reserva
+          </h2>
+
+          <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-300">
+            Fecha
+          </label>
+          <input
+            type="date"
+            value={fechaEditar}
+            onChange={(e) => {
+              setFechaEditar(e.target.value);
+              if (reservaAEditar.cancha?.id) {
+                fetch(
+                  `http://localhost:3000/api/reservas/porFecha?canchaId=${reservaAEditar.cancha.id}&fecha=${e.target.value}`,
+                  {
+                    headers: { Authorization: `Bearer ${token}` },
+                  }
+                )
+                  .then(async (res) => {
+                    if (!res.ok)
+                      throw new Error("Error al cargar horarios disponibles");
+                    const reservasDelDia = await res.json();
+                    const horariosReservados = reservasDelDia
+                      .filter((r) => r.id !== reservaAEditar.id)
+                      .map((r) => r.horaReserva);
+
+                    const todosHorarios = reservaAEditar.cancha.horarios || [];
+                    const disponibles = todosHorarios.filter(
+                      (h) =>
+                        !horariosReservados.includes(h) ||
+                        h === reservaAEditar.horaReserva
+                    );
+
+                    setHorariosDisponibles(disponibles);
+                    setHorarioEditar("");
+                  })
+                  .catch(() => {
+                    showErrorToast("Error al cargar horarios disponibles");
+                    setHorariosDisponibles([]);
+                  });
+              }
+            }}
+            className="w-full p-3 mb-4 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
+          />
+
+          <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-300">
+            Horario
+          </label>
+          <select
+            value={horarioEditar}
+            onChange={(e) => setHorarioEditar(e.target.value)}
+            className="w-full p-3 mb-6 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
+          >
+            <option value="">-- Seleccioná un horario --</option>
+            {horariosDisponibles.map((h, i) => (
+              <option key={i} value={h}>
+                {h}
+              </option>
+            ))}
+          </select>
+
+          <div className="flex gap-4 mt-auto">
+            <button
+              onClick={() => setReservaAEditar(null)}
+              className="flex-1 py-3 bg-gray-400 hover:bg-gray-500 rounded-md text-white font-semibold transition"
+            >
+              Cancelar
+            </button>
+            <button
+              onClick={handleGuardarCambios}
+              className="flex-1 py-3 bg-green-600 hover:bg-green-700 rounded-md text-white font-semibold transition"
+            >
+              Guardar cambios
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
