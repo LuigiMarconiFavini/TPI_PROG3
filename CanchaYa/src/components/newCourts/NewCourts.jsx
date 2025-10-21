@@ -165,11 +165,18 @@ const NewCourts = ({ existingCourt = null, onSaved }) => {
                   value={h}
                   checked={horariosSeleccionados.includes(h)}
                   onChange={(e) => {
+
+                    const ordenarHorarios = (arr) => [...arr].sort((a, b) => {
+                      const [ha, ma] = a.replace("hs", "").trim().split(":").map(Number);
+                      const [hb, mb] = b.replace("hs", "").trim().split(":").map(Number);
+                      return ha * 60 + ma - (hb * 60 + mb);
+                    });
                     if (e.target.checked) {
-                      setHorariosSeleccionados([...horariosSeleccionados, h]);
+                      setHorariosSeleccionados(ordenarHorarios([...horariosSeleccionados, h]));
                     } else {
                       setHorariosSeleccionados(
-                        horariosSeleccionados.filter((hor) => hor !== h)
+                        ordenarHorarios(horariosSeleccionados).filter((hor) => hor !== h)
+
                       );
                     }
                   }}
