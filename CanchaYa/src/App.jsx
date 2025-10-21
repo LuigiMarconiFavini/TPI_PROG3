@@ -9,8 +9,6 @@ import Protected from "./components/protected/Protected";
 import MyProfile from "./components/myProfile/MyProfile";
 import Contact from "./components/contact/Contact";
 import MainLayout from "./components/layouts/MainLayout";
-import Promotions from "./components/promotions/Promotions";
-import PublicPromotions from "./components/promotions/PublicPromotions";
 import { AuthenticationContext } from "./components/services/auth.context";
 import { ThemeProvider } from "./components/context/ThemeProvider";
 import AllUsers from "./components/allUsers/allUsers";
@@ -37,14 +35,7 @@ function App() {
             path="/register"
             element={loggedIn ? <Navigate to="/" /> : <Register />}
           />
-          <Route
-            path="/promotions"
-            element={
-              <MainLayout loggedIn={loggedIn} onSignOut={handleUserLogout}>
-                <PublicPromotions />
-              </MainLayout>
-            }
-          />
+          
           <Route
             path="/"
             element={
@@ -66,14 +57,7 @@ function App() {
           <Route
             element={<Protected allowedRoles={["user", "admin", "sysadmin"]} />}
           >
-            <Route
-              path="/promotions/private"
-              element={
-                <MainLayout loggedIn={loggedIn} onSignOut={handleUserLogout}>
-                  <Promotions />
-                </MainLayout>
-              }
-            />
+            
             <Route
               path="/my-profile"
               element={
