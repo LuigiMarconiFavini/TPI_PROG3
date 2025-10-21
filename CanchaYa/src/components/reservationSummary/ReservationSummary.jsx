@@ -120,24 +120,6 @@ const ReservationSummary = () => {
                   <hr className="mt-2 border-gray-300 dark:border-gray-700" />
                 </div>
 
-                {/* Promoción
-                <div className="bg-yellow-50 dark:bg-yellow-900/30 border-l-4 border-yellow-400 p-4 rounded-xl shadow-sm flex justify-between items-center mt-2">
-                  <div>
-                    <p className="text-yellow-800 dark:text-yellow-300 font-semibold">
-                      🎁 Promoción: 10% de descuento
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                      Aplicable gracias a nuestras promociones exclusivas.
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => alert("Funcionalidad pendiente")}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-white px-5 py-2 rounded-lg text-sm font-medium transition"
-                  >
-                    Aplicar
-                  </button>
-                </div> */}
-
                 {/* Precio final */}
                 <p className="flex justify-between font-semibold text-gray-800 dark:text-gray-100 mt-4">
                   <span>💰 Precio final</span> <span>${cancha?.precio}</span>
