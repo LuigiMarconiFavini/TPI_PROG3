@@ -158,7 +158,9 @@ const NewCourts = ({ existingCourt = null, onSaved }) => {
             {horarios.map((h) => (
               <label
                 key={h}
-                className="flex items-center justify-center gap-2 border px-3 py-2 rounded-xl cursor-pointer bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition text-sm"
+                className="flex items-center justify-center gap-2 border px-3 py-2 rounded-xl cursor-pointer 
+                hover:bg-gray-200 dark:hover:bg-gray-700 
+                transition text-sm text-gray-800 dark:text-white"
               >
                 <input
                   type="checkbox"

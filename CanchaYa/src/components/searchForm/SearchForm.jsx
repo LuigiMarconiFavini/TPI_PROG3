@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import CardCourts from "../cardCourts/CardCourts";
 import { deportes, tiposPorDeporte, horarios } from "../../mocks/mock";
 import { AuthenticationContext } from "../services/auth.context";
@@ -125,6 +125,19 @@ const SearchForm = () => {
     setModalOpen(false);
   };
 
+  //lo usamos para que el modal no se superponga
+  useEffect(() => {
+  if (modalOpen) {
+    document.body.style.overflow = "hidden"; // bloquea el scroll del fondo
+  } else {
+    document.body.style.overflow = "auto"; // lo restaura
+  }
+
+  return () => {
+    document.body.style.overflow = "auto"; // cleanup por seguridad
+  };
+}, [modalOpen]);
+
   return (
     <div className="searchform-container text-black dark:text-white transition-colors duration-300">
       {/* 🔍 Formulario de filtros */}
@@ -239,19 +252,21 @@ const SearchForm = () => {
 
       {/* Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="relative w-full max-w-2xl bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 overflow-y-auto max-h-[90vh]">
-            <button
-              className="absolute top-3 right-4 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 text-2xl font-bold"
-              onClick={() => {
-                setModalOpen(false);
-                setEditingCourt(null);
-              }}
-            >
-              ×
-            </button>
+        <div className="fixed inset-0 bg-black bg-opacity-60 z-[9999] overflow-y-auto">
+          <div className="min-h-screen flex items-start justify-center px-4 py-10 mt-10">
+            <div className="relative w-full max-w-2xl bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6">
+              <button
+                className="absolute top-3 right-4 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 text-2xl font-bold"
+                onClick={() => {
+                  setModalOpen(false);
+                  setEditingCourt(null);
+                }}
+              >
+                ×
+              </button>
 
-            <NewCourts existingCourt={editingCourt} onSaved={handleSaved} />
+              <NewCourts existingCourt={editingCourt} onSaved={handleSaved} />
+            </div>
           </div>
         </div>
       )}
