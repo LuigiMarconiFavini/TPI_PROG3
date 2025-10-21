@@ -178,6 +178,14 @@ const MyReservations = () => {
           </div>
         </div>
       </div>
+          <div className="flex justify-center mt-10 mb-12">
+            <button
+              onClick={() => navigate("/")}
+              className="bg-red-600 hover:bg-red-600 text-white font-semibold py-3 px-10 rounded-lg shadow-md transition transform hover:scale-105"
+            >
+              Volver Atrás
+            </button>
+          </div>
     </div>
   );
 };

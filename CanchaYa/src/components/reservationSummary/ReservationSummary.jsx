@@ -213,10 +213,19 @@ const ReservationSummary = () => {
             </div>
 
             {/* Botón confirmar reserva */}
-            <div className="flex justify-end mt-4">
+            <div className="flex justify-center gap-3 mt-4">
+
+              <button
+                onClick={() => navigate("/")}
+                className="w-1/3 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 rounded-full text-base transition transform hover:scale-105 flex items-center justify-center gap-2 shadow-sm"
+              >
+                ❌ No quiero reservar ahora
+              </button>
+
+
               <button
                 onClick={handleReserva}
-                className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-10 w-1/2 rounded-full text-base transition"
+                className="w-1/3 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-full text-base transition transform hover:scale-105 flex items-center justify-center gap-2 shadow-md"
               >
                 ✅ Confirmar reserva
               </button>
@@ -224,6 +233,7 @@ const ReservationSummary = () => {
           </div>
         </div>
       </div>
+      
     </div>
   );
 };
