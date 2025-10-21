@@ -43,10 +43,10 @@ const Register = () => {
       toast.error("❌ El email es obligatorio");
       return;
     }
-    if (!phone.trim() || phone.length < 8) {
+    if (!phone.trim() || phone.length < 8 || phone.length > 10) {
       setErrors((s) => ({ ...s, phone: true }));
       phoneRef.current?.focus();
-      toast.error("❌ El teléfono debe tener al menos 8 dígitos");
+      toast.error("❌ El teléfono debe tener al menos 8 dígitos y no mas de 10");
       return;
     }
     if (password.length < 6) {
