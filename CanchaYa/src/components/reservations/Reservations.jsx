@@ -245,7 +245,6 @@ const Reservations = () => {
 
                 <div className="text-gray-700 dark:text-gray-300 text-sm space-y-1 mt-2 flex-1">
                   <p><span className="font-semibold">Deporte:</span> {r.cancha?.deporte}</p>
-                  <p><span className="font-semibold">Tipo:</span> {r.cancha?.tipo}</p>
                   <p><span className="font-semibold">Dirección:</span> {r.cancha?.direccion}</p>
                   <p><span className="font-semibold">Fecha:</span> {r.fechaReserva}</p>
                   <p><span className="font-semibold">Horario:</span> {r.horaReserva}</p>
